@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { Database, Lock, Play, Search, ShieldAlert, UserCheck } from 'lucide-react';
 import { analyticsApi, caseApi, modelApi } from '../services/api';
-import type { AdminAnalytics, ModelEntity, SuspiciousCase } from '../types';
+import type { AdminAnalytics, ModelEntity, SuspiciousCase, User } from '../types';
 
 interface AdminPortalProps {
+  currentUser?: User | null;
   onOpenLogin?: (mode?: 'signin' | 'register') => void;
 }
 
-export const AdminPortal: React.FC<AdminPortalProps> = ({ onOpenLogin }) => {
+export const AdminPortal: React.FC<AdminPortalProps> = ({ currentUser, onOpenLogin }) => {
   const [cases, setCases] = useState<SuspiciousCase[]>([]);
   const [models, setModels] = useState<ModelEntity[]>([]);
   const [analytics, setAnalytics] = useState<AdminAnalytics | null>(null);
@@ -23,10 +24,38 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onOpenLogin }) => {
 
   useEffect(() => {
     loadAdminData();
-  }, []);
+  }, [currentUser]);
 
   const loadAdminData = async () => {
     setIsLoading(true);
+
+    // Pre-flight client credential check: prevents 403 Forbidden log spam for unauthorized visitors
+    const token = localStorage.getItem('verisure_token');
+    const storedUserStr = localStorage.getItem('verisure_user');
+    let userRoles: string[] = [];
+    if (storedUserStr) {
+      try {
+        const u = JSON.parse(storedUserStr);
+        userRoles = u.roles || [];
+      } catch {
+        // ignore parse error
+      }
+    }
+
+    const hasAnyAdminRole = userRoles.some((r) =>
+      ['PLATFORM_ADMIN', 'BRAND_ADMIN', 'BRAND_REVIEWER'].includes(r)
+    );
+
+    if (!token || !hasAnyAdminRole) {
+      setHasCaseAccess(false);
+      setHasAdminAccess(false);
+      setCases([]);
+      setModels([]);
+      setAnalytics(null);
+      setIsLoading(false);
+      return;
+    }
+
     const [casesRes, modelsRes, analyticsRes] = await Promise.allSettled([
       caseApi.listCases(),
       modelApi.listModels(),

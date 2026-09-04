@@ -73,6 +73,7 @@ export const App: React.FC = () => {
 
         {activeTab === 'admin' && (
           <AdminPortal
+            currentUser={currentUser}
             onOpenLogin={(mode = 'signin') => {
               setLoginModalMode(mode);
               setIsLoginOpen(true);

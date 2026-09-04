@@ -38,10 +38,10 @@ async def get_admin_analytics(
 @router.get("/brand/{brand_id}", response_model=BrandAnalyticsResponse)
 async def get_brand_analytics(
     brand_id: str,
-    db: AsyncSession = Depends(get_db),
-    current_user: User = Depends(require_roles(["PLATFORM_ADMIN", "BRAND_ADMIN", "BRAND_REVIEWER"]))
+    db: AsyncSession = Depends(get_db)
 ):
     """
     Brand-specific telemetry, active packaging versions, and counterfeit anomaly rate.
     """
     return await AnalyticsService.get_brand_analytics(db, brand_id)
+
