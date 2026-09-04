@@ -16,16 +16,6 @@ class LoginRequest(BaseModel):
     password: str
 
 
-class TokenResponse(BaseModel):
-    access_token: str
-    token_type: str = "bearer"
-    expires_in_minutes: int
-    user_id: str
-    email: str
-    roles: List[str]
-    brand_id: Optional[str] = None
-
-
 class UserResponse(BaseModel):
     id: str
     email: str
@@ -37,3 +27,15 @@ class UserResponse(BaseModel):
     created_at: datetime
 
     model_config = {"from_attributes": True}
+
+
+class TokenResponse(BaseModel):
+    access_token: str
+    token_type: str = "bearer"
+    expires_in_minutes: int
+    user_id: str
+    email: str
+    roles: List[str]
+    brand_id: Optional[str] = None
+    user: Optional[UserResponse] = None
+

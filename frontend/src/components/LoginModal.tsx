@@ -45,16 +45,40 @@ export const LoginModal: React.FC<LoginModalProps> = ({
     setLoading(true);
     setError(null);
     try {
-      const targetEmail = loginEmail || email;
+      const targetEmail = (loginEmail || email).trim();
       const targetPass = loginPass || password;
+
+      if (!targetEmail) {
+        setError('Please enter your email address.');
+        setLoading(false);
+        return;
+      }
+      if (!targetPass) {
+        setError('Please enter your password.');
+        setLoading(false);
+        return;
+      }
+
       const res = await authApi.login(targetEmail, targetPass);
-      onLoginSuccess(res.user);
+      if (res && res.user) {
+        onLoginSuccess(res.user);
+      }
       onClose();
     } catch (err: any) {
-      if (!err.response) {
-        setError('Unable to reach backend server. Please verify the backend is running on http://localhost:8000');
+      if (err.response) {
+        const detail = err.response.data?.detail;
+        if (typeof detail === 'string') {
+          setError(detail);
+        } else if (Array.isArray(detail)) {
+          setError(detail.map((d: any) => d.msg || d.message || JSON.stringify(d)).join(', '));
+        } else {
+          setError('Invalid email or password. Please check your credentials.');
+        }
+      } else if (err.request) {
+        setError('Unable to reach backend server. Please check your connection or verify the server is running on port 8000.');
       } else {
-        setError(err.response?.data?.detail || 'Invalid email or password');
+        console.error('Login error:', err);
+        setError(err.message || 'An unexpected error occurred during login.');
       }
     } finally {
       setLoading(false);
@@ -94,13 +118,25 @@ export const LoginModal: React.FC<LoginModalProps> = ({
 
       // 2. Automatically sign in with the new credentials
       const loginRes = await authApi.login(regEmail.trim(), regPassword);
-      onLoginSuccess(loginRes.user);
+      if (loginRes && loginRes.user) {
+        onLoginSuccess(loginRes.user);
+      }
       onClose();
     } catch (err: any) {
-      if (!err.response) {
-        setError('Unable to reach backend server. Please verify the backend is running on http://localhost:8000');
+      if (err.response) {
+        const detail = err.response.data?.detail;
+        if (typeof detail === 'string') {
+          setError(detail);
+        } else if (Array.isArray(detail)) {
+          setError(detail.map((d: any) => d.msg || d.message || JSON.stringify(d)).join(', '));
+        } else {
+          setError('Registration failed. Email may already be in use.');
+        }
+      } else if (err.request) {
+        setError('Unable to reach backend server. Please check your connection or verify the server is running on port 8000.');
       } else {
-        setError(err.response?.data?.detail || 'Registration failed. Email may already be in use.');
+        console.error('Registration error:', err);
+        setError(err.message || 'An unexpected error occurred during registration.');
       }
     } finally {
       setLoading(false);

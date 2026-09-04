@@ -31,10 +31,27 @@ apiClient.interceptors.request.use((config) => {
 
 export const authApi = {
   login: async (email: string, password: string): Promise<AuthResponse> => {
-    const res = await apiClient.post<AuthResponse>('/auth/login', { email, password });
-    localStorage.setItem('verisure_token', res.data.access_token);
-    localStorage.setItem('verisure_user', JSON.stringify(res.data.user));
-    return res.data;
+    const res = await apiClient.post<any>('/auth/login', {
+      email: email.trim(),
+      password,
+    });
+    const rawData = res.data;
+    const user: User = rawData.user || {
+      id: rawData.user_id,
+      email: rawData.email,
+      full_name: rawData.email ? rawData.email.split('@')[0] : 'User',
+      is_active: true,
+      is_superuser: Array.isArray(rawData.roles) && rawData.roles.includes('PLATFORM_ADMIN'),
+      roles: Array.isArray(rawData.roles) ? rawData.roles : ['CONSUMER'],
+      brand_id: rawData.brand_id || null,
+    };
+    localStorage.setItem('verisure_token', rawData.access_token);
+    localStorage.setItem('verisure_user', JSON.stringify(user));
+    return {
+      access_token: rawData.access_token,
+      token_type: rawData.token_type || 'bearer',
+      user,
+    };
   },
   register: async (data: {
     email: string;

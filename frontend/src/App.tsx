@@ -110,11 +110,14 @@ export const App: React.FC = () => {
         initialMode={loginModalMode}
         onClose={() => setIsLoginOpen(false)}
         onLoginSuccess={(user) => {
+          if (!user) return;
           setCurrentUser(user);
+          // Safely determine roles array
+          const roles = Array.isArray(user.roles) ? user.roles : [];
           // Automatically navigate to relevant portal based on role
-          if (user.roles.includes('PLATFORM_ADMIN')) {
+          if (roles.includes('PLATFORM_ADMIN')) {
             setActiveTab('admin');
-          } else if (user.roles.includes('BRAND_ADMIN') || user.roles.includes('BRAND_REVIEWER')) {
+          } else if (roles.includes('BRAND_ADMIN') || roles.includes('BRAND_REVIEWER')) {
             setActiveTab('brand');
           } else {
             setActiveTab('consumer');

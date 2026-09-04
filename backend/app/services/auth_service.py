@@ -122,6 +122,17 @@ class AuthService:
         )
         await db.commit()
 
+        user_resp = UserResponse(
+            id=user.id,
+            email=user.email,
+            full_name=user.full_name,
+            is_active=user.is_active,
+            is_superuser=user.is_superuser,
+            brand_id=primary_brand_id,
+            roles=role_names,
+            created_at=user.created_at
+        )
+
         return TokenResponse(
             access_token=token,
             token_type="bearer",
@@ -129,6 +140,7 @@ class AuthService:
             user_id=user.id,
             email=user.email,
             roles=role_names,
-            brand_id=primary_brand_id
+            brand_id=primary_brand_id,
+            user=user_resp
         )
 
