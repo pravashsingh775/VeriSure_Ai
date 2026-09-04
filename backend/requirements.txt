@@ -1,0 +1,50 @@
+# VeriSure AI — Backend Runtime Dependencies
+# Python 3.10+
+# Pinned to versions verified in the reference environment (Windows x64, Python 3.10).
+
+# --- Web Framework ---
+fastapi==0.141.1
+uvicorn==0.48.0
+python-multipart==0.0.29
+email-validator==2.3.0
+pydantic==2.13.4
+pydantic-settings==2.15.0
+
+# --- Database & ORM ---
+SQLAlchemy==2.0.52
+aiosqlite==0.22.1
+alembic==1.19.1
+greenlet==3.5.5
+# For PostgreSQL in production (docker-compose.yml):
+psycopg2-binary==2.9.10
+asyncpg==0.31.0
+
+# --- Security / Auth ---
+PyJWT==2.13.0
+bcrypt==5.0.0
+
+# --- AI / Computer Vision ---
+numpy==2.2.6
+opencv-python==5.0.0.93
+opencv-contrib-python==5.0.0.93
+scipy==1.13.1
+scikit-image==0.25.2
+scikit-learn==1.7.2
+scikit-fuzzy==0.5.0
+pillow==12.3.0
+# OCR (optional: used automatically only if EasyOCR weights are cached locally;
+# torch is intentionally NOT pinned here to keep the image slim.
+# Install manually with: pip install easyocr if you want neural OCR.)
+# easyocr
+pytesseract==0.3.13
+zxing-cpp==3.1.1
+
+# --- PDF Report Generation ---
+reportlab==5.0.1
+
+# --- Utilities ---
+python-dotenv==1.2.2
+httpx==0.28.1
+
+# --- Testing ---
+pytest==9.1.1

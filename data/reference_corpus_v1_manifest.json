@@ -1,0 +1,504 @@
+{
+  "title": "VeriSure AI \u2014 Initial Reference Corpus V1 Manifest",
+  "ingested_at": "2026-09-03T15:35:13.542255",
+  "total_images": 12,
+  "products": {
+    "Amul Gold": 4,
+    "Amul Taaza": 4,
+    "Amul Shakti": 4
+  },
+  "records": [
+    {
+      "image_id": "GOLD-REF-001",
+      "product_name": "Amul Gold",
+      "variant_name": "Full Cream Milk",
+      "pack_size": "1L",
+      "pack_type": "POUCH",
+      "view_type": "FRONT",
+      "source_path": "C:/Users/PRAVASH/.gemini/antigravity/brain/9b1c4cea-9eea-48cb-a52d-b412aefbe88f/.user_uploaded/media_1788440125203.jpg",
+      "expected_sha256": "88c5574b5a78afa831b06022f7de06226278822e4418cbb41be589d738b18f7f",
+      "observed_barcode": null,
+      "observed_fssai": null,
+      "observed_net_qty": null,
+      "observed_mrp": null,
+      "provenance_notes": "Front view of 1L pouch packaging with Amul Gold logo, Amul Girl in chef hat, red/white wave design.",
+      "filename": "media_1788440125203.jpg",
+      "relative_path": "references/media_1788440125203.jpg",
+      "absolute_path": "C:\\Users\\PRAVASH\\Desktop\\VeriSure_Ai\\data\\storage\\references\\media_1788440125203.jpg",
+      "sha256": "88c5574b5a78afa831b06022f7de06226278822e4418cbb41be589d738b18f7f",
+      "dimensions": "500x500",
+      "file_size_bytes": 46386,
+      "quality_score": 0.78,
+      "quality_usable": true,
+      "blur_score": 1.0,
+      "extracted_barcode": null,
+      "extracted_qr": null,
+      "ocr_excerpt": "Amul GOLD Milky MiLK 31H05 Jc3 LcAILALD",
+      "color_features": {
+        "mean_hue": 44.51,
+        "mean_saturation": 28.95,
+        "mean_value": 237.75,
+        "color_space": "HSV"
+      },
+      "texture_features": {
+        "laplacian_variance": 1567.71,
+        "edge_energy": 7.86
+      },
+      "orb_features": {
+        "keypoint_count": 500,
+        "has_descriptors": true
+      }
+    },
+    {
+      "image_id": "GOLD-REF-002",
+      "product_name": "Amul Gold",
+      "variant_name": "Full Cream Milk",
+      "pack_size": "1L",
+      "pack_type": "POUCH",
+      "view_type": "BACK",
+      "source_path": "C:/Users/PRAVASH/.gemini/antigravity/brain/9b1c4cea-9eea-48cb-a52d-b412aefbe88f/.user_uploaded/media_1788440132882.jpg",
+      "expected_sha256": "ea311581f56163e78630aabc87e3129eca0fdca206de0c21debff3e965cf8679",
+      "observed_barcode": "8901262260114",
+      "observed_fssai": "10012021000071",
+      "observed_net_qty": "1 L",
+      "observed_mrp": null,
+      "provenance_notes": "Back view of 1L pouch packaging showing manufacturing units, barcode 8901262260114, FSSAI 10012021000071, and nutritional table.",
+      "filename": "media_1788440132882.jpg",
+      "relative_path": "references/media_1788440132882.jpg",
+      "absolute_path": "C:\\Users\\PRAVASH\\Desktop\\VeriSure_Ai\\data\\storage\\references\\media_1788440132882.jpg",
+      "sha256": "ea311581f56163e78630aabc87e3129eca0fdca206de0c21debff3e965cf8679",
+      "dimensions": "500x500",
+      "file_size_bytes": 35935,
+      "quality_score": 0.642,
+      "quality_usable": true,
+      "blur_score": 1.0,
+      "extracted_barcode": null,
+      "extracted_qr": null,
+      "ocr_excerpt": "Go@ Nel Conlent ; 10012021000071",
+      "color_features": {
+        "mean_hue": 27.57,
+        "mean_saturation": 5.61,
+        "mean_value": 242.36,
+        "color_space": "HSV"
+      },
+      "texture_features": {
+        "laplacian_variance": 1261.76,
+        "edge_energy": 4.26
+      },
+      "orb_features": {
+        "keypoint_count": 500,
+        "has_descriptors": true
+      }
+    },
+    {
+      "image_id": "GOLD-REF-003",
+      "product_name": "Amul Gold",
+      "variant_name": "Full Cream Milk",
+      "pack_size": "1L",
+      "pack_type": "POUCH",
+      "view_type": "DETAIL",
+      "source_path": "C:/Users/PRAVASH/.gemini/antigravity/brain/9b1c4cea-9eea-48cb-a52d-b412aefbe88f/.user_uploaded/media_1788440139783.jpg",
+      "expected_sha256": "7bd216d59d44660864f2ef9b618b8a09eba356b9f531d70eb864551cd9a7713e",
+      "observed_barcode": null,
+      "observed_fssai": null,
+      "observed_net_qty": null,
+      "observed_mrp": null,
+      "provenance_notes": "Detail panel macro crop of nutritional information per 100g with green veg symbol.",
+      "filename": "media_1788440139783.jpg",
+      "relative_path": "references/media_1788440139783.jpg",
+      "absolute_path": "C:\\Users\\PRAVASH\\Desktop\\VeriSure_Ai\\data\\storage\\references\\media_1788440139783.jpg",
+      "sha256": "7bd216d59d44660864f2ef9b618b8a09eba356b9f531d70eb864551cd9a7713e",
+      "dimensions": "500x500",
+      "file_size_bytes": 29324,
+      "quality_score": 0.806,
+      "quality_usable": true,
+      "blur_score": 1.0,
+      "extracted_barcode": null,
+      "extracted_qr": null,
+      "ocr_excerpt": "Amul FH etctofIndl NUTRITIONAL INFORMATION per 100g (approx. values} Energy; kcal 86.4 Total Carbohydrate; 5.0 Total fat",
+      "color_features": {
+        "mean_hue": 2.13,
+        "mean_saturation": 1.39,
+        "mean_value": 237.42,
+        "color_space": "HSV"
+      },
+      "texture_features": {
+        "laplacian_variance": 4700.44,
+        "edge_energy": 7.48
+      },
+      "orb_features": {
+        "keypoint_count": 500,
+        "has_descriptors": true
+      }
+    },
+    {
+      "image_id": "GOLD-REF-004",
+      "product_name": "Amul Gold",
+      "variant_name": "Full Cream Milk",
+      "pack_size": "1L",
+      "pack_type": "POUCH",
+      "view_type": "DETAIL",
+      "source_path": "C:/Users/PRAVASH/.gemini/antigravity/brain/9b1c4cea-9eea-48cb-a52d-b412aefbe88f/.user_uploaded/media_1788440147040.jpg",
+      "expected_sha256": "61c16ee54bd282403c177404286378a9a177590383e7eb620c174bd05c706310",
+      "observed_barcode": null,
+      "observed_fssai": null,
+      "observed_net_qty": null,
+      "observed_mrp": null,
+      "provenance_notes": "Detail panel crop of refrigeration and storage instructions.",
+      "filename": "media_1788440147040.jpg",
+      "relative_path": "references/media_1788440147040.jpg",
+      "absolute_path": "C:\\Users\\PRAVASH\\Desktop\\VeriSure_Ai\\data\\storage\\references\\media_1788440147040.jpg",
+      "sha256": "61c16ee54bd282403c177404286378a9a177590383e7eb620c174bd05c706310",
+      "dimensions": "500x500",
+      "file_size_bytes": 23434,
+      "quality_score": 0.839,
+      "quality_usable": true,
+      "blur_score": 1.0,
+      "extracted_barcode": null,
+      "extracted_qr": null,
+      "ocr_excerpt": "Amul Thc Tattce( Indis FOR BEST RESULTS, STORE CONTINUOUSLY UNDER REFRIGERATION BELOW 8P\u20ac UNTIL \"USE-BY DATE\" Amul Pouch",
+      "color_features": {
+        "mean_hue": 7.12,
+        "mean_saturation": 3.68,
+        "mean_value": 235.39,
+        "color_space": "HSV"
+      },
+      "texture_features": {
+        "laplacian_variance": 1937.09,
+        "edge_energy": 5.09
+      },
+      "orb_features": {
+        "keypoint_count": 500,
+        "has_descriptors": true
+      }
+    },
+    {
+      "image_id": "TAZA-REF-001",
+      "product_name": "Amul Taaza",
+      "variant_name": "Toned Milk",
+      "pack_size": "1L",
+      "pack_type": "POUCH",
+      "view_type": "FRONT",
+      "source_path": "C:/Users/PRAVASH/.gemini/antigravity/brain/9b1c4cea-9eea-48cb-a52d-b412aefbe88f/.user_uploaded/media_1788440168117.jpg",
+      "expected_sha256": "cd81235bb8e186d062a334cab6795e51f740b8596ced37dac7de322961887891",
+      "observed_barcode": null,
+      "observed_fssai": null,
+      "observed_net_qty": null,
+      "observed_mrp": null,
+      "provenance_notes": "Front view of 1L pouch packaging with Amul Taaza logo, girl holding tray of milk glasses, blue wave graphic.",
+      "filename": "media_1788440168117.jpg",
+      "relative_path": "references/media_1788440168117.jpg",
+      "absolute_path": "C:\\Users\\PRAVASH\\Desktop\\VeriSure_Ai\\data\\storage\\references\\media_1788440168117.jpg",
+      "sha256": "cd81235bb8e186d062a334cab6795e51f740b8596ced37dac7de322961887891",
+      "dimensions": "500x500",
+      "file_size_bytes": 47390,
+      "quality_score": 0.775,
+      "quality_usable": true,
+      "blur_score": 1.0,
+      "extracted_barcode": null,
+      "extracted_qr": null,
+      "ocr_excerpt": "Amul Taaza Kky U 31H05 clloll Fca 7xu 0StfupiSFO OogeNiCED TONFDMiLK El minimut SNF RSS minimi m",
+      "color_features": {
+        "mean_hue": 36.67,
+        "mean_saturation": 28.42,
+        "mean_value": 237.11,
+        "color_space": "HSV"
+      },
+      "texture_features": {
+        "laplacian_variance": 1453.46,
+        "edge_energy": 7.37
+      },
+      "orb_features": {
+        "keypoint_count": 500,
+        "has_descriptors": true
+      }
+    },
+    {
+      "image_id": "TAZA-REF-002",
+      "product_name": "Amul Taaza",
+      "variant_name": "Toned Milk",
+      "pack_size": "1L",
+      "pack_type": "POUCH",
+      "view_type": "BACK",
+      "source_path": "C:/Users/PRAVASH/.gemini/antigravity/brain/9b1c4cea-9eea-48cb-a52d-b412aefbe88f/.user_uploaded/media_1788440175260.jpg",
+      "expected_sha256": "7d4c002351d0f07f4829b3bbffece98fe2e24614f7ff864109c25cd492484ca1",
+      "observed_barcode": "8901262260091",
+      "observed_fssai": "10012021000071",
+      "observed_net_qty": "1 L",
+      "observed_mrp": null,
+      "provenance_notes": "Back view of 1L pouch packaging showing barcode 8901262260091, QR code, FSSAI 10012021000071, and nutritional panel.",
+      "filename": "media_1788440175260.jpg",
+      "relative_path": "references/media_1788440175260.jpg",
+      "absolute_path": "C:\\Users\\PRAVASH\\Desktop\\VeriSure_Ai\\data\\storage\\references\\media_1788440175260.jpg",
+      "sha256": "7d4c002351d0f07f4829b3bbffece98fe2e24614f7ff864109c25cd492484ca1",
+      "dimensions": "500x500",
+      "file_size_bytes": 43589,
+      "quality_score": 0.679,
+      "quality_usable": true,
+      "blur_score": 1.0,
+      "extracted_barcode": null,
+      "extracted_qr": null,
+      "ocr_excerpt": "Did YCJ aboul Kricilab IDAlIx4 67 [a0itt Emr5y (zp Jcttuls  cubotreulelul Maann Calanar Jeul Cotuni #ccn0 ECHDONLO Unlab",
+      "color_features": {
+        "mean_hue": 22.82,
+        "mean_saturation": 7.28,
+        "mean_value": 239.78,
+        "color_space": "HSV"
+      },
+      "texture_features": {
+        "laplacian_variance": 1701.49,
+        "edge_energy": 5.97
+      },
+      "orb_features": {
+        "keypoint_count": 500,
+        "has_descriptors": true
+      }
+    },
+    {
+      "image_id": "TAZA-REF-003",
+      "product_name": "Amul Taaza",
+      "variant_name": "Toned Milk",
+      "pack_size": "1L",
+      "pack_type": "POUCH",
+      "view_type": "DETAIL",
+      "source_path": "C:/Users/PRAVASH/.gemini/antigravity/brain/9b1c4cea-9eea-48cb-a52d-b412aefbe88f/.user_uploaded/media_1788440184370.jpg",
+      "expected_sha256": "310718d68569a90dcd07d632569c86bcb8787f830e4dfbbb830a13c4cffbdc06",
+      "observed_barcode": null,
+      "observed_fssai": null,
+      "observed_net_qty": null,
+      "observed_mrp": null,
+      "provenance_notes": "Detail panel macro crop of nutritional table per 100 mL with green veg symbol.",
+      "filename": "media_1788440184370.jpg",
+      "relative_path": "references/media_1788440184370.jpg",
+      "absolute_path": "C:\\Users\\PRAVASH\\Desktop\\VeriSure_Ai\\data\\storage\\references\\media_1788440184370.jpg",
+      "sha256": "310718d68569a90dcd07d632569c86bcb8787f830e4dfbbb830a13c4cffbdc06",
+      "dimensions": "500x500",
+      "file_size_bytes": 45293,
+      "quality_score": 0.836,
+      "quality_usable": true,
+      "blur_score": 1.0,
+      "extracted_barcode": null,
+      "extracted_qr": null,
+      "ocr_excerpt": "Amul Nutritional Information 5 servings per container Serving size 200 mL Amount per 100 mL % RDA Energy (kcal) Tota Fat",
+      "color_features": {
+        "mean_hue": 3.65,
+        "mean_saturation": 2.13,
+        "mean_value": 233.06,
+        "color_space": "HSV"
+      },
+      "texture_features": {
+        "laplacian_variance": 7218.91,
+        "edge_energy": 12.68
+      },
+      "orb_features": {
+        "keypoint_count": 500,
+        "has_descriptors": true
+      }
+    },
+    {
+      "image_id": "TAZA-REF-004",
+      "product_name": "Amul Taaza",
+      "variant_name": "Toned Milk",
+      "pack_size": "1L",
+      "pack_type": "POUCH",
+      "view_type": "DETAIL",
+      "source_path": "C:/Users/PRAVASH/.gemini/antigravity/brain/9b1c4cea-9eea-48cb-a52d-b412aefbe88f/.user_uploaded/media_1788440198814.jpg",
+      "expected_sha256": "032faf82a91fa526eb4a910450a30fc8e1c89c523790bcdb7cafc3a94db997f9",
+      "observed_barcode": null,
+      "observed_fssai": null,
+      "observed_net_qty": null,
+      "observed_mrp": null,
+      "provenance_notes": "Detail panel crop of refrigeration and consumption storage instructions.",
+      "filename": "media_1788440198814.jpg",
+      "relative_path": "references/media_1788440198814.jpg",
+      "absolute_path": "C:\\Users\\PRAVASH\\Desktop\\VeriSure_Ai\\data\\storage\\references\\media_1788440198814.jpg",
+      "sha256": "032faf82a91fa526eb4a910450a30fc8e1c89c523790bcdb7cafc3a94db997f9",
+      "dimensions": "500x500",
+      "file_size_bytes": 28828,
+      "quality_score": 0.811,
+      "quality_usable": true,
+      "blur_score": 1.0,
+      "extracted_barcode": null,
+      "extracted_qr": null,
+      "ocr_excerpt": "Amul Keep REFRIGERATED AT 4C OR BELOW FOR STORAGE, BOLL the MLlk COOL,STORE IN CHILLER SECTHON OR RACk BELOW CHILLER SEC",
+      "color_features": {
+        "mean_hue": 3.65,
+        "mean_saturation": 2.13,
+        "mean_value": 237.55,
+        "color_space": "HSV"
+      },
+      "texture_features": {
+        "laplacian_variance": 4030.9,
+        "edge_energy": 8.5
+      },
+      "orb_features": {
+        "keypoint_count": 500,
+        "has_descriptors": true
+      }
+    },
+    {
+      "image_id": "SHAKTI-REF-001",
+      "product_name": "Amul Shakti",
+      "variant_name": "Standardised Milk",
+      "pack_size": "500ml",
+      "pack_type": "POUCH",
+      "view_type": "FRONT",
+      "source_path": "C:/Users/PRAVASH/.gemini/antigravity/brain/9b1c4cea-9eea-48cb-a52d-b412aefbe88f/.user_uploaded/media_1788440237491.jpg",
+      "expected_sha256": "0bfc640bc967e4f28ee21dd807e4706d44bb7266c57692a8d0f6cdc6140bbada",
+      "observed_barcode": null,
+      "observed_fssai": null,
+      "observed_net_qty": null,
+      "observed_mrp": null,
+      "provenance_notes": "Front view of 500 mL pouch packaging with Amul Shakti logo, girl flexing with dumbbells, green wave graphic.",
+      "filename": "media_1788440237491.jpg",
+      "relative_path": "references/media_1788440237491.jpg",
+      "absolute_path": "C:\\Users\\PRAVASH\\Desktop\\VeriSure_Ai\\data\\storage\\references\\media_1788440237491.jpg",
+      "sha256": "0bfc640bc967e4f28ee21dd807e4706d44bb7266c57692a8d0f6cdc6140bbada",
+      "dimensions": "500x500",
+      "file_size_bytes": 34840,
+      "quality_score": 0.79,
+      "quality_usable": true,
+      "blur_score": 1.0,
+      "extracted_barcode": null,
+      "extracted_qr": null,
+      "ocr_excerpt": "Amul SHAKTI MKY MI < nnyt Ta3t VHE",
+      "color_features": {
+        "mean_hue": 26.57,
+        "mean_saturation": 19.52,
+        "mean_value": 233.9,
+        "color_space": "HSV"
+      },
+      "texture_features": {
+        "laplacian_variance": 987.47,
+        "edge_energy": 4.81
+      },
+      "orb_features": {
+        "keypoint_count": 500,
+        "has_descriptors": true
+      }
+    },
+    {
+      "image_id": "SHAKTI-REF-002",
+      "product_name": "Amul Shakti",
+      "variant_name": "Standardised Milk",
+      "pack_size": "500ml",
+      "pack_type": "POUCH",
+      "view_type": "BACK",
+      "source_path": "C:/Users/PRAVASH/.gemini/antigravity/brain/9b1c4cea-9eea-48cb-a52d-b412aefbe88f/.user_uploaded/media_1788440250225.jpg",
+      "expected_sha256": "2951972266effaa3be3cbb80081d065e1fde68aa4695712b2507b0411bf97546",
+      "observed_barcode": "8901262260138",
+      "observed_fssai": "10012021000071",
+      "observed_net_qty": "500 mL",
+      "observed_mrp": null,
+      "provenance_notes": "Back view of 500 mL pouch packaging showing barcode 8901262260138, FSSAI 10012021000071, and nutritional table.",
+      "filename": "media_1788440250225.jpg",
+      "relative_path": "references/media_1788440250225.jpg",
+      "absolute_path": "C:\\Users\\PRAVASH\\Desktop\\VeriSure_Ai\\data\\storage\\references\\media_1788440250225.jpg",
+      "sha256": "2951972266effaa3be3cbb80081d065e1fde68aa4695712b2507b0411bf97546",
+      "dimensions": "500x500",
+      "file_size_bytes": 38991,
+      "quality_score": 0.719,
+      "quality_usable": true,
+      "blur_score": 1.0,
+      "extracted_barcode": null,
+      "extracted_qr": null,
+      "ocr_excerpt": "4u ShaktI Net Content = 500 mL KaaHnemhicimamae Lul 1001202100007- Fqa DESI AE?ULIS SIQA cytiriinisly Cacer *FrIGE ATl0k",
+      "color_features": {
+        "mean_hue": 26.95,
+        "mean_saturation": 4.78,
+        "mean_value": 237.37,
+        "color_space": "HSV"
+      },
+      "texture_features": {
+        "laplacian_variance": 2210.87,
+        "edge_energy": 5.46
+      },
+      "orb_features": {
+        "keypoint_count": 500,
+        "has_descriptors": true
+      }
+    },
+    {
+      "image_id": "SHAKTI-REF-003",
+      "product_name": "Amul Shakti",
+      "variant_name": "Standardised Milk",
+      "pack_size": "500ml",
+      "pack_type": "POUCH",
+      "view_type": "DETAIL",
+      "source_path": "C:/Users/PRAVASH/.gemini/antigravity/brain/9b1c4cea-9eea-48cb-a52d-b412aefbe88f/.user_uploaded/media_1788440258275.jpg",
+      "expected_sha256": "508dd94163b0019baf745cfaa94a8c4007b2d6aa7a7debe286351df96a75d14c",
+      "observed_barcode": null,
+      "observed_fssai": null,
+      "observed_net_qty": null,
+      "observed_mrp": null,
+      "provenance_notes": "Detail panel macro crop of nutritional table per 100g with green veg symbol.",
+      "filename": "media_1788440258275.jpg",
+      "relative_path": "references/media_1788440258275.jpg",
+      "absolute_path": "C:\\Users\\PRAVASH\\Desktop\\VeriSure_Ai\\data\\storage\\references\\media_1788440258275.jpg",
+      "sha256": "508dd94163b0019baf745cfaa94a8c4007b2d6aa7a7debe286351df96a75d14c",
+      "dimensions": "500x500",
+      "file_size_bytes": 30312,
+      "quality_score": 0.806,
+      "quality_usable": true,
+      "blur_score": 1.0,
+      "extracted_barcode": null,
+      "extracted_qr": null,
+      "ocr_excerpt": "Amul Tk Tutun( Indu NUTRITIONAL INFORMATION per 10Og (approx. values) kcal 71.3 Total Carbohydrate; g Total fat, g Added",
+      "color_features": {
+        "mean_hue": 2.13,
+        "mean_saturation": 1.4,
+        "mean_value": 237.41,
+        "color_space": "HSV"
+      },
+      "texture_features": {
+        "laplacian_variance": 4704.9,
+        "edge_energy": 7.35
+      },
+      "orb_features": {
+        "keypoint_count": 500,
+        "has_descriptors": true
+      }
+    },
+    {
+      "image_id": "SHAKTI-REF-004",
+      "product_name": "Amul Shakti",
+      "variant_name": "Standardised Milk",
+      "pack_size": "500ml",
+      "pack_type": "POUCH",
+      "view_type": "DETAIL",
+      "source_path": "C:/Users/PRAVASH/.gemini/antigravity/brain/9b1c4cea-9eea-48cb-a52d-b412aefbe88f/.user_uploaded/media_1788440267324.jpg",
+      "expected_sha256": "97977e5b14e892eb839a5cb31c2ab6adee35beb54f7f5652c5d337d86dc81992",
+      "observed_barcode": null,
+      "observed_fssai": null,
+      "observed_net_qty": null,
+      "observed_mrp": null,
+      "provenance_notes": "Detail panel crop of refrigeration and storage instructions.",
+      "filename": "media_1788440267324.jpg",
+      "relative_path": "references/media_1788440267324.jpg",
+      "absolute_path": "C:\\Users\\PRAVASH\\Desktop\\VeriSure_Ai\\data\\storage\\references\\media_1788440267324.jpg",
+      "sha256": "97977e5b14e892eb839a5cb31c2ab6adee35beb54f7f5652c5d337d86dc81992",
+      "dimensions": "500x500",
+      "file_size_bytes": 23938,
+      "quality_score": 0.84,
+      "quality_usable": true,
+      "blur_score": 1.0,
+      "extracted_barcode": null,
+      "extracted_qr": null,
+      "ocr_excerpt": "Amul Tk Tuatenf Indb FOR BEST RESULTS, STORE CONTINUOUSLY UNDER REFRIGERATION BELOW 82\u20ac UNTIL \"USE-BY DATE\" Amul Pouch M",
+      "color_features": {
+        "mean_hue": 7.25,
+        "mean_saturation": 3.77,
+        "mean_value": 235.4,
+        "color_space": "HSV"
+      },
+      "texture_features": {
+        "laplacian_variance": 2230.99,
+        "edge_energy": 5.12
+      },
+      "orb_features": {
+        "keypoint_count": 500,
+        "has_descriptors": true
+      }
+    }
+  ]
+}

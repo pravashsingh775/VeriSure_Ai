@@ -1,0 +1,59 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+
+# Data and Storage (Exclude dynamic user scans and generated reports; keep ground-truth reference corpus)
+data/storage/raw_scans/*
+!data/storage/raw_scans/.gitkeep
+data/storage/crops/*
+!data/storage/crops/.gitkeep
+data/storage/heatmaps/*
+!data/storage/heatmaps/.gitkeep
+data/storage/reports/*
+!data/storage/reports/.gitkeep
+data/storage/temp/*
+!data/storage/temp/.gitkeep
+
+# Ensure official Reference Corpus V1 images are tracked in git
+!data/storage/references/
+!data/storage/references/*
+
+# Database
+*.db
+*.db.*
+*.sqlite
+*.sqlite3
+*.backup
+
+# Node / Frontend
+node_modules/
+dist/
+build/
+*.local
+
+# OS generated
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDEs
+.vscode/
+.idea/
+
+# Testing / Coverage
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Logs
+*.log
+
