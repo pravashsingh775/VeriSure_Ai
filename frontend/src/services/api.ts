@@ -20,6 +20,22 @@ export const apiClient = axios.create({
   },
 });
 
+export const resolveStorageUrl = (path: string | null | undefined): string | null => {
+  if (!path) return null;
+  const clean = path.trim();
+  if (!clean) return null;
+  if (clean.startsWith('http://') || clean.startsWith('https://') || clean.startsWith('data:')) {
+    return clean;
+  }
+  if (clean.startsWith('/data/storage/')) {
+    return clean;
+  }
+  if (clean.startsWith('data/storage/')) {
+    return `/${clean}`;
+  }
+  return `/data/storage/${clean.replace(/^\/+/, '')}`;
+};
+
 // Attach Authorization header if token exists
 apiClient.interceptors.request.use((config) => {
   const token = localStorage.getItem('verisure_token');

@@ -1,7 +1,12 @@
+import sys
 import sqlite3
 import json
 from datetime import datetime
 from pathlib import Path
+
+REPO_ROOT = Path(__file__).resolve().parent.parent.parent
+sys.path.insert(0, str(REPO_ROOT))
+
 from sqlalchemy import create_engine
 from psycopg2.extras import Json
 import psycopg2
@@ -9,7 +14,7 @@ from backend.app.core.config import settings
 from backend.app.core.database import BaseModel
 import backend.app.models
 
-sqlite_path = r"c:\Users\PRAVASH\Desktop\VeriSure_Ai\verisure.db"
+sqlite_path = REPO_ROOT / "verisure.db"
 
 TABLES_ORDER = [
     "roles",

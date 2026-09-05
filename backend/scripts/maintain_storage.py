@@ -29,6 +29,9 @@ logging.basicConfig(
 logger = logging.getLogger("maintain_storage")
 
 REPO_ROOT = Path(__file__).resolve().parent.parent.parent
+sys.path.insert(0, str(REPO_ROOT))
+from backend.app.core.config import settings
+
 DATA_DIR = REPO_ROOT / "data"
 STORAGE_DIR = DATA_DIR / "storage"
 
@@ -75,20 +78,26 @@ def ensure_storage_directories() -> Dict[str, bool]:
 
 
 def get_db_connection():
-    """Establishes connection to PostgreSQL using environment or standard credentials."""
-    db_user = os.getenv("POSTGRES_USER", "verisure_app")
-    db_pass = os.getenv("POSTGRES_PASSWORD", "verisure_secure_pass_2026")
-    db_host = os.getenv("POSTGRES_HOST", "172.30.74.29")
-    db_port = int(os.getenv("POSTGRES_PORT", "5432"))
-    db_name = os.getenv("POSTGRES_DB", "verisure_db")
+    """Establishes connection to PostgreSQL using settings or environment credentials."""
+    sync_url = settings.DATABASE_SYNC_URL
+    if "postgresql+psycopg2://" in sync_url:
+        sync_url = sync_url.replace("postgresql+psycopg2://", "postgresql://")
+    try:
+        return psycopg2.connect(sync_url)
+    except Exception:
+        db_user = os.getenv("POSTGRES_USER", "verisure_app")
+        db_pass = os.getenv("POSTGRES_PASSWORD", "verisure_secure_pass_2026")
+        db_host = os.getenv("POSTGRES_HOST", "localhost")
+        db_port = int(os.getenv("POSTGRES_PORT", "5432"))
+        db_name = os.getenv("POSTGRES_DB", "verisure_db")
 
-    return psycopg2.connect(
-        user=db_user,
-        password=db_pass,
-        host=db_host,
-        port=db_port,
-        dbname=db_name
-    )
+        return psycopg2.connect(
+            user=db_user,
+            password=db_pass,
+            host=db_host,
+            port=db_port,
+            dbname=db_name
+        )
 
 
 def audit_storage() -> Dict:

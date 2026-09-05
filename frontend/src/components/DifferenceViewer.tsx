@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Layers } from 'lucide-react';
 import type { RegionBox, ScanImageDetail } from '../types';
+import { resolveStorageUrl } from '../services/api';
 
 interface DifferenceViewerProps {
   imageDetail: ScanImageDetail;
@@ -17,8 +18,10 @@ export const DifferenceViewer: React.FC<DifferenceViewerProps> = ({
   const [cropError, setCropError] = useState(false);
   const [heatError, setHeatError] = useState(false);
 
-  const cropUrl = imageDetail.crop_path && !cropError ? `/data/storage/${imageDetail.crop_path}` : null;
-  const heatUrl = imageDetail.heatmap_path && !heatError ? `/data/storage/${imageDetail.heatmap_path}` : null;
+  const rawCropUrl = resolveStorageUrl(imageDetail.crop_path);
+  const rawHeatUrl = resolveStorageUrl(imageDetail.heatmap_path);
+  const cropUrl = rawCropUrl && !cropError ? rawCropUrl : null;
+  const heatUrl = rawHeatUrl && !heatError ? rawHeatUrl : null;
 
   return (
     <div className="bg-white rounded-2xl border border-slate-200 p-5 shadow-xs">

@@ -14,7 +14,7 @@ import {
   TrendingUp,
   X,
 } from 'lucide-react';
-import { brandApi } from '../services/api';
+import { brandApi, resolveStorageUrl } from '../services/api';
 import type { BrandAnalytics, ReferenceImage } from '../types';
 
 export const BrandPortal: React.FC = () => {
@@ -172,7 +172,7 @@ export const BrandPortal: React.FC = () => {
                 >
                   <div className="relative bg-slate-100 aspect-4/3 overflow-hidden flex items-center justify-center">
                     <img
-                      src={`/data/storage/${ref.image_path}`}
+                      src={resolveStorageUrl(ref.image_path) || ''}
                       alt={ref.original_filename || ref.view_type}
                       className="w-full h-full object-contain p-2 group-hover:scale-105 transition-transform duration-300"
                       loading="lazy"
@@ -390,7 +390,7 @@ export const BrandPortal: React.FC = () => {
 
             <div className="p-4 bg-slate-100 flex items-center justify-center max-h-[60vh] overflow-hidden">
               <img
-                src={`/data/storage/${selectedImage.image_path}`}
+                src={resolveStorageUrl(selectedImage.image_path) || ''}
                 alt={selectedImage.original_filename || selectedImage.view_type}
                 className="max-h-[55vh] w-auto object-contain rounded-lg shadow-sm"
                 onError={(e) => {

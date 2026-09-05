@@ -65,6 +65,7 @@ app.add_middleware(
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
+    expose_headers=["X-Request-ID", "Content-Disposition"],
 )
 
 import logging
@@ -134,23 +135,66 @@ async def root():
     }
 
 
+from sqlalchemy import text
+from backend.app.core.database import AsyncSessionLocal
+
+
 @app.get("/health", tags=["Health"])
 async def health():
-    return {
-        "status": "healthy",
-        "environment": settings.ENVIRONMENT,
-        "storage": settings.STORAGE_PROVIDER,
-        "database": "connected"
-    }
+    db_status = "connected"
+    overall_status = "healthy"
+    status_code = 200
+
+    try:
+        async with AsyncSessionLocal() as session:
+            await session.execute(text("SELECT 1"))
+    except Exception as e:
+        logger.error(f"Health probe database check failed: {e}")
+        db_status = "disconnected"
+        overall_status = "unhealthy"
+        status_code = 503
+
+    return JSONResponse(
+        status_code=status_code,
+        content={
+            "status": overall_status,
+            "environment": settings.ENVIRONMENT,
+            "storage": settings.STORAGE_PROVIDER,
+            "database": db_status
+        }
+    )
 
 
 from pathlib import Path
 from fastapi.responses import FileResponse
 frontend_dist = Path(__file__).resolve().parent.parent.parent / "frontend" / "dist"
-if frontend_dist.exists() and (frontend_dist / "assets").exists():
-    app.mount("/assets", StaticFiles(directory=str(frontend_dist / "assets")), name="frontend_assets")
+if frontend_dist.exists():
+    if (frontend_dist / "assets").exists():
+        app.mount("/assets", StaticFiles(directory=str(frontend_dist / "assets")), name="frontend_assets")
+
+    @app.get("/favicon.svg", include_in_schema=False)
+    async def favicon_svg():
+        fav = frontend_dist / "favicon.svg"
+        if fav.exists():
+            return FileResponse(fav, media_type="image/svg+xml")
+        return JSONResponse(status_code=404, content={"detail": "Not found"})
+
+    @app.get("/favicon.ico", include_in_schema=False)
+    async def favicon_ico():
+        fav = frontend_dist / "favicon.svg"
+        if fav.exists():
+            return FileResponse(fav, media_type="image/svg+xml")
+        return JSONResponse(status_code=404, content={"detail": "Not found"})
+
+    @app.get("/icons.svg", include_in_schema=False)
+    async def icons_svg():
+        icons = frontend_dist / "icons.svg"
+        if icons.exists():
+            return FileResponse(icons, media_type="image/svg+xml")
+        return JSONResponse(status_code=404, content={"detail": "Not found"})
 
     @app.get("/app", include_in_schema=False)
     @app.get("/app/{full_path:path}", include_in_schema=False)
     async def serve_spa(full_path: str = ""):
         return FileResponse(frontend_dist / "index.html")
+

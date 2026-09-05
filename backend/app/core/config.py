@@ -63,6 +63,37 @@ class Settings(BaseSettings):
     DATABASE_URL: str = "postgresql+asyncpg://verisure_app:verisure_secure_pass_2026@localhost:5432/verisure_db"
     DATABASE_SYNC_URL: str = "postgresql+psycopg2://verisure_app:verisure_secure_pass_2026@localhost:5432/verisure_db"
 
+    @field_validator("DATABASE_URL", mode="before")
+    @classmethod
+    def assemble_async_db_url(cls, v: Optional[str], info) -> str:
+        if isinstance(v, str) and v.strip():
+            return v
+        values = info.data
+        user = values.get("POSTGRES_USER")
+        password = values.get("POSTGRES_PASSWORD")
+        host = values.get("POSTGRES_HOST")
+        port = values.get("POSTGRES_PORT", 5432)
+        db = values.get("POSTGRES_DB")
+        if user and password and host and db:
+            return f"postgresql+asyncpg://{user}:{password}@{host}:{port}/{db}"
+        return "postgresql+asyncpg://verisure_app:verisure_secure_pass_2026@localhost:5432/verisure_db"
+
+    @field_validator("DATABASE_SYNC_URL", mode="before")
+    @classmethod
+    def assemble_sync_db_url(cls, v: Optional[str], info) -> str:
+        if isinstance(v, str) and v.strip():
+            return v
+        values = info.data
+        user = values.get("POSTGRES_USER")
+        password = values.get("POSTGRES_PASSWORD")
+        host = values.get("POSTGRES_HOST")
+        port = values.get("POSTGRES_PORT", 5432)
+        db = values.get("POSTGRES_DB")
+        if user and password and host and db:
+            return f"postgresql+psycopg2://{user}:{password}@{host}:{port}/{db}"
+        return "postgresql+psycopg2://verisure_app:verisure_secure_pass_2026@localhost:5432/verisure_db"
+
+
     # Storage
     STORAGE_PROVIDER: str = "local"
     STORAGE_LOCAL_DIR: str = "./data/storage"

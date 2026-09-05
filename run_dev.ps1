@@ -60,8 +60,13 @@ try {
 } catch {}
 
 if (-not $dbReachable) {
-    # Check WSL Ubuntu host IP from .env
+    # Dynamically query WSL Ubuntu IP if available, with static fallback
     $wslIp = "172.30.74.29"
+    try {
+        $detectedIp = (& wsl -d Ubuntu -e hostname -I 2>$null).Trim().Split(' ')[0]
+        if ($detectedIp -and $detectedIp.Length -ge 7) { $wslIp = $detectedIp }
+    } catch {}
+
     try {
         $tcpWsl = Test-NetConnection -ComputerName $wslIp -Port 5432 -InformationLevel Quiet -WarningAction SilentlyContinue
         if ($tcpWsl) { $dbReachable = $true }
