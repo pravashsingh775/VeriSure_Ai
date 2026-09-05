@@ -1,0 +1,98 @@
+[
+  {
+    "image_id": "SYN-TAMPER-SEAL-001",
+    "label": "SYNTHETIC_TAMPER",
+    "provenance_status": "SYNTHETIC_TEST_STUB",
+    "verification_status": "PENDING_REVIEW",
+    "license_status": "INTERNAL_RESEARCH_ONLY",
+    "variant": "AMUL_GOLD",
+    "tamper_type": "SEAL_CRIMP_RESEAL_SMOOTHED",
+    "base_reference": "media_1788440125203.jpg",
+    "description": "Top seal crimp ridges blurred and smoothed simulating manual hot-iron resealing.",
+    "filename": "syn-tamper-seal-001_amul_gold.png",
+    "relative_path": "synthetic_tampers/syn-tamper-seal-001_amul_gold.png",
+    "absolute_path": "C:\\Users\\PRAVASH\\Desktop\\VeriSure_Ai\\data\\storage\\synthetic_tampers\\syn-tamper-seal-001_amul_gold.png",
+    "sha256": "609f509f1d3b52272f9060863b06cfc58b19720bbd4418c9c047f6903ac0a911",
+    "hashes": {
+      "phash": "e9c96d9632b29233",
+      "dhash": "4363332b2b650f23",
+      "whash": "f1f1f98181f7a181"
+    },
+    "dimensions": "500x500",
+    "file_size_bytes": 206539,
+    "quality_score": 0.732,
+    "quality_status": "GOOD"
+  },
+  {
+    "image_id": "SYN-TAMPER-BARCODE-001",
+    "label": "SYNTHETIC_TAMPER",
+    "provenance_status": "SYNTHETIC_TEST_STUB",
+    "verification_status": "PENDING_REVIEW",
+    "license_status": "INTERNAL_RESEARCH_ONLY",
+    "variant": "AMUL_GOLD",
+    "tamper_type": "BARCODE_CHECKSUM_ALTERATION",
+    "base_reference": "media_1788440132882.jpg",
+    "description": "Barcode digits altered causing EAN-13 modulo-10 checksum invalidation.",
+    "filename": "syn-tamper-barcode-001_amul_gold.png",
+    "relative_path": "synthetic_tampers/syn-tamper-barcode-001_amul_gold.png",
+    "absolute_path": "C:\\Users\\PRAVASH\\Desktop\\VeriSure_Ai\\data\\storage\\synthetic_tampers\\syn-tamper-barcode-001_amul_gold.png",
+    "sha256": "b9d80a207471a9d8966cb6b37cc6e1dbcf5a2fbefde27f5e13036de096534e10",
+    "hashes": {
+      "phash": "acd24ec573389e91",
+      "dhash": "4d27333b47263723",
+      "whash": "ed919d81a3bb9381"
+    },
+    "dimensions": "500x500",
+    "file_size_bytes": 188579,
+    "quality_score": 0.597,
+    "quality_status": "ACCEPTABLE"
+  },
+  {
+    "image_id": "SYN-TAMPER-LOGO-COLOR-001",
+    "label": "SYNTHETIC_TAMPER",
+    "provenance_status": "SYNTHETIC_TEST_STUB",
+    "verification_status": "PENDING_REVIEW",
+    "license_status": "INTERNAL_RESEARCH_ONLY",
+    "variant": "AMUL_TAAZA",
+    "tamper_type": "LOGO_CHROMATIC_MISREGISTRATION",
+    "base_reference": "media_1788440168117.jpg",
+    "description": "Amul Taaza wave color shifted from official blue to anomalous hue.",
+    "filename": "syn-tamper-logo-color-001_amul_taaza.png",
+    "relative_path": "synthetic_tampers/syn-tamper-logo-color-001_amul_taaza.png",
+    "absolute_path": "C:\\Users\\PRAVASH\\Desktop\\VeriSure_Ai\\data\\storage\\synthetic_tampers\\syn-tamper-logo-color-001_amul_taaza.png",
+    "sha256": "d912c648e05919f0bcc3af66f05a7163c90cc128fd7400740511e1c7edf15901",
+    "hashes": {
+      "phash": "eac969943436963b",
+      "dhash": "6373632535350d33",
+      "whash": "f1f9b19195b5a181"
+    },
+    "dimensions": "500x500",
+    "file_size_bytes": 222999,
+    "quality_score": 0.724,
+    "quality_status": "GOOD"
+  },
+  {
+    "image_id": "SYN-TAMPER-TYPO-001",
+    "label": "SYNTHETIC_TAMPER",
+    "provenance_status": "SYNTHETIC_TEST_STUB",
+    "verification_status": "PENDING_REVIEW",
+    "license_status": "INTERNAL_RESEARCH_ONLY",
+    "variant": "AMUL_SHAKTI",
+    "tamper_type": "TYPOGRAPHY_FONT_WEIGHT_ANOMALY",
+    "base_reference": "media_1788440237491.jpg",
+    "description": "Product title typography modified with non-standard stroke thickness.",
+    "filename": "syn-tamper-typo-001_amul_shakti.png",
+    "relative_path": "synthetic_tampers/syn-tamper-typo-001_amul_shakti.png",
+    "absolute_path": "C:\\Users\\PRAVASH\\Desktop\\VeriSure_Ai\\data\\storage\\synthetic_tampers\\syn-tamper-typo-001_amul_shakti.png",
+    "sha256": "aa4aa127aca3e5a6f43883e64e7cbe7797f472c497b26bb6c7008fbaca6656de",
+    "hashes": {
+      "phash": "ebc19192946fc16d",
+      "dhash": "8c53632b2b4b2b31",
+      "whash": "ff81b18191a181ff"
+    },
+    "dimensions": "500x500",
+    "file_size_bytes": 161663,
+    "quality_score": 0.734,
+    "quality_status": "GOOD"
+  }
+]

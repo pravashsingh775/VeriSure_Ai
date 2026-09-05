@@ -27,6 +27,14 @@ data/storage/temp/*
 !data/storage/references/
 !data/storage/references/*
 
+# Ensure official Reference Corpus V2, synthetic tampers, and negative benchmark samples are tracked
+!data/storage/references_v2/
+!data/storage/references_v2/*
+!data/storage/synthetic_tampers/
+!data/storage/synthetic_tampers/*
+!data/storage/negative_samples/
+!data/storage/negative_samples/*
+
 # Database
 *.db
 *.db.*

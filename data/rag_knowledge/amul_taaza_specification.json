@@ -1,0 +1,53 @@
+{
+  "doc_id": "amul_taaza_specification",
+  "title": "Official Packaging & Product Specification: Amul Taaza Toned Milk",
+  "brand": "Amul",
+  "manufacturer": "Gujarat Co-operative Milk Marketing Federation Ltd. (GCMMF)",
+  "variant": "AMUL_TAAZA",
+  "product_name": "Amul Taaza",
+  "category": "Pasteurised Homogenised Toned Milk",
+  "description": "Wholesome and nutritious toned milk processed under high-pressure homogenization for smooth texture.",
+  "composition": {
+    "minimum_milk_fat": "3.0%",
+    "minimum_snf": "8.5%",
+    "nutritional_info_per_100ml": {
+      "energy_kcal": 58.0,
+      "protein_g": 3.1,
+      "total_carbohydrates_g": 4.7,
+      "added_sugar_g": 0.0,
+      "total_fat_g": 3.0,
+      "saturated_fat_g": 1.9,
+      "trans_fat_g": 0.0,
+      "calcium_mg": 125.0
+    }
+  },
+  "packaging": {
+    "material": "Multi-layer LDPE/LLDPE Food-grade Poly Film",
+    "pack_type": "Form-Fill-Seal (FFS) Poly Pouch",
+    "supported_sizes": ["200 mL", "500 mL", "1 L"],
+    "registered_barcodes": {
+      "500ml": "8901262150316",
+      "1L": "8901262260091"
+    },
+    "registered_fssai_license": "10012021000071",
+    "storage_condition": "Store under refrigeration at 8°C or below",
+    "shelf_life": "48 hours from date of packing under refrigeration"
+  },
+  "packaging_versions": [
+    {
+      "version_code": "V1",
+      "status": "HISTORICAL",
+      "effective_period": "2018 - 2021",
+      "visual_cues": "Distinctive cyan/blue wave graphics, girl carrying tray of milk glasses, standard back panel.",
+      "barcode": "8901262260091"
+    },
+    {
+      "version_code": "V2",
+      "status": "ACTIVE",
+      "effective_period": "2021 - Present",
+      "visual_cues": "Enhanced FSSAI nutrition matrix with added sugar sublines, digital batch matrix, verified EAN-13 barcode.",
+      "barcode": "8901262260091"
+    }
+  ]
+}
+

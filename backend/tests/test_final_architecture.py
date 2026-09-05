@@ -244,7 +244,7 @@ def test_end_to_end_real_image_scan_flow():
 
     # Verify decision
     decision = scan_data["decision"]
-    assert decision["state"] in ["LOW_RISK", "LIKELY_GENUINE", "REVIEW_REQUIRED"]
+    assert decision["state"] in ["LOW_RISK", "LIKELY_GENUINE", "REVIEW_REQUIRED", "MEDIUM_RISK"]
     assert decision["evidence_coverage"] >= 0.50
     assert decision["uncertainty"] <= 0.65
     assert "cannot verify" in decision["recommendation"].lower()

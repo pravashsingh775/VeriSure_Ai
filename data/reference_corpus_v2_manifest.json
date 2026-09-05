@@ -1,0 +1,2754 @@
+{
+  "title": "VeriSure AI \u2014 Reference Corpus V2 Manifest",
+  "dataset_version": "v2.0.0",
+  "created_at": "2026-09-05T05:23:14.496512",
+  "total_approved_references": 11,
+  "total_negative_samples": 5,
+  "total_front_back_pairs": 3,
+  "duplicate_occurrences_filtered": 7,
+  "low_quality_rejected": 1,
+  "products_distribution": {
+    "Amul Gold": 7,
+    "Amul Taaza": 4,
+    "Amul Shakti": 0
+  },
+  "view_distribution": {
+    "FRONT": 5,
+    "BACK": 6,
+    "DETAIL": 0,
+    "SEAL": 0
+  },
+  "pairs": [
+    {
+      "pair_id": "PAIR-GOLD-V1-2B8912",
+      "variant": "AMUL_GOLD",
+      "packaging_version": "V1",
+      "front_image_id": "GOLD-V2-001",
+      "back_image_id": "GOLD-V2-007",
+      "pair_confidence": 0.85,
+      "notes": "Verified Front/Back pair for AMUL_GOLD (V1)"
+    },
+    {
+      "pair_id": "PAIR-GOLD-V1-996325",
+      "variant": "AMUL_GOLD",
+      "packaging_version": "V1",
+      "front_image_id": "GOLD-V2-002",
+      "back_image_id": "GOLD-V2-008",
+      "pair_confidence": 0.85,
+      "notes": "Verified Front/Back pair for AMUL_GOLD (V1)"
+    },
+    {
+      "pair_id": "PAIR-TAAZA-V1-73F3CD",
+      "variant": "AMUL_TAAZA",
+      "packaging_version": "V1",
+      "front_image_id": "TAAZA-V2-011",
+      "back_image_id": "TAAZA-V2-006",
+      "pair_confidence": 0.9,
+      "notes": "Verified Front/Back pair for AMUL_TAAZA (V1)"
+    }
+  ],
+  "approved_records": [
+    {
+      "image_id": "GOLD-V2-001",
+      "product_name": "Amul Gold",
+      "variant_name": "Full Cream Milk",
+      "variant": "AMUL_GOLD",
+      "pack_size": "1L",
+      "pack_type": "POUCH",
+      "view_type": "FRONT",
+      "packaging_version": "V1",
+      "source_url": "https://images.openfoodfacts.org/images/products/890/126/226/0114/1.jpg",
+      "source_domain": "openfoodfacts.org",
+      "source_type": "AUTHORIZED_SOURCE",
+      "provenance_status": "AUTHORIZED_SOURCE",
+      "verification_status": "APPROVED",
+      "license_status": "CC_BY_SA_3_0",
+      "filename": "gold-v2-001_front.png",
+      "relative_path": "references_v2/gold-v2-001_front.png",
+      "absolute_path": "C:\\Users\\PRAVASH\\Desktop\\VeriSure_Ai\\data\\storage\\references_v2\\gold-v2-001_front.png",
+      "sha256": "0f61600e432554f68004f334c75523036d95a50e0a408d1cb7d4d985be057dd3",
+      "hashes": {
+        "phash": "d5d501b422b74e9b",
+        "dhash": "8cd0604c8a220ec8",
+        "whash": "c0f8fcfefcf88000"
+      },
+      "dimensions": "1962x2998",
+      "file_size_bytes": 5982159,
+      "quality_score": 0.949,
+      "quality_status": "EXCELLENT",
+      "blur_score": 0.824,
+      "detected_barcode": "8901262260114",
+      "ocr_excerpt": "BE Amul GOLD MILKY MILK 3170J Ji5 ficai fco5 JEURISED FULL CREAM MILK Fat 6.0% minimum SNF 9.0% minimum 2) 2194 Tbe of I",
+      "fingerprint": {
+        "variant": "AMUL_GOLD",
+        "packaging_version": "V1",
+        "view": "FRONT",
+        "dimensions": "1962x2998",
+        "quality": {
+          "overall_quality": 0.7,
+          "usable": false,
+          "blur_score": 0.096
+        },
+        "logo_features": {
+          "orb_keypoint_count": 500,
+          "has_descriptors": true
+        },
+        "layout_features": {
+          "band_densities": [
+            0.011,
+            0.0294,
+            0.0198,
+            0.0089
+          ],
+          "centroid_norm": [
+            0.46,
+            0.478
+          ]
+        },
+        "colour_features": {
+          "dominant_lab_centers": [
+            [
+              180.4,
+              125.3,
+              130.9
+            ],
+            [
+              139.7,
+              166.9,
+              149.6
+            ],
+            [
+              232.0,
+              124.1,
+              126.4
+            ],
+            [
+              72.1,
+              149.1,
+              140.4
+            ]
+          ],
+          "mean_hsv": [
+            47.9,
+            62.36,
+            184.74
+          ]
+        },
+        "typography_features": {
+          "mean_stroke_width_px": 48.74,
+          "stroke_std_px": 49.31,
+          "stroke_coefficient_of_variation": 1.012
+        },
+        "texture_features": {
+          "pattern_entropy": 2.078,
+          "laplacian_variance": 23.96
+        },
+        "shape_features": {
+          "aspect_ratio": 1.528
+        },
+        "seal_features": {
+          "available": true,
+          "crimp_integrity_score": 0.98,
+          "explanation": "Package heat-seal crimp bands evaluated. Crimp gradient variance: 498.1 (Integrity score: 98.0%)."
+        },
+        "print_features": {
+          "mean_edge_acuity": 151.0,
+          "color_fringing_delta": 51.3,
+          "acuity_score": 0.539
+        },
+        "ocr_features": {
+          "extracted_text_excerpt": "BE Amul GOLD MILKY MILK 3170J Ji5 ficai fco5 JEURISED FULL CREAM MILK Fat 6.0% minimum SNF 9.0% minimum 2) 2194 Tbe of India Amal e Tacteel 31a Amul MORE MILK: Taste",
+          "confidence": 0.567,
+          "total_characters": 165
+        },
+        "barcode_features": {
+          "available": false,
+          "barcode_value": null,
+          "barcode_type": null,
+          "checksum_valid": null,
+          "confidence": 0.0
+        },
+        "qr_features": {
+          "available": false,
+          "qr_content": null,
+          "domain": null,
+          "confidence": 0.0
+        },
+        "certification_features": {
+          "available": false,
+          "fssai_license": null,
+          "syntax_valid": null,
+          "jurisdiction": null
+        }
+      },
+      "individual_features": {
+        "QUALITY": {
+          "overall_quality": 0.7,
+          "usable": false,
+          "blur_score": 0.096
+        },
+        "LOGO": {
+          "orb_keypoint_count": 500,
+          "has_descriptors": true
+        },
+        "LAYOUT": {
+          "band_densities": [
+            0.011,
+            0.0294,
+            0.0198,
+            0.0089
+          ],
+          "centroid_norm": [
+            0.46,
+            0.478
+          ]
+        },
+        "COLOR_PALETTE": {
+          "dominant_lab_centers": [
+            [
+              180.4,
+              125.3,
+              130.9
+            ],
+            [
+              139.7,
+              166.9,
+              149.6
+            ],
+            [
+              232.0,
+              124.1,
+              126.4
+            ],
+            [
+              72.1,
+              149.1,
+              140.4
+            ]
+          ],
+          "mean_hsv": [
+            47.9,
+            62.36,
+            184.74
+          ]
+        },
+        "TYPOGRAPHY": {
+          "mean_stroke_width_px": 48.74,
+          "stroke_std_px": 49.31,
+          "stroke_coefficient_of_variation": 1.012
+        },
+        "TEXTURE_LBP": {
+          "pattern_entropy": 2.078,
+          "laplacian_variance": 23.96
+        },
+        "SHAPE": {
+          "aspect_ratio": 1.528
+        },
+        "SEAL": {
+          "available": true,
+          "crimp_integrity_score": 0.98,
+          "explanation": "Package heat-seal crimp bands evaluated. Crimp gradient variance: 498.1 (Integrity score: 98.0%)."
+        },
+        "PRINT": {
+          "mean_edge_acuity": 151.0,
+          "color_fringing_delta": 51.3,
+          "acuity_score": 0.539
+        },
+        "OCR": {
+          "extracted_text_excerpt": "BE Amul GOLD MILKY MILK 3170J Ji5 ficai fco5 JEURISED FULL CREAM MILK Fat 6.0% minimum SNF 9.0% minimum 2) 2194 Tbe of India Amal e Tacteel 31a Amul MORE MILK: Taste",
+          "confidence": 0.567,
+          "total_characters": 165
+        },
+        "BARCODE": {
+          "available": false,
+          "barcode_value": null,
+          "barcode_type": null,
+          "checksum_valid": null,
+          "confidence": 0.0
+        },
+        "QR": {
+          "available": false,
+          "qr_content": null,
+          "domain": null,
+          "confidence": 0.0
+        },
+        "CERTIFICATION": {
+          "available": false,
+          "fssai_license": null,
+          "syntax_valid": null,
+          "jurisdiction": null
+        }
+      },
+      "duplicate_sources": []
+    },
+    {
+      "image_id": "GOLD-V2-002",
+      "product_name": "Amul Gold",
+      "variant_name": "Full Cream Milk",
+      "variant": "AMUL_GOLD",
+      "pack_size": "1L",
+      "pack_type": "POUCH",
+      "view_type": "FRONT",
+      "packaging_version": "V1",
+      "source_url": "https://images.openfoodfacts.org/images/products/890/126/226/0114/2.jpg",
+      "source_domain": "openfoodfacts.org",
+      "source_type": "AUTHORIZED_SOURCE",
+      "provenance_status": "AUTHORIZED_SOURCE",
+      "verification_status": "APPROVED",
+      "license_status": "CC_BY_SA_3_0",
+      "filename": "gold-v2-002_front.png",
+      "relative_path": "references_v2/gold-v2-002_front.png",
+      "absolute_path": "C:\\Users\\PRAVASH\\Desktop\\VeriSure_Ai\\data\\storage\\references_v2\\gold-v2-002_front.png",
+      "sha256": "e7cd1c61d6ecb1532d63b590aa53c9bb3b226a48b5452b5a19f65b8de2a33115",
+      "hashes": {
+        "phash": "e9ce98c464cd9ac9",
+        "dhash": "a10d030f0317131b",
+        "whash": "f8e0f9e1c1c1e9c1"
+      },
+      "dimensions": "1219x302",
+      "file_size_bytes": 427796,
+      "quality_score": 0.756,
+      "quality_status": "GOOD",
+      "blur_score": 0.65,
+      "detected_barcode": "8901262260114",
+      "ocr_excerpt": "TASTEURISED FULL CREAM MILK Allergen Information: milk Mutionalniormation 5 Cenvings por conang size 200 ML Amount Conta",
+      "fingerprint": {
+        "variant": "AMUL_GOLD",
+        "packaging_version": "V1",
+        "view": "FRONT",
+        "dimensions": "1219x302",
+        "quality": {
+          "overall_quality": 0.742,
+          "usable": true,
+          "blur_score": 0.751
+        },
+        "logo_features": {
+          "orb_keypoint_count": 500,
+          "has_descriptors": true
+        },
+        "layout_features": {
+          "band_densities": [
+            0.0492,
+            0.048,
+            0.0735,
+            0.0492
+          ],
+          "centroid_norm": [
+            0.484,
+            0.495
+          ]
+        },
+        "colour_features": {
+          "dominant_lab_centers": [
+            [
+              199.3,
+              128.3,
+              130.5
+            ],
+            [
+              215.4,
+              124.5,
+              130.3
+            ],
+            [
+              141.3,
+              150.2,
+              138.6
+            ],
+            [
+              173.7,
+              141.8,
+              135.1
+            ]
+          ],
+          "mean_hsv": [
+            37.12,
+            25.78,
+            199.16
+          ]
+        },
+        "typography_features": {
+          "mean_stroke_width_px": 2.89,
+          "stroke_std_px": 1.18,
+          "stroke_coefficient_of_variation": 0.408
+        },
+        "texture_features": {
+          "pattern_entropy": 1.993,
+          "laplacian_variance": 187.64
+        },
+        "shape_features": {
+          "aspect_ratio": 0.248
+        },
+        "seal_features": {
+          "available": true,
+          "crimp_integrity_score": 0.98,
+          "explanation": "Package heat-seal crimp bands evaluated. Crimp gradient variance: 4303.6 (Integrity score: 98.0%)."
+        },
+        "print_features": {
+          "mean_edge_acuity": 131.6,
+          "color_fringing_delta": 48.69,
+          "acuity_score": 0.431
+        },
+        "ocr_features": {
+          "extracted_text_excerpt": "TASTEURISED FULL CREAM MILK Allergen Information: milk Mutionalniormation 5 Cenvings por conang size 200 ML Amount Contains Serving",
+          "confidence": 0.707,
+          "total_characters": 131
+        },
+        "barcode_features": {
+          "available": false,
+          "barcode_value": null,
+          "barcode_type": null,
+          "checksum_valid": null,
+          "confidence": 0.0
+        },
+        "qr_features": {
+          "available": false,
+          "qr_content": null,
+          "domain": null,
+          "confidence": 0.0
+        },
+        "certification_features": {
+          "available": false,
+          "fssai_license": null,
+          "syntax_valid": null,
+          "jurisdiction": null
+        }
+      },
+      "individual_features": {
+        "QUALITY": {
+          "overall_quality": 0.742,
+          "usable": true,
+          "blur_score": 0.751
+        },
+        "LOGO": {
+          "orb_keypoint_count": 500,
+          "has_descriptors": true
+        },
+        "LAYOUT": {
+          "band_densities": [
+            0.0492,
+            0.048,
+            0.0735,
+            0.0492
+          ],
+          "centroid_norm": [
+            0.484,
+            0.495
+          ]
+        },
+        "COLOR_PALETTE": {
+          "dominant_lab_centers": [
+            [
+              199.3,
+              128.3,
+              130.5
+            ],
+            [
+              215.4,
+              124.5,
+              130.3
+            ],
+            [
+              141.3,
+              150.2,
+              138.6
+            ],
+            [
+              173.7,
+              141.8,
+              135.1
+            ]
+          ],
+          "mean_hsv": [
+            37.12,
+            25.78,
+            199.16
+          ]
+        },
+        "TYPOGRAPHY": {
+          "mean_stroke_width_px": 2.89,
+          "stroke_std_px": 1.18,
+          "stroke_coefficient_of_variation": 0.408
+        },
+        "TEXTURE_LBP": {
+          "pattern_entropy": 1.993,
+          "laplacian_variance": 187.64
+        },
+        "SHAPE": {
+          "aspect_ratio": 0.248
+        },
+        "SEAL": {
+          "available": true,
+          "crimp_integrity_score": 0.98,
+          "explanation": "Package heat-seal crimp bands evaluated. Crimp gradient variance: 4303.6 (Integrity score: 98.0%)."
+        },
+        "PRINT": {
+          "mean_edge_acuity": 131.6,
+          "color_fringing_delta": 48.69,
+          "acuity_score": 0.431
+        },
+        "OCR": {
+          "extracted_text_excerpt": "TASTEURISED FULL CREAM MILK Allergen Information: milk Mutionalniormation 5 Cenvings por conang size 200 ML Amount Contains Serving",
+          "confidence": 0.707,
+          "total_characters": 131
+        },
+        "BARCODE": {
+          "available": false,
+          "barcode_value": null,
+          "barcode_type": null,
+          "checksum_valid": null,
+          "confidence": 0.0
+        },
+        "QR": {
+          "available": false,
+          "qr_content": null,
+          "domain": null,
+          "confidence": 0.0
+        },
+        "CERTIFICATION": {
+          "available": false,
+          "fssai_license": null,
+          "syntax_valid": null,
+          "jurisdiction": null
+        }
+      },
+      "duplicate_sources": []
+    },
+    {
+      "image_id": "GOLD-V2-003",
+      "product_name": "Amul Gold",
+      "variant_name": "Full Cream Milk",
+      "variant": "AMUL_GOLD",
+      "pack_size": "1L",
+      "pack_type": "POUCH",
+      "view_type": "BACK",
+      "packaging_version": "V2",
+      "source_url": "https://images.openfoodfacts.org/images/products/890/126/226/0114/3.jpg",
+      "source_domain": "openfoodfacts.org",
+      "source_type": "AUTHORIZED_SOURCE",
+      "provenance_status": "AUTHORIZED_SOURCE",
+      "verification_status": "APPROVED",
+      "license_status": "CC_BY_SA_3_0",
+      "filename": "gold-v2-003_back.png",
+      "relative_path": "references_v2/gold-v2-003_back.png",
+      "absolute_path": "C:\\Users\\PRAVASH\\Desktop\\VeriSure_Ai\\data\\storage\\references_v2\\gold-v2-003_back.png",
+      "sha256": "868b964187e5d70cf2c1ee75e5dbc73cb662ce46aecc867b1a1671299850f0e0",
+      "hashes": {
+        "phash": "ffa0e621e434c479",
+        "dhash": "0773317753731329",
+        "whash": "c39d9f9b8b8981e0"
+      },
+      "dimensions": "1128x1302",
+      "file_size_bytes": 1832941,
+      "quality_score": 0.764,
+      "quality_status": "GOOD",
+      "blur_score": 0.163,
+      "detected_barcode": "8901262260114",
+      "ocr_excerpt": "Nutltonalntormation  5 ervnngs per container Serving size 200 ML Anount per 100 mLI % RDA Energy (kcal) 87 9% Total Fat ",
+      "fingerprint": {
+        "variant": "AMUL_GOLD",
+        "packaging_version": "V2",
+        "view": "BACK",
+        "dimensions": "1128x1302",
+        "quality": {
+          "overall_quality": 0.584,
+          "usable": false,
+          "blur_score": 0.106
+        },
+        "logo_features": {
+          "orb_keypoint_count": 500,
+          "has_descriptors": true
+        },
+        "layout_features": {
+          "band_densities": [
+            0.0289,
+            0.0503,
+            0.063,
+            0.0632
+          ],
+          "centroid_norm": [
+            0.498,
+            0.495
+          ]
+        },
+        "colour_features": {
+          "dominant_lab_centers": [
+            [
+              198.9,
+              125.7,
+              129.4
+            ],
+            [
+              185.1,
+              131.2,
+              131.3
+            ],
+            [
+              159.6,
+              144.5,
+              135.8
+            ],
+            [
+              127.2,
+              154.0,
+              139.6
+            ]
+          ],
+          "mean_hsv": [
+            45.7,
+            34.2,
+            188.48
+          ]
+        },
+        "typography_features": {
+          "mean_stroke_width_px": 2.97,
+          "stroke_std_px": 1.17,
+          "stroke_coefficient_of_variation": 0.394
+        },
+        "texture_features": {
+          "pattern_entropy": 1.963,
+          "laplacian_variance": 26.51
+        },
+        "shape_features": {
+          "aspect_ratio": 1.154
+        },
+        "seal_features": {
+          "available": true,
+          "crimp_integrity_score": 0.98,
+          "explanation": "Package heat-seal crimp bands evaluated. Crimp gradient variance: 681.1 (Integrity score: 98.0%)."
+        },
+        "print_features": {
+          "mean_edge_acuity": 139.4,
+          "color_fringing_delta": 50.47,
+          "acuity_score": 0.474
+        },
+        "ocr_features": {
+          "extracted_text_excerpt": "Nutltonalntormation  5 ervnngs per container Serving size 200 ML Anount per 100 mLI % RDA Energy (kcal) 87 9% Total Fat (g 6.0 18% Saturated Fat 3.8 35% Trans Fat 0.0 0% Cholesterol (mg) 16 Carbohydra",
+          "confidence": 0.847,
+          "total_characters": 385
+        },
+        "barcode_features": {
+          "available": false,
+          "barcode_value": null,
+          "barcode_type": null,
+          "checksum_valid": null,
+          "confidence": 0.0
+        },
+        "qr_features": {
+          "available": false,
+          "qr_content": null,
+          "domain": null,
+          "confidence": 0.0
+        },
+        "certification_features": {
+          "available": false,
+          "fssai_license": null,
+          "syntax_valid": null,
+          "jurisdiction": null
+        }
+      },
+      "individual_features": {
+        "QUALITY": {
+          "overall_quality": 0.584,
+          "usable": false,
+          "blur_score": 0.106
+        },
+        "LOGO": {
+          "orb_keypoint_count": 500,
+          "has_descriptors": true
+        },
+        "LAYOUT": {
+          "band_densities": [
+            0.0289,
+            0.0503,
+            0.063,
+            0.0632
+          ],
+          "centroid_norm": [
+            0.498,
+            0.495
+          ]
+        },
+        "COLOR_PALETTE": {
+          "dominant_lab_centers": [
+            [
+              198.9,
+              125.7,
+              129.4
+            ],
+            [
+              185.1,
+              131.2,
+              131.3
+            ],
+            [
+              159.6,
+              144.5,
+              135.8
+            ],
+            [
+              127.2,
+              154.0,
+              139.6
+            ]
+          ],
+          "mean_hsv": [
+            45.7,
+            34.2,
+            188.48
+          ]
+        },
+        "TYPOGRAPHY": {
+          "mean_stroke_width_px": 2.97,
+          "stroke_std_px": 1.17,
+          "stroke_coefficient_of_variation": 0.394
+        },
+        "TEXTURE_LBP": {
+          "pattern_entropy": 1.963,
+          "laplacian_variance": 26.51
+        },
+        "SHAPE": {
+          "aspect_ratio": 1.154
+        },
+        "SEAL": {
+          "available": true,
+          "crimp_integrity_score": 0.98,
+          "explanation": "Package heat-seal crimp bands evaluated. Crimp gradient variance: 681.1 (Integrity score: 98.0%)."
+        },
+        "PRINT": {
+          "mean_edge_acuity": 139.4,
+          "color_fringing_delta": 50.47,
+          "acuity_score": 0.474
+        },
+        "OCR": {
+          "extracted_text_excerpt": "Nutltonalntormation  5 ervnngs per container Serving size 200 ML Anount per 100 mLI % RDA Energy (kcal) 87 9% Total Fat (g 6.0 18% Saturated Fat 3.8 35% Trans Fat 0.0 0% Cholesterol (mg) 16 Carbohydra",
+          "confidence": 0.847,
+          "total_characters": 385
+        },
+        "BARCODE": {
+          "available": false,
+          "barcode_value": null,
+          "barcode_type": null,
+          "checksum_valid": null,
+          "confidence": 0.0
+        },
+        "QR": {
+          "available": false,
+          "qr_content": null,
+          "domain": null,
+          "confidence": 0.0
+        },
+        "CERTIFICATION": {
+          "available": false,
+          "fssai_license": null,
+          "syntax_valid": null,
+          "jurisdiction": null
+        }
+      },
+      "duplicate_sources": []
+    },
+    {
+      "image_id": "TAAZA-V2-004",
+      "product_name": "Amul Taaza",
+      "variant_name": "Toned Milk",
+      "variant": "AMUL_TAAZA",
+      "pack_size": "1L",
+      "pack_type": "POUCH",
+      "view_type": "BACK",
+      "packaging_version": "V1",
+      "source_url": "https://images.openfoodfacts.org/images/products/890/126/226/0091/1.jpg",
+      "source_domain": "openfoodfacts.org",
+      "source_type": "AUTHORIZED_SOURCE",
+      "provenance_status": "AUTHORIZED_SOURCE",
+      "verification_status": "APPROVED",
+      "license_status": "CC_BY_SA_3_0",
+      "filename": "taaza-v2-004_back.png",
+      "relative_path": "references_v2/taaza-v2-004_back.png",
+      "absolute_path": "C:\\Users\\PRAVASH\\Desktop\\VeriSure_Ai\\data\\storage\\references_v2\\taaza-v2-004_back.png",
+      "sha256": "c37f850db8c1fa304cccba46641e56fcdee94108da2eedc9f1686b7dff58f88a",
+      "hashes": {
+        "phash": "82d24a8b7d28b7d6",
+        "dhash": "9df8fcbedeebefd7",
+        "whash": "7fffff4f07010000"
+      },
+      "dimensions": "4096x2925",
+      "file_size_bytes": 13062040,
+      "quality_score": 0.944,
+      "quality_status": "EXCELLENT",
+      "blur_score": 0.728,
+      "detected_barcode": "8901262260091",
+      "ocr_excerpt": "083 # [Ij 1 1 U 8 0 0 2 1 81 8 d3 19 H 6 8i 8 6 2 3 R 0 6 0 1 8 8 0 8 els 8 1 8 3 H L 1 [ @ 8 1 1 [ 1 1 8 1 1 1 3 8 3 1 ",
+      "fingerprint": {
+        "variant": "AMUL_TAAZA",
+        "packaging_version": "V1",
+        "view": "BACK",
+        "dimensions": "4096x2925",
+        "quality": {
+          "overall_quality": 0.713,
+          "usable": false,
+          "blur_score": 0.055
+        },
+        "logo_features": {
+          "orb_keypoint_count": 500,
+          "has_descriptors": true
+        },
+        "layout_features": {
+          "band_densities": [
+            0.0005,
+            0.0206,
+            0.0207,
+            0.0039
+          ],
+          "centroid_norm": [
+            0.531,
+            0.409
+          ]
+        },
+        "colour_features": {
+          "dominant_lab_centers": [
+            [
+              190.7,
+              128.2,
+              129.0
+            ],
+            [
+              152.1,
+              127.7,
+              126.6
+            ],
+            [
+              95.6,
+              126.1,
+              123.2
+            ],
+            [
+              49.9,
+              127.2,
+              126.3
+            ]
+          ],
+          "mean_hsv": [
+            61.47,
+            40.81,
+            140.92
+          ]
+        },
+        "typography_features": {
+          "mean_stroke_width_px": 259.4,
+          "stroke_std_px": 257.33,
+          "stroke_coefficient_of_variation": 0.992
+        },
+        "texture_features": {
+          "pattern_entropy": 2.087,
+          "laplacian_variance": 13.8
+        },
+        "shape_features": {
+          "aspect_ratio": 0.714
+        },
+        "seal_features": {
+          "available": true,
+          "crimp_integrity_score": 0.549,
+          "explanation": "Package heat-seal crimp bands evaluated. Crimp gradient variance: 120.8 (Integrity score: 54.9%)."
+        },
+        "print_features": {
+          "mean_edge_acuity": 109.3,
+          "color_fringing_delta": 59.98,
+          "acuity_score": 0.307
+        },
+        "ocr_features": {
+          "extracted_text_excerpt": "083 # [Ij 1 1 U 8 0 0 2 1 81 8 d3 19 H 6 8i 8 6 2 3 R 0 6 0 1 8 8 0 8 els 8 1 8 3 H L 1 [ @ 8 1 1 [ 1 1 8 1 1 1 3 8 3 1 4 1 8 3 1 { 2 0 8 1 { 1 8",
+          "confidence": 0.467,
+          "total_characters": 145
+        },
+        "barcode_features": {
+          "available": false,
+          "barcode_value": null,
+          "barcode_type": null,
+          "checksum_valid": null,
+          "confidence": 0.0
+        },
+        "qr_features": {
+          "available": false,
+          "qr_content": null,
+          "domain": null,
+          "confidence": 0.0
+        },
+        "certification_features": {
+          "available": false,
+          "fssai_license": null,
+          "syntax_valid": null,
+          "jurisdiction": null
+        }
+      },
+      "individual_features": {
+        "QUALITY": {
+          "overall_quality": 0.713,
+          "usable": false,
+          "blur_score": 0.055
+        },
+        "LOGO": {
+          "orb_keypoint_count": 500,
+          "has_descriptors": true
+        },
+        "LAYOUT": {
+          "band_densities": [
+            0.0005,
+            0.0206,
+            0.0207,
+            0.0039
+          ],
+          "centroid_norm": [
+            0.531,
+            0.409
+          ]
+        },
+        "COLOR_PALETTE": {
+          "dominant_lab_centers": [
+            [
+              190.7,
+              128.2,
+              129.0
+            ],
+            [
+              152.1,
+              127.7,
+              126.6
+            ],
+            [
+              95.6,
+              126.1,
+              123.2
+            ],
+            [
+              49.9,
+              127.2,
+              126.3
+            ]
+          ],
+          "mean_hsv": [
+            61.47,
+            40.81,
+            140.92
+          ]
+        },
+        "TYPOGRAPHY": {
+          "mean_stroke_width_px": 259.4,
+          "stroke_std_px": 257.33,
+          "stroke_coefficient_of_variation": 0.992
+        },
+        "TEXTURE_LBP": {
+          "pattern_entropy": 2.087,
+          "laplacian_variance": 13.8
+        },
+        "SHAPE": {
+          "aspect_ratio": 0.714
+        },
+        "SEAL": {
+          "available": true,
+          "crimp_integrity_score": 0.549,
+          "explanation": "Package heat-seal crimp bands evaluated. Crimp gradient variance: 120.8 (Integrity score: 54.9%)."
+        },
+        "PRINT": {
+          "mean_edge_acuity": 109.3,
+          "color_fringing_delta": 59.98,
+          "acuity_score": 0.307
+        },
+        "OCR": {
+          "extracted_text_excerpt": "083 # [Ij 1 1 U 8 0 0 2 1 81 8 d3 19 H 6 8i 8 6 2 3 R 0 6 0 1 8 8 0 8 els 8 1 8 3 H L 1 [ @ 8 1 1 [ 1 1 8 1 1 1 3 8 3 1 4 1 8 3 1 { 2 0 8 1 { 1 8",
+          "confidence": 0.467,
+          "total_characters": 145
+        },
+        "BARCODE": {
+          "available": false,
+          "barcode_value": null,
+          "barcode_type": null,
+          "checksum_valid": null,
+          "confidence": 0.0
+        },
+        "QR": {
+          "available": false,
+          "qr_content": null,
+          "domain": null,
+          "confidence": 0.0
+        },
+        "CERTIFICATION": {
+          "available": false,
+          "fssai_license": null,
+          "syntax_valid": null,
+          "jurisdiction": null
+        }
+      },
+      "duplicate_sources": []
+    },
+    {
+      "image_id": "TAAZA-V2-005",
+      "product_name": "Amul Taaza",
+      "variant_name": "Toned Milk",
+      "variant": "AMUL_TAAZA",
+      "pack_size": "1L",
+      "pack_type": "POUCH",
+      "view_type": "BACK",
+      "packaging_version": "V2",
+      "source_url": "https://images.openfoodfacts.org/images/products/890/126/226/0091/2.jpg",
+      "source_domain": "openfoodfacts.org",
+      "source_type": "AUTHORIZED_SOURCE",
+      "provenance_status": "AUTHORIZED_SOURCE",
+      "verification_status": "APPROVED",
+      "license_status": "CC_BY_SA_3_0",
+      "filename": "taaza-v2-005_back.png",
+      "relative_path": "references_v2/taaza-v2-005_back.png",
+      "absolute_path": "C:\\Users\\PRAVASH\\Desktop\\VeriSure_Ai\\data\\storage\\references_v2\\taaza-v2-005_back.png",
+      "sha256": "630931f7b71c0355d61dba25c275922a619da121e11cdd599b445a793f2f00af",
+      "hashes": {
+        "phash": "8baf06c23133df1a",
+        "dhash": "dde372da91e0e1f0",
+        "whash": "7f3b1f7f587c0000"
+      },
+      "dimensions": "2957x3900",
+      "file_size_bytes": 12604368,
+      "quality_score": 0.999,
+      "quality_status": "EXCELLENT",
+      "blur_score": 1.0,
+      "detected_barcode": "8901262260091",
+      "ocr_excerpt": "F Jaza Milk? Amu)  o( Nutritonal mL Serving size % ALEssenttal Amount Por 400 6 Containse acids Energy (Kcal 58 Total Fa",
+      "fingerprint": {
+        "variant": "AMUL_TAAZA",
+        "packaging_version": "V2",
+        "view": "BACK",
+        "dimensions": "2957x3900",
+        "quality": {
+          "overall_quality": 0.716,
+          "usable": false,
+          "blur_score": 0.097
+        },
+        "logo_features": {
+          "orb_keypoint_count": 500,
+          "has_descriptors": true
+        },
+        "layout_features": {
+          "band_densities": [
+            0.0244,
+            0.0268,
+            0.0225,
+            0.0144
+          ],
+          "centroid_norm": [
+            0.503,
+            0.439
+          ]
+        },
+        "colour_features": {
+          "dominant_lab_centers": [
+            [
+              162.6,
+              129.1,
+              133.0
+            ],
+            [
+              201.0,
+              128.7,
+              132.3
+            ],
+            [
+              111.4,
+              128.2,
+              128.1
+            ],
+            [
+              57.1,
+              129.9,
+              127.9
+            ]
+          ],
+          "mean_hsv": [
+            34.97,
+            47.41,
+            150.93
+          ]
+        },
+        "typography_features": {
+          "mean_stroke_width_px": 164.5,
+          "stroke_std_px": 188.32,
+          "stroke_coefficient_of_variation": 1.145
+        },
+        "texture_features": {
+          "pattern_entropy": 2.084,
+          "laplacian_variance": 24.33
+        },
+        "shape_features": {
+          "aspect_ratio": 1.319
+        },
+        "seal_features": {
+          "available": true,
+          "crimp_integrity_score": 0.98,
+          "explanation": "Package heat-seal crimp bands evaluated. Crimp gradient variance: 296.7 (Integrity score: 98.0%)."
+        },
+        "print_features": {
+          "mean_edge_acuity": 118.9,
+          "color_fringing_delta": 42.8,
+          "acuity_score": 0.36
+        },
+        "ocr_features": {
+          "extracted_text_excerpt": "F Jaza Milk? Amu)  o( Nutritonal mL Serving size % ALEssenttal Amount Por 400 6 Containse acids Energy (Kcal 58 Total Fat 0 3.0 Saturated Fat 0 20 O%6 Trans Fat 00 Cholesterdl(mg) 8 ~cal (9 47 Carbohy",
+          "confidence": 0.569,
+          "total_characters": 1287
+        },
+        "barcode_features": {
+          "available": true,
+          "barcode_value": "8901262260091",
+          "barcode_type": "EAN13",
+          "checksum_valid": true,
+          "confidence": 0.98
+        },
+        "qr_features": {
+          "available": false,
+          "qr_content": null,
+          "domain": null,
+          "confidence": 0.0
+        },
+        "certification_features": {
+          "available": false,
+          "fssai_license": null,
+          "syntax_valid": null,
+          "jurisdiction": null
+        }
+      },
+      "individual_features": {
+        "QUALITY": {
+          "overall_quality": 0.716,
+          "usable": false,
+          "blur_score": 0.097
+        },
+        "LOGO": {
+          "orb_keypoint_count": 500,
+          "has_descriptors": true
+        },
+        "LAYOUT": {
+          "band_densities": [
+            0.0244,
+            0.0268,
+            0.0225,
+            0.0144
+          ],
+          "centroid_norm": [
+            0.503,
+            0.439
+          ]
+        },
+        "COLOR_PALETTE": {
+          "dominant_lab_centers": [
+            [
+              162.6,
+              129.1,
+              133.0
+            ],
+            [
+              201.0,
+              128.7,
+              132.3
+            ],
+            [
+              111.4,
+              128.2,
+              128.1
+            ],
+            [
+              57.1,
+              129.9,
+              127.9
+            ]
+          ],
+          "mean_hsv": [
+            34.97,
+            47.41,
+            150.93
+          ]
+        },
+        "TYPOGRAPHY": {
+          "mean_stroke_width_px": 164.5,
+          "stroke_std_px": 188.32,
+          "stroke_coefficient_of_variation": 1.145
+        },
+        "TEXTURE_LBP": {
+          "pattern_entropy": 2.084,
+          "laplacian_variance": 24.33
+        },
+        "SHAPE": {
+          "aspect_ratio": 1.319
+        },
+        "SEAL": {
+          "available": true,
+          "crimp_integrity_score": 0.98,
+          "explanation": "Package heat-seal crimp bands evaluated. Crimp gradient variance: 296.7 (Integrity score: 98.0%)."
+        },
+        "PRINT": {
+          "mean_edge_acuity": 118.9,
+          "color_fringing_delta": 42.8,
+          "acuity_score": 0.36
+        },
+        "OCR": {
+          "extracted_text_excerpt": "F Jaza Milk? Amu)  o( Nutritonal mL Serving size % ALEssenttal Amount Por 400 6 Containse acids Energy (Kcal 58 Total Fat 0 3.0 Saturated Fat 0 20 O%6 Trans Fat 00 Cholesterdl(mg) 8 ~cal (9 47 Carbohy",
+          "confidence": 0.569,
+          "total_characters": 1287
+        },
+        "BARCODE": {
+          "available": true,
+          "barcode_value": "8901262260091",
+          "barcode_type": "EAN13",
+          "checksum_valid": true,
+          "confidence": 0.98
+        },
+        "QR": {
+          "available": false,
+          "qr_content": null,
+          "domain": null,
+          "confidence": 0.0
+        },
+        "CERTIFICATION": {
+          "available": false,
+          "fssai_license": null,
+          "syntax_valid": null,
+          "jurisdiction": null
+        }
+      },
+      "duplicate_sources": []
+    },
+    {
+      "image_id": "TAAZA-V2-006",
+      "product_name": "Amul Taaza",
+      "variant_name": "Toned Milk",
+      "variant": "AMUL_TAAZA",
+      "pack_size": "500ml",
+      "pack_type": "POUCH",
+      "view_type": "BACK",
+      "packaging_version": "V1",
+      "source_url": "https://images.openfoodfacts.org/images/products/890/126/215/0217/1.jpg",
+      "source_domain": "openfoodfacts.org",
+      "source_type": "AUTHORIZED_SOURCE",
+      "provenance_status": "AUTHORIZED_SOURCE",
+      "verification_status": "APPROVED",
+      "license_status": "CC_BY_SA_3_0",
+      "filename": "taaza-v2-006_back.png",
+      "relative_path": "references_v2/taaza-v2-006_back.png",
+      "absolute_path": "C:\\Users\\PRAVASH\\Desktop\\VeriSure_Ai\\data\\storage\\references_v2\\taaza-v2-006_back.png",
+      "sha256": "b25386e8a1443440c5d86418938780f0a095839cc1dd039a416318c0e4dc7ed7",
+      "hashes": {
+        "phash": "ddba22346e9d4983",
+        "dhash": "251c70707070f0e0",
+        "whash": "80fefcbcbc383830"
+      },
+      "dimensions": "1047x2832",
+      "file_size_bytes": 3470000,
+      "quality_score": 0.914,
+      "quality_status": "EXCELLENT",
+      "blur_score": 0.724,
+      "detected_barcode": "8901262150217",
+      "ocr_excerpt": "Tetaral Taaza autunnts milk (Fat 3.0% minimum SNF- Uargoe tatormation: Contains = 85* munu milk Net Content: So0 ml 2 My",
+      "fingerprint": {
+        "variant": "AMUL_TAAZA",
+        "packaging_version": "V1",
+        "view": "BACK",
+        "dimensions": "1047x2832",
+        "quality": {
+          "overall_quality": 0.626,
+          "usable": false,
+          "blur_score": 0.068
+        },
+        "logo_features": {
+          "orb_keypoint_count": 500,
+          "has_descriptors": true
+        },
+        "layout_features": {
+          "band_densities": [
+            0.0136,
+            0.0216,
+            0.0274,
+            0.0254
+          ],
+          "centroid_norm": [
+            0.458,
+            0.476
+          ]
+        },
+        "colour_features": {
+          "dominant_lab_centers": [
+            [
+              125.0,
+              119.3,
+              97.9
+            ],
+            [
+              159.8,
+              121.4,
+              115.5
+            ],
+            [
+              96.7,
+              126.5,
+              96.2
+            ],
+            [
+              34.2,
+              130.0,
+              128.8
+            ]
+          ],
+          "mean_hsv": [
+            92.38,
+            158.91,
+            151.24
+          ]
+        },
+        "typography_features": {
+          "mean_stroke_width_px": 67.49,
+          "stroke_std_px": 76.07,
+          "stroke_coefficient_of_variation": 1.127
+        },
+        "texture_features": {
+          "pattern_entropy": 2.05,
+          "laplacian_variance": 16.94
+        },
+        "shape_features": {
+          "aspect_ratio": 2.705
+        },
+        "seal_features": {
+          "available": true,
+          "crimp_integrity_score": 0.98,
+          "explanation": "Package heat-seal crimp bands evaluated. Crimp gradient variance: 259.9 (Integrity score: 98.0%)."
+        },
+        "print_features": {
+          "mean_edge_acuity": 120.0,
+          "color_fringing_delta": 82.92,
+          "acuity_score": 0.367
+        },
+        "ocr_features": {
+          "extracted_text_excerpt": "Tetaral Taaza autunnts milk (Fat 3.0% minimum SNF- Uargoe tatormation: Contains = 85* munu milk Net Content: So0 ml 2 Mytition Ilnformation servings per conlainer Size 200 ML Amountper JoomLS I(kcau) ",
+          "confidence": 0.507,
+          "total_characters": 1100
+        },
+        "barcode_features": {
+          "available": false,
+          "barcode_value": null,
+          "barcode_type": null,
+          "checksum_valid": null,
+          "confidence": 0.0
+        },
+        "qr_features": {
+          "available": false,
+          "qr_content": null,
+          "domain": null,
+          "confidence": 0.0
+        },
+        "certification_features": {
+          "available": false,
+          "fssai_license": null,
+          "syntax_valid": null,
+          "jurisdiction": null
+        }
+      },
+      "individual_features": {
+        "QUALITY": {
+          "overall_quality": 0.626,
+          "usable": false,
+          "blur_score": 0.068
+        },
+        "LOGO": {
+          "orb_keypoint_count": 500,
+          "has_descriptors": true
+        },
+        "LAYOUT": {
+          "band_densities": [
+            0.0136,
+            0.0216,
+            0.0274,
+            0.0254
+          ],
+          "centroid_norm": [
+            0.458,
+            0.476
+          ]
+        },
+        "COLOR_PALETTE": {
+          "dominant_lab_centers": [
+            [
+              125.0,
+              119.3,
+              97.9
+            ],
+            [
+              159.8,
+              121.4,
+              115.5
+            ],
+            [
+              96.7,
+              126.5,
+              96.2
+            ],
+            [
+              34.2,
+              130.0,
+              128.8
+            ]
+          ],
+          "mean_hsv": [
+            92.38,
+            158.91,
+            151.24
+          ]
+        },
+        "TYPOGRAPHY": {
+          "mean_stroke_width_px": 67.49,
+          "stroke_std_px": 76.07,
+          "stroke_coefficient_of_variation": 1.127
+        },
+        "TEXTURE_LBP": {
+          "pattern_entropy": 2.05,
+          "laplacian_variance": 16.94
+        },
+        "SHAPE": {
+          "aspect_ratio": 2.705
+        },
+        "SEAL": {
+          "available": true,
+          "crimp_integrity_score": 0.98,
+          "explanation": "Package heat-seal crimp bands evaluated. Crimp gradient variance: 259.9 (Integrity score: 98.0%)."
+        },
+        "PRINT": {
+          "mean_edge_acuity": 120.0,
+          "color_fringing_delta": 82.92,
+          "acuity_score": 0.367
+        },
+        "OCR": {
+          "extracted_text_excerpt": "Tetaral Taaza autunnts milk (Fat 3.0% minimum SNF- Uargoe tatormation: Contains = 85* munu milk Net Content: So0 ml 2 Mytition Ilnformation servings per conlainer Size 200 ML Amountper JoomLS I(kcau) ",
+          "confidence": 0.507,
+          "total_characters": 1100
+        },
+        "BARCODE": {
+          "available": false,
+          "barcode_value": null,
+          "barcode_type": null,
+          "checksum_valid": null,
+          "confidence": 0.0
+        },
+        "QR": {
+          "available": false,
+          "qr_content": null,
+          "domain": null,
+          "confidence": 0.0
+        },
+        "CERTIFICATION": {
+          "available": false,
+          "fssai_license": null,
+          "syntax_valid": null,
+          "jurisdiction": null
+        }
+      },
+      "duplicate_sources": []
+    },
+    {
+      "image_id": "GOLD-V2-007",
+      "product_name": "Amul Gold",
+      "variant_name": "Full Cream Milk",
+      "variant": "AMUL_GOLD",
+      "pack_size": "500ml",
+      "pack_type": "POUCH",
+      "view_type": "BACK",
+      "packaging_version": "V1",
+      "source_url": "https://images.openfoodfacts.org/images/products/890/126/215/0217/2.jpg",
+      "source_domain": "openfoodfacts.org",
+      "source_type": "AUTHORIZED_SOURCE",
+      "provenance_status": "AUTHORIZED_SOURCE",
+      "verification_status": "APPROVED",
+      "license_status": "CC_BY_SA_3_0",
+      "filename": "gold-v2-007_back.png",
+      "relative_path": "references_v2/gold-v2-007_back.png",
+      "absolute_path": "C:\\Users\\PRAVASH\\Desktop\\VeriSure_Ai\\data\\storage\\references_v2\\gold-v2-007_back.png",
+      "sha256": "ef1fe3cb86dd529ebd036ff8d3d4284e249c56dc84b2ca8c02645c40b083fdb7",
+      "hashes": {
+        "phash": "c2a969a92d561fa5",
+        "dhash": "c9c9c8c8c8c8c8c0",
+        "whash": "787c7c7c7c7c7000"
+      },
+      "dimensions": "2166x2797",
+      "file_size_bytes": 8319937,
+      "quality_score": 0.983,
+      "quality_status": "EXCELLENT",
+      "blur_score": 1.0,
+      "detected_barcode": "8901262150217",
+      "ocr_excerpt": "J17s 'aki J!falave clog &0 Amul BE MORE MILK: <",
+      "fingerprint": {
+        "variant": "AMUL_GOLD",
+        "packaging_version": "V1",
+        "view": "BACK",
+        "dimensions": "2166x2797",
+        "quality": {
+          "overall_quality": 0.847,
+          "usable": true,
+          "blur_score": 0.56
+        },
+        "logo_features": {
+          "orb_keypoint_count": 500,
+          "has_descriptors": true
+        },
+        "layout_features": {
+          "band_densities": [
+            0.0094,
+            0.0488,
+            0.0467,
+            0.0207
+          ],
+          "centroid_norm": [
+            0.457,
+            0.468
+          ]
+        },
+        "colour_features": {
+          "dominant_lab_centers": [
+            [
+              219.3,
+              126.0,
+              127.0
+            ],
+            [
+              148.0,
+              130.9,
+              114.4
+            ],
+            [
+              97.8,
+              135.2,
+              133.3
+            ],
+            [
+              21.3,
+              131.0,
+              122.6
+            ]
+          ],
+          "mean_hsv": [
+            77.43,
+            57.56,
+            172.44
+          ]
+        },
+        "typography_features": {
+          "mean_stroke_width_px": 104.58,
+          "stroke_std_px": 121.73,
+          "stroke_coefficient_of_variation": 1.164
+        },
+        "texture_features": {
+          "pattern_entropy": 2.218,
+          "laplacian_variance": 140.09
+        },
+        "shape_features": {
+          "aspect_ratio": 1.291
+        },
+        "seal_features": {
+          "available": true,
+          "crimp_integrity_score": 0.98,
+          "explanation": "Package heat-seal crimp bands evaluated. Crimp gradient variance: 314.9 (Integrity score: 98.0%)."
+        },
+        "print_features": {
+          "mean_edge_acuity": 169.1,
+          "color_fringing_delta": 51.4,
+          "acuity_score": 0.64
+        },
+        "ocr_features": {
+          "extracted_text_excerpt": "J17s 'aki J!falave clog &0 Amul BE MORE MILK: <",
+          "confidence": 0.476,
+          "total_characters": 47
+        },
+        "barcode_features": {
+          "available": false,
+          "barcode_value": null,
+          "barcode_type": null,
+          "checksum_valid": null,
+          "confidence": 0.0
+        },
+        "qr_features": {
+          "available": false,
+          "qr_content": null,
+          "domain": null,
+          "confidence": 0.0
+        },
+        "certification_features": {
+          "available": false,
+          "fssai_license": null,
+          "syntax_valid": null,
+          "jurisdiction": null
+        }
+      },
+      "individual_features": {
+        "QUALITY": {
+          "overall_quality": 0.847,
+          "usable": true,
+          "blur_score": 0.56
+        },
+        "LOGO": {
+          "orb_keypoint_count": 500,
+          "has_descriptors": true
+        },
+        "LAYOUT": {
+          "band_densities": [
+            0.0094,
+            0.0488,
+            0.0467,
+            0.0207
+          ],
+          "centroid_norm": [
+            0.457,
+            0.468
+          ]
+        },
+        "COLOR_PALETTE": {
+          "dominant_lab_centers": [
+            [
+              219.3,
+              126.0,
+              127.0
+            ],
+            [
+              148.0,
+              130.9,
+              114.4
+            ],
+            [
+              97.8,
+              135.2,
+              133.3
+            ],
+            [
+              21.3,
+              131.0,
+              122.6
+            ]
+          ],
+          "mean_hsv": [
+            77.43,
+            57.56,
+            172.44
+          ]
+        },
+        "TYPOGRAPHY": {
+          "mean_stroke_width_px": 104.58,
+          "stroke_std_px": 121.73,
+          "stroke_coefficient_of_variation": 1.164
+        },
+        "TEXTURE_LBP": {
+          "pattern_entropy": 2.218,
+          "laplacian_variance": 140.09
+        },
+        "SHAPE": {
+          "aspect_ratio": 1.291
+        },
+        "SEAL": {
+          "available": true,
+          "crimp_integrity_score": 0.98,
+          "explanation": "Package heat-seal crimp bands evaluated. Crimp gradient variance: 314.9 (Integrity score: 98.0%)."
+        },
+        "PRINT": {
+          "mean_edge_acuity": 169.1,
+          "color_fringing_delta": 51.4,
+          "acuity_score": 0.64
+        },
+        "OCR": {
+          "extracted_text_excerpt": "J17s 'aki J!falave clog &0 Amul BE MORE MILK: <",
+          "confidence": 0.476,
+          "total_characters": 47
+        },
+        "BARCODE": {
+          "available": false,
+          "barcode_value": null,
+          "barcode_type": null,
+          "checksum_valid": null,
+          "confidence": 0.0
+        },
+        "QR": {
+          "available": false,
+          "qr_content": null,
+          "domain": null,
+          "confidence": 0.0
+        },
+        "CERTIFICATION": {
+          "available": false,
+          "fssai_license": null,
+          "syntax_valid": null,
+          "jurisdiction": null
+        }
+      },
+      "duplicate_sources": []
+    },
+    {
+      "image_id": "GOLD-V2-008",
+      "product_name": "Amul Gold",
+      "variant_name": "Full Cream Milk",
+      "variant": "AMUL_GOLD",
+      "pack_size": "500ml",
+      "pack_type": "POUCH",
+      "view_type": "BACK",
+      "packaging_version": "V1",
+      "source_url": "https://images.openfoodfacts.org/images/products/890/126/215/0217/3.jpg",
+      "source_domain": "openfoodfacts.org",
+      "source_type": "AUTHORIZED_SOURCE",
+      "provenance_status": "AUTHORIZED_SOURCE",
+      "verification_status": "APPROVED",
+      "license_status": "CC_BY_SA_3_0",
+      "filename": "gold-v2-008_back.png",
+      "relative_path": "references_v2/gold-v2-008_back.png",
+      "absolute_path": "C:\\Users\\PRAVASH\\Desktop\\VeriSure_Ai\\data\\storage\\references_v2\\gold-v2-008_back.png",
+      "sha256": "a1b2db9a2c0d317bf07fd28a478c7da356ba2141ea2fb173e2a242afb2b6bd01",
+      "hashes": {
+        "phash": "d27f2d0837e71cc0",
+        "dhash": "6048ccccc989c9c9",
+        "whash": "00007c647c7d7dfd"
+      },
+      "dimensions": "2166x3362",
+      "file_size_bytes": 9793292,
+      "quality_score": 0.92,
+      "quality_status": "EXCELLENT",
+      "blur_score": 1.0,
+      "detected_barcode": "8901262150217",
+      "ocr_excerpt": "J1715 sh4ifiliv3 &l3 24 Am BE MORE MILK 'aki",
+      "fingerprint": {
+        "variant": "AMUL_GOLD",
+        "packaging_version": "V1",
+        "view": "BACK",
+        "dimensions": "2166x3362",
+        "quality": {
+          "overall_quality": 0.858,
+          "usable": true,
+          "blur_score": 0.547
+        },
+        "logo_features": {
+          "orb_keypoint_count": 500,
+          "has_descriptors": true
+        },
+        "layout_features": {
+          "band_densities": [
+            0.0049,
+            0.0139,
+            0.0468,
+            0.0153
+          ],
+          "centroid_norm": [
+            0.462,
+            0.57
+          ]
+        },
+        "colour_features": {
+          "dominant_lab_centers": [
+            [
+              232.0,
+              127.1,
+              127.5
+            ],
+            [
+              42.6,
+              130.8,
+              128.8
+            ],
+            [
+              148.5,
+              132.3,
+              136.4
+            ],
+            [
+              134.8,
+              126.1,
+              86.4
+            ]
+          ],
+          "mean_hsv": [
+            58.28,
+            64.35,
+            158.47
+          ]
+        },
+        "typography_features": {
+          "mean_stroke_width_px": 133.14,
+          "stroke_std_px": 146.46,
+          "stroke_coefficient_of_variation": 1.1
+        },
+        "texture_features": {
+          "pattern_entropy": 2.234,
+          "laplacian_variance": 136.79
+        },
+        "shape_features": {
+          "aspect_ratio": 1.552
+        },
+        "seal_features": {
+          "available": true,
+          "crimp_integrity_score": 0.98,
+          "explanation": "Package heat-seal crimp bands evaluated. Crimp gradient variance: 290.3 (Integrity score: 98.0%)."
+        },
+        "print_features": {
+          "mean_edge_acuity": 217.4,
+          "color_fringing_delta": 68.03,
+          "acuity_score": 0.68
+        },
+        "ocr_features": {
+          "extracted_text_excerpt": "J1715 sh4ifiliv3 &l3 24 Am BE MORE MILK 'aki",
+          "confidence": 0.63,
+          "total_characters": 44
+        },
+        "barcode_features": {
+          "available": false,
+          "barcode_value": null,
+          "barcode_type": null,
+          "checksum_valid": null,
+          "confidence": 0.0
+        },
+        "qr_features": {
+          "available": false,
+          "qr_content": null,
+          "domain": null,
+          "confidence": 0.0
+        },
+        "certification_features": {
+          "available": false,
+          "fssai_license": null,
+          "syntax_valid": null,
+          "jurisdiction": null
+        }
+      },
+      "individual_features": {
+        "QUALITY": {
+          "overall_quality": 0.858,
+          "usable": true,
+          "blur_score": 0.547
+        },
+        "LOGO": {
+          "orb_keypoint_count": 500,
+          "has_descriptors": true
+        },
+        "LAYOUT": {
+          "band_densities": [
+            0.0049,
+            0.0139,
+            0.0468,
+            0.0153
+          ],
+          "centroid_norm": [
+            0.462,
+            0.57
+          ]
+        },
+        "COLOR_PALETTE": {
+          "dominant_lab_centers": [
+            [
+              232.0,
+              127.1,
+              127.5
+            ],
+            [
+              42.6,
+              130.8,
+              128.8
+            ],
+            [
+              148.5,
+              132.3,
+              136.4
+            ],
+            [
+              134.8,
+              126.1,
+              86.4
+            ]
+          ],
+          "mean_hsv": [
+            58.28,
+            64.35,
+            158.47
+          ]
+        },
+        "TYPOGRAPHY": {
+          "mean_stroke_width_px": 133.14,
+          "stroke_std_px": 146.46,
+          "stroke_coefficient_of_variation": 1.1
+        },
+        "TEXTURE_LBP": {
+          "pattern_entropy": 2.234,
+          "laplacian_variance": 136.79
+        },
+        "SHAPE": {
+          "aspect_ratio": 1.552
+        },
+        "SEAL": {
+          "available": true,
+          "crimp_integrity_score": 0.98,
+          "explanation": "Package heat-seal crimp bands evaluated. Crimp gradient variance: 290.3 (Integrity score: 98.0%)."
+        },
+        "PRINT": {
+          "mean_edge_acuity": 217.4,
+          "color_fringing_delta": 68.03,
+          "acuity_score": 0.68
+        },
+        "OCR": {
+          "extracted_text_excerpt": "J1715 sh4ifiliv3 &l3 24 Am BE MORE MILK 'aki",
+          "confidence": 0.63,
+          "total_characters": 44
+        },
+        "BARCODE": {
+          "available": false,
+          "barcode_value": null,
+          "barcode_type": null,
+          "checksum_valid": null,
+          "confidence": 0.0
+        },
+        "QR": {
+          "available": false,
+          "qr_content": null,
+          "domain": null,
+          "confidence": 0.0
+        },
+        "CERTIFICATION": {
+          "available": false,
+          "fssai_license": null,
+          "syntax_valid": null,
+          "jurisdiction": null
+        }
+      },
+      "duplicate_sources": []
+    },
+    {
+      "image_id": "GOLD-V2-009",
+      "product_name": "Amul Gold",
+      "variant_name": "Full Cream Milk",
+      "variant": "AMUL_GOLD",
+      "pack_size": "500ml",
+      "pack_type": "POUCH",
+      "view_type": "FRONT",
+      "packaging_version": "V1",
+      "source_url": "https://images.openfoodfacts.org/images/products/890/126/215/0217/4.jpg",
+      "source_domain": "openfoodfacts.org",
+      "source_type": "AUTHORIZED_SOURCE",
+      "provenance_status": "AUTHORIZED_SOURCE",
+      "verification_status": "APPROVED",
+      "license_status": "CC_BY_SA_3_0",
+      "filename": "gold-v2-009_front.png",
+      "relative_path": "references_v2/gold-v2-009_front.png",
+      "absolute_path": "C:\\Users\\PRAVASH\\Desktop\\VeriSure_Ai\\data\\storage\\references_v2\\gold-v2-009_front.png",
+      "sha256": "69cb3c72ba7aa896b2c1177371ae767aef837f4d29347e544849c74991ee4dd3",
+      "hashes": {
+        "phash": "d2d04c883da71fce",
+        "dhash": "d888c8cc88c9c9c8",
+        "whash": "7c7c7c646c7c7c00"
+      },
+      "dimensions": "2166x2962",
+      "file_size_bytes": 8983769,
+      "quality_score": 0.857,
+      "quality_status": "EXCELLENT",
+      "blur_score": 1.0,
+      "detected_barcode": "8901262150217",
+      "ocr_excerpt": "UHT Trcated Kooneaenised Amul 'Taaza HOMOGENISED TONED MILK Auul BE MORE MILK: UThis Isonlya brand name or trade mark an",
+      "fingerprint": {
+        "variant": "AMUL_GOLD",
+        "packaging_version": "V1",
+        "view": "FRONT",
+        "dimensions": "2166x2962",
+        "quality": {
+          "overall_quality": 0.746,
+          "usable": true,
+          "blur_score": 0.373
+        },
+        "logo_features": {
+          "orb_keypoint_count": 500,
+          "has_descriptors": true
+        },
+        "layout_features": {
+          "band_densities": [
+            0.0198,
+            0.033,
+            0.0328,
+            0.0232
+          ],
+          "centroid_norm": [
+            0.472,
+            0.491
+          ]
+        },
+        "colour_features": {
+          "dominant_lab_centers": [
+            [
+              241.7,
+              128.5,
+              125.5
+            ],
+            [
+              159.9,
+              135.7,
+              140.3
+            ],
+            [
+              155.3,
+              125.7,
+              85.9
+            ],
+            [
+              88.4,
+              131.3,
+              125.2
+            ]
+          ],
+          "mean_hsv": [
+            85.53,
+            55.67,
+            206.03
+          ]
+        },
+        "typography_features": {
+          "mean_stroke_width_px": 96.02,
+          "stroke_std_px": 97.64,
+          "stroke_coefficient_of_variation": 1.017
+        },
+        "texture_features": {
+          "pattern_entropy": 2.218,
+          "laplacian_variance": 93.35
+        },
+        "shape_features": {
+          "aspect_ratio": 1.367
+        },
+        "seal_features": {
+          "available": true,
+          "crimp_integrity_score": 0.98,
+          "explanation": "Package heat-seal crimp bands evaluated. Crimp gradient variance: 812.5 (Integrity score: 98.0%)."
+        },
+        "print_features": {
+          "mean_edge_acuity": 206.9,
+          "color_fringing_delta": 79.52,
+          "acuity_score": 0.68
+        },
+        "ocr_features": {
+          "extracted_text_excerpt": "UHT Trcated Kooneaenised Amul 'Taaza HOMOGENISED TONED MILK Auul BE MORE MILK: UThis Isonlya brand name or trade mark and does not represent Its true nature",
+          "confidence": 0.733,
+          "total_characters": 156
+        },
+        "barcode_features": {
+          "available": false,
+          "barcode_value": null,
+          "barcode_type": null,
+          "checksum_valid": null,
+          "confidence": 0.0
+        },
+        "qr_features": {
+          "available": false,
+          "qr_content": null,
+          "domain": null,
+          "confidence": 0.0
+        },
+        "certification_features": {
+          "available": false,
+          "fssai_license": null,
+          "syntax_valid": null,
+          "jurisdiction": null
+        }
+      },
+      "individual_features": {
+        "QUALITY": {
+          "overall_quality": 0.746,
+          "usable": true,
+          "blur_score": 0.373
+        },
+        "LOGO": {
+          "orb_keypoint_count": 500,
+          "has_descriptors": true
+        },
+        "LAYOUT": {
+          "band_densities": [
+            0.0198,
+            0.033,
+            0.0328,
+            0.0232
+          ],
+          "centroid_norm": [
+            0.472,
+            0.491
+          ]
+        },
+        "COLOR_PALETTE": {
+          "dominant_lab_centers": [
+            [
+              241.7,
+              128.5,
+              125.5
+            ],
+            [
+              159.9,
+              135.7,
+              140.3
+            ],
+            [
+              155.3,
+              125.7,
+              85.9
+            ],
+            [
+              88.4,
+              131.3,
+              125.2
+            ]
+          ],
+          "mean_hsv": [
+            85.53,
+            55.67,
+            206.03
+          ]
+        },
+        "TYPOGRAPHY": {
+          "mean_stroke_width_px": 96.02,
+          "stroke_std_px": 97.64,
+          "stroke_coefficient_of_variation": 1.017
+        },
+        "TEXTURE_LBP": {
+          "pattern_entropy": 2.218,
+          "laplacian_variance": 93.35
+        },
+        "SHAPE": {
+          "aspect_ratio": 1.367
+        },
+        "SEAL": {
+          "available": true,
+          "crimp_integrity_score": 0.98,
+          "explanation": "Package heat-seal crimp bands evaluated. Crimp gradient variance: 812.5 (Integrity score: 98.0%)."
+        },
+        "PRINT": {
+          "mean_edge_acuity": 206.9,
+          "color_fringing_delta": 79.52,
+          "acuity_score": 0.68
+        },
+        "OCR": {
+          "extracted_text_excerpt": "UHT Trcated Kooneaenised Amul 'Taaza HOMOGENISED TONED MILK Auul BE MORE MILK: UThis Isonlya brand name or trade mark and does not represent Its true nature",
+          "confidence": 0.733,
+          "total_characters": 156
+        },
+        "BARCODE": {
+          "available": false,
+          "barcode_value": null,
+          "barcode_type": null,
+          "checksum_valid": null,
+          "confidence": 0.0
+        },
+        "QR": {
+          "available": false,
+          "qr_content": null,
+          "domain": null,
+          "confidence": 0.0
+        },
+        "CERTIFICATION": {
+          "available": false,
+          "fssai_license": null,
+          "syntax_valid": null,
+          "jurisdiction": null
+        }
+      },
+      "duplicate_sources": []
+    },
+    {
+      "image_id": "GOLD-V2-010",
+      "product_name": "Amul Gold",
+      "variant_name": "Full Cream Milk",
+      "variant": "AMUL_GOLD",
+      "pack_size": "500ml",
+      "pack_type": "POUCH",
+      "view_type": "FRONT",
+      "packaging_version": "V1",
+      "source_url": "local://raw_scans/scan_0679f43b-bf3f-4676-8f14-34d683ea47bf_front_Amul_Milk.jpg.png",
+      "source_domain": "verisure_local_capture",
+      "source_type": "VERIFIED_EXTERNAL",
+      "provenance_status": "VERIFIED_EXTERNAL",
+      "verification_status": "APPROVED",
+      "license_status": "INTERNAL_PROJECT",
+      "filename": "gold-v2-010_front.png",
+      "relative_path": "references_v2/gold-v2-010_front.png",
+      "absolute_path": "C:\\Users\\PRAVASH\\Desktop\\VeriSure_Ai\\data\\storage\\references_v2\\gold-v2-010_front.png",
+      "sha256": "683872e81233c1aecf26c8f7e97e4bc387c9808e78187d8bb7afa383bfe2d80d",
+      "hashes": {
+        "phash": "80507b387f2a3f87",
+        "dhash": "1380f6f2f6f6ebca",
+        "whash": "00783f3f3f3f3300"
+      },
+      "dimensions": "1200x1600",
+      "file_size_bytes": 1697160,
+      "quality_score": 0.871,
+      "quality_status": "EXCELLENT",
+      "blur_score": 0.444,
+      "detected_barcode": null,
+      "ocr_excerpt": "Amul GOLD MILKY MILK J17CS vi8 fcai} fHcd5 FULL CREAM MILK 3 Fat _ 6.0% minimum 9.0% minimum EURISED SNF 2170",
+      "fingerprint": {
+        "variant": "AMUL_GOLD",
+        "packaging_version": "V1",
+        "view": "FRONT",
+        "dimensions": "1200x1600",
+        "quality": {
+          "overall_quality": 0.714,
+          "usable": true,
+          "blur_score": 0.205
+        },
+        "logo_features": {
+          "orb_keypoint_count": 500,
+          "has_descriptors": true
+        },
+        "layout_features": {
+          "band_densities": [
+            0.0117,
+            0.0462,
+            0.045,
+            0.0361
+          ],
+          "centroid_norm": [
+            0.534,
+            0.52
+          ]
+        },
+        "colour_features": {
+          "dominant_lab_centers": [
+            [
+              155.4,
+              127.0,
+              133.5
+            ],
+            [
+              17.8,
+              139.0,
+              133.6
+            ],
+            [
+              113.9,
+              129.7,
+              134.2
+            ],
+            [
+              69.2,
+              157.9,
+              145.9
+            ]
+          ],
+          "mean_hsv": [
+            55.39,
+            85.58,
+            112.34
+          ]
+        },
+        "typography_features": {
+          "mean_stroke_width_px": 51.95,
+          "stroke_std_px": 50.65,
+          "stroke_coefficient_of_variation": 0.975
+        },
+        "texture_features": {
+          "pattern_entropy": 1.576,
+          "laplacian_variance": 51.33
+        },
+        "shape_features": {
+          "aspect_ratio": 1.333
+        },
+        "seal_features": {
+          "available": true,
+          "crimp_integrity_score": 0.98,
+          "explanation": "Package heat-seal crimp bands evaluated. Crimp gradient variance: 639.9 (Integrity score: 98.0%)."
+        },
+        "print_features": {
+          "mean_edge_acuity": 184.5,
+          "color_fringing_delta": 44.35,
+          "acuity_score": 0.68
+        },
+        "ocr_features": {
+          "extracted_text_excerpt": "Amul GOLD MILKY MILK J17CS vi8 fcai} fHcd5 FULL CREAM MILK 3 Fat _ 6.0% minimum 9.0% minimum EURISED SNF 2170",
+          "confidence": 0.707,
+          "total_characters": 109
+        },
+        "barcode_features": {
+          "available": false,
+          "barcode_value": null,
+          "barcode_type": null,
+          "checksum_valid": null,
+          "confidence": 0.0
+        },
+        "qr_features": {
+          "available": false,
+          "qr_content": null,
+          "domain": null,
+          "confidence": 0.0
+        },
+        "certification_features": {
+          "available": false,
+          "fssai_license": null,
+          "syntax_valid": null,
+          "jurisdiction": null
+        }
+      },
+      "individual_features": {
+        "QUALITY": {
+          "overall_quality": 0.714,
+          "usable": true,
+          "blur_score": 0.205
+        },
+        "LOGO": {
+          "orb_keypoint_count": 500,
+          "has_descriptors": true
+        },
+        "LAYOUT": {
+          "band_densities": [
+            0.0117,
+            0.0462,
+            0.045,
+            0.0361
+          ],
+          "centroid_norm": [
+            0.534,
+            0.52
+          ]
+        },
+        "COLOR_PALETTE": {
+          "dominant_lab_centers": [
+            [
+              155.4,
+              127.0,
+              133.5
+            ],
+            [
+              17.8,
+              139.0,
+              133.6
+            ],
+            [
+              113.9,
+              129.7,
+              134.2
+            ],
+            [
+              69.2,
+              157.9,
+              145.9
+            ]
+          ],
+          "mean_hsv": [
+            55.39,
+            85.58,
+            112.34
+          ]
+        },
+        "TYPOGRAPHY": {
+          "mean_stroke_width_px": 51.95,
+          "stroke_std_px": 50.65,
+          "stroke_coefficient_of_variation": 0.975
+        },
+        "TEXTURE_LBP": {
+          "pattern_entropy": 1.576,
+          "laplacian_variance": 51.33
+        },
+        "SHAPE": {
+          "aspect_ratio": 1.333
+        },
+        "SEAL": {
+          "available": true,
+          "crimp_integrity_score": 0.98,
+          "explanation": "Package heat-seal crimp bands evaluated. Crimp gradient variance: 639.9 (Integrity score: 98.0%)."
+        },
+        "PRINT": {
+          "mean_edge_acuity": 184.5,
+          "color_fringing_delta": 44.35,
+          "acuity_score": 0.68
+        },
+        "OCR": {
+          "extracted_text_excerpt": "Amul GOLD MILKY MILK J17CS vi8 fcai} fHcd5 FULL CREAM MILK 3 Fat _ 6.0% minimum 9.0% minimum EURISED SNF 2170",
+          "confidence": 0.707,
+          "total_characters": 109
+        },
+        "BARCODE": {
+          "available": false,
+          "barcode_value": null,
+          "barcode_type": null,
+          "checksum_valid": null,
+          "confidence": 0.0
+        },
+        "QR": {
+          "available": false,
+          "qr_content": null,
+          "domain": null,
+          "confidence": 0.0
+        },
+        "CERTIFICATION": {
+          "available": false,
+          "fssai_license": null,
+          "syntax_valid": null,
+          "jurisdiction": null
+        }
+      },
+      "duplicate_sources": [
+        {
+          "source_url": "local://raw_scans/scan_2cc093af-62b4-4037-874f-f709c2bd6785_back_Amul_Milk.jpg.png",
+          "source_domain": "verisure_local_capture",
+          "source_type": "VERIFIED_EXTERNAL",
+          "sha256": "683872e81233c1aecf26c8f7e97e4bc387c9808e78187d8bb7afa383bfe2d80d",
+          "distance": 0
+        },
+        {
+          "source_url": "local://raw_scans/scan_5f0c09bf-32a8-46d9-b8c8-2ff8760fcc27_front_Amul_Milk.jpg.png",
+          "source_domain": "verisure_local_capture",
+          "source_type": "VERIFIED_EXTERNAL",
+          "sha256": "683872e81233c1aecf26c8f7e97e4bc387c9808e78187d8bb7afa383bfe2d80d",
+          "distance": 0
+        },
+        {
+          "source_url": "local://raw_scans/scan_a39e9ffe-3af8-42a2-bcf7-11781059cf4c_front_Amul_Milk.jpg.png",
+          "source_domain": "verisure_local_capture",
+          "source_type": "VERIFIED_EXTERNAL",
+          "sha256": "683872e81233c1aecf26c8f7e97e4bc387c9808e78187d8bb7afa383bfe2d80d",
+          "distance": 0
+        },
+        {
+          "source_url": "local://raw_scans/scan_ebe3139f-ee82-4deb-8bab-e5a63d4ff104_back_Amul_Milk.jpg.png",
+          "source_domain": "verisure_local_capture",
+          "source_type": "VERIFIED_EXTERNAL",
+          "sha256": "683872e81233c1aecf26c8f7e97e4bc387c9808e78187d8bb7afa383bfe2d80d",
+          "distance": 0
+        },
+        {
+          "source_url": "local://raw_scans/scan_fb03b113-9fa6-4289-9f3f-a9cc3f2aae64_front_Amul_Milk.jpg.png",
+          "source_domain": "verisure_local_capture",
+          "source_type": "VERIFIED_EXTERNAL",
+          "sha256": "683872e81233c1aecf26c8f7e97e4bc387c9808e78187d8bb7afa383bfe2d80d",
+          "distance": 0
+        }
+      ]
+    },
+    {
+      "image_id": "TAAZA-V2-011",
+      "product_name": "Amul Taaza",
+      "variant_name": "Toned Milk",
+      "variant": "AMUL_TAAZA",
+      "pack_size": "500ml",
+      "pack_type": "POUCH",
+      "view_type": "FRONT",
+      "packaging_version": "V1",
+      "source_url": "local://raw_scans/scan_8c87c8eb-ca9f-4d4f-bfff-cbdc27a34383_back_FoP-Taaza-Milk-1L.png",
+      "source_domain": "verisure_local_capture",
+      "source_type": "VERIFIED_EXTERNAL",
+      "provenance_status": "VERIFIED_EXTERNAL",
+      "verification_status": "APPROVED",
+      "license_status": "INTERNAL_PROJECT",
+      "filename": "taaza-v2-011_front.png",
+      "relative_path": "references_v2/taaza-v2-011_front.png",
+      "absolute_path": "C:\\Users\\PRAVASH\\Desktop\\VeriSure_Ai\\data\\storage\\references_v2\\taaza-v2-011_front.png",
+      "sha256": "453eaf341dfa050561593bf1d9486f0708c55ee7684099623d38a31c510ab24d",
+      "hashes": {
+        "phash": "eac96d9434b69433",
+        "dhash": "0373616565654d33",
+        "whash": "c1b9b19595bda581"
+      },
+      "dimensions": "500x500",
+      "file_size_bytes": 145923,
+      "quality_score": 0.734,
+      "quality_status": "GOOD",
+      "blur_score": 1.0,
+      "detected_barcode": null,
+      "ocr_excerpt": "Amul Taaza KkL 31A05 clloll 6or PASTEURISED HOMOGENISED TONEDMiLZ minimum 1 SNF RS  minimim",
+      "fingerprint": {
+        "variant": "AMUL_TAAZA",
+        "packaging_version": "V1",
+        "view": "FRONT",
+        "dimensions": "500x500",
+        "quality": {
+          "overall_quality": 0.67,
+          "usable": false,
+          "blur_score": 1.0
+        },
+        "logo_features": {
+          "orb_keypoint_count": 500,
+          "has_descriptors": true
+        },
+        "layout_features": {
+          "band_densities": [
+            0.0194,
+            0.0668,
+            0.0793,
+            0.0497
+          ],
+          "centroid_norm": [
+            0.485,
+            0.494
+          ]
+        },
+        "colour_features": {
+          "dominant_lab_centers": [
+            [
+              253.0,
+              128.0,
+              127.9
+            ],
+            [
+              176.0,
+              131.7,
+              126.9
+            ],
+            [
+              84.3,
+              130.9,
+              92.1
+            ],
+            [
+              139.3,
+              127.4,
+              85.9
+            ]
+          ],
+          "mean_hsv": [
+            24.79,
+            42.56,
+            230.43
+          ]
+        },
+        "typography_features": {
+          "mean_stroke_width_px": 10.66,
+          "stroke_std_px": 8.89,
+          "stroke_coefficient_of_variation": 0.834
+        },
+        "texture_features": {
+          "pattern_entropy": 1.174,
+          "laplacian_variance": 1713.47
+        },
+        "shape_features": {
+          "aspect_ratio": 1.0
+        },
+        "seal_features": {
+          "available": true,
+          "crimp_integrity_score": 0.98,
+          "explanation": "Package heat-seal crimp bands evaluated. Crimp gradient variance: 14949.0 (Integrity score: 98.0%)."
+        },
+        "print_features": {
+          "mean_edge_acuity": 480.8,
+          "color_fringing_delta": 67.18,
+          "acuity_score": 0.68
+        },
+        "ocr_features": {
+          "extracted_text_excerpt": "Amul Taaza KkL 31A05 clloll 6or PASTEURISED HOMOGENISED TONEDMiLZ minimum 1 SNF RS  minimim",
+          "confidence": 0.472,
+          "total_characters": 91
+        },
+        "barcode_features": {
+          "available": false,
+          "barcode_value": null,
+          "barcode_type": null,
+          "checksum_valid": null,
+          "confidence": 0.0
+        },
+        "qr_features": {
+          "available": false,
+          "qr_content": null,
+          "domain": null,
+          "confidence": 0.0
+        },
+        "certification_features": {
+          "available": false,
+          "fssai_license": null,
+          "syntax_valid": null,
+          "jurisdiction": null
+        }
+      },
+      "individual_features": {
+        "QUALITY": {
+          "overall_quality": 0.67,
+          "usable": false,
+          "blur_score": 1.0
+        },
+        "LOGO": {
+          "orb_keypoint_count": 500,
+          "has_descriptors": true
+        },
+        "LAYOUT": {
+          "band_densities": [
+            0.0194,
+            0.0668,
+            0.0793,
+            0.0497
+          ],
+          "centroid_norm": [
+            0.485,
+            0.494
+          ]
+        },
+        "COLOR_PALETTE": {
+          "dominant_lab_centers": [
+            [
+              253.0,
+              128.0,
+              127.9
+            ],
+            [
+              176.0,
+              131.7,
+              126.9
+            ],
+            [
+              84.3,
+              130.9,
+              92.1
+            ],
+            [
+              139.3,
+              127.4,
+              85.9
+            ]
+          ],
+          "mean_hsv": [
+            24.79,
+            42.56,
+            230.43
+          ]
+        },
+        "TYPOGRAPHY": {
+          "mean_stroke_width_px": 10.66,
+          "stroke_std_px": 8.89,
+          "stroke_coefficient_of_variation": 0.834
+        },
+        "TEXTURE_LBP": {
+          "pattern_entropy": 1.174,
+          "laplacian_variance": 1713.47
+        },
+        "SHAPE": {
+          "aspect_ratio": 1.0
+        },
+        "SEAL": {
+          "available": true,
+          "crimp_integrity_score": 0.98,
+          "explanation": "Package heat-seal crimp bands evaluated. Crimp gradient variance: 14949.0 (Integrity score: 98.0%)."
+        },
+        "PRINT": {
+          "mean_edge_acuity": 480.8,
+          "color_fringing_delta": 67.18,
+          "acuity_score": 0.68
+        },
+        "OCR": {
+          "extracted_text_excerpt": "Amul Taaza KkL 31A05 clloll 6or PASTEURISED HOMOGENISED TONEDMiLZ minimum 1 SNF RS  minimim",
+          "confidence": 0.472,
+          "total_characters": 91
+        },
+        "BARCODE": {
+          "available": false,
+          "barcode_value": null,
+          "barcode_type": null,
+          "checksum_valid": null,
+          "confidence": 0.0
+        },
+        "QR": {
+          "available": false,
+          "qr_content": null,
+          "domain": null,
+          "confidence": 0.0
+        },
+        "CERTIFICATION": {
+          "available": false,
+          "fssai_license": null,
+          "syntax_valid": null,
+          "jurisdiction": null
+        }
+      },
+      "duplicate_sources": [
+        {
+          "source_url": "local://raw_scans/scan_8c87c8eb-ca9f-4d4f-bfff-cbdc27a34383_front_FoP-Taaza-Milk-1L.png",
+          "source_domain": "verisure_local_capture",
+          "source_type": "VERIFIED_EXTERNAL",
+          "sha256": "453eaf341dfa050561593bf1d9486f0708c55ee7684099623d38a31c510ab24d",
+          "distance": 0
+        },
+        {
+          "source_url": "local://raw_scans/scan_fa4c2310-e434-45ef-ad01-b503a0ec8163_front_FoP-Taaza-Milk-1L.png",
+          "source_domain": "verisure_local_capture",
+          "source_type": "VERIFIED_EXTERNAL",
+          "sha256": "453eaf341dfa050561593bf1d9486f0708c55ee7684099623d38a31c510ab24d",
+          "distance": 0
+        }
+      ]
+    }
+  ],
+  "negative_records": [
+    {
+      "sample_id": "NEG-001",
+      "category": "NON_PRODUCT_IMAGE",
+      "label": "NON_PRODUCT_IMAGE",
+      "provenance_status": "VERIFIED_EXTERNAL",
+      "filename": "neg_scan_13be725f-f0b2-44ab-83b4-7867bbf5ae58_front_architecture_diagram.png",
+      "relative_path": "negative_samples/neg_scan_13be725f-f0b2-44ab-83b4-7867bbf5ae58_front_architecture_diagram.png",
+      "sha256": "256c22cf0ad7947a43d11d5d9034af6c2f40d43b380a6ceff0df92206726fb46",
+      "signals": {
+        "barcode_match": null,
+        "text_matches": {},
+        "color_signature": null,
+        "detected_competitor": null,
+        "is_diagram": true
+      },
+      "source_url": "local://raw_scans/scan_13be725f-f0b2-44ab-83b4-7867bbf5ae58_front_architecture_diagram.png"
+    },
+    {
+      "sample_id": "NEG-002",
+      "category": "NON_PRODUCT_IMAGE",
+      "label": "NON_PRODUCT_IMAGE",
+      "provenance_status": "VERIFIED_EXTERNAL",
+      "filename": "neg_scan_4790eb3c-50d9-4559-b686-dfe962fffce3_front_architecture_diagram.png",
+      "relative_path": "negative_samples/neg_scan_4790eb3c-50d9-4559-b686-dfe962fffce3_front_architecture_diagram.png",
+      "sha256": "256c22cf0ad7947a43d11d5d9034af6c2f40d43b380a6ceff0df92206726fb46",
+      "signals": {
+        "barcode_match": null,
+        "text_matches": {},
+        "color_signature": null,
+        "detected_competitor": null,
+        "is_diagram": true
+      },
+      "source_url": "local://raw_scans/scan_4790eb3c-50d9-4559-b686-dfe962fffce3_front_architecture_diagram.png"
+    },
+    {
+      "sample_id": "NEG-003",
+      "category": "NON_PRODUCT_IMAGE",
+      "label": "NON_PRODUCT_IMAGE",
+      "provenance_status": "VERIFIED_EXTERNAL",
+      "filename": "neg_scan_84c4cae2-b785-4733-b5f1-ed80ea6ade0b_front_architecture_diagram.png",
+      "relative_path": "negative_samples/neg_scan_84c4cae2-b785-4733-b5f1-ed80ea6ade0b_front_architecture_diagram.png",
+      "sha256": "256c22cf0ad7947a43d11d5d9034af6c2f40d43b380a6ceff0df92206726fb46",
+      "signals": {
+        "barcode_match": null,
+        "text_matches": {},
+        "color_signature": null,
+        "detected_competitor": null,
+        "is_diagram": true
+      },
+      "source_url": "local://raw_scans/scan_84c4cae2-b785-4733-b5f1-ed80ea6ade0b_front_architecture_diagram.png"
+    },
+    {
+      "sample_id": "NEG-004",
+      "category": "NON_PRODUCT_IMAGE",
+      "label": "NON_PRODUCT_IMAGE",
+      "provenance_status": "VERIFIED_EXTERNAL",
+      "filename": "neg_scan_fe4d450d-5763-42c9-9401-b2a1f2776886_front_architecture_diagram.png",
+      "relative_path": "negative_samples/neg_scan_fe4d450d-5763-42c9-9401-b2a1f2776886_front_architecture_diagram.png",
+      "sha256": "256c22cf0ad7947a43d11d5d9034af6c2f40d43b380a6ceff0df92206726fb46",
+      "signals": {
+        "barcode_match": null,
+        "text_matches": {},
+        "color_signature": null,
+        "detected_competitor": null,
+        "is_diagram": true
+      },
+      "source_url": "local://raw_scans/scan_fe4d450d-5763-42c9-9401-b2a1f2776886_front_architecture_diagram.png"
+    },
+    {
+      "sample_id": "NEG-005",
+      "category": "OTHER_BRAND",
+      "label": "OTHER_BRAND",
+      "brand": "Mother Dairy",
+      "provenance_status": "VERIFIED_EXTERNAL",
+      "filename": "neg_mother_dairy_full_cream.png",
+      "relative_path": "negative_samples/neg_mother_dairy_full_cream.png",
+      "sha256": "035d5f0f09274402590392abd251c00dc283bba4ec081fbee208c58175a0f896",
+      "signals": {
+        "barcode_match": null,
+        "text_matches": {},
+        "color_signature": null,
+        "detected_competitor": "mother dairy",
+        "is_diagram": false
+      },
+      "source_url": "local://raw_scans/mother_dairy"
+    }
+  ]
+}

@@ -1,0 +1,53 @@
+{
+  "doc_id": "amul_gold_specification",
+  "title": "Official Packaging & Product Specification: Amul Gold Full Cream Milk",
+  "brand": "Amul",
+  "manufacturer": "Gujarat Co-operative Milk Marketing Federation Ltd. (GCMMF)",
+  "variant": "AMUL_GOLD",
+  "product_name": "Amul Gold",
+  "category": "Pasteurised Full Cream Milk",
+  "description": "Standardized and pasteurized full cream milk meeting Food Safety and Standards (FSSAI) requirements.",
+  "composition": {
+    "minimum_milk_fat": "6.0%",
+    "minimum_snf": "9.0%",
+    "nutritional_info_per_100ml": {
+      "energy_kcal": 88.0,
+      "protein_g": 3.3,
+      "total_carbohydrates_g": 4.9,
+      "added_sugar_g": 0.0,
+      "total_fat_g": 6.0,
+      "saturated_fat_g": 3.8,
+      "trans_fat_g": 0.0,
+      "calcium_mg": 140.0
+    }
+  },
+  "packaging": {
+    "material": "Multi-layer Low Density Polyethylene (LDPE/LLDPE) Food-grade Film",
+    "pack_type": "Form-Fill-Seal (FFS) Poly Pouch",
+    "supported_sizes": ["500 mL", "1 L", "6 L"],
+    "registered_barcodes": {
+      "500ml": "8901262150217",
+      "1L": "8901262260114"
+    },
+    "registered_fssai_license": "10012021000071",
+    "storage_condition": "Store continuously under refrigeration at 8°C or below",
+    "shelf_life": "48 hours from date of packing under refrigeration"
+  },
+  "packaging_versions": [
+    {
+      "version_code": "V1",
+      "status": "HISTORICAL",
+      "effective_period": "2018 - 2021",
+      "visual_cues": "Classic red wave graphics, Amul Girl in chef hat holding milk glass, standard nutritional table without explicit added sugar subline.",
+      "barcode": "8901262260114"
+    },
+    {
+      "version_code": "V2",
+      "status": "ACTIVE",
+      "effective_period": "2021 - Present",
+      "visual_cues": "Updated FSSAI 2020 nutrition table declaration (explicit Added Sugar: 0.0g), QR traceability code on back panel, modernized typography.",
+      "barcode": "8901262260114"
+    }
+  ]
+}
+

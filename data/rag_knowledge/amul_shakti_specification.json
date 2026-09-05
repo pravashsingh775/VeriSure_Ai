@@ -1,0 +1,53 @@
+{
+  "doc_id": "amul_shakti_specification",
+  "title": "Official Packaging & Product Specification: Amul Shakti Standardised Milk",
+  "brand": "Amul",
+  "manufacturer": "Gujarat Co-operative Milk Marketing Federation Ltd. (GCMMF)",
+  "variant": "AMUL_SHAKTI",
+  "product_name": "Amul Shakti",
+  "category": "Pasteurised Standardised Milk",
+  "description": "Standardised milk with balanced fat and proteins offering complete nutrition for active lifestyles.",
+  "composition": {
+    "minimum_milk_fat": "4.5%",
+    "minimum_snf": "8.5%",
+    "nutritional_info_per_100ml": {
+      "energy_kcal": 72.0,
+      "protein_g": 3.2,
+      "total_carbohydrates_g": 4.8,
+      "added_sugar_g": 0.0,
+      "total_fat_g": 4.5,
+      "saturated_fat_g": 2.8,
+      "trans_fat_g": 0.0,
+      "calcium_mg": 130.0
+    }
+  },
+  "packaging": {
+    "material": "Multi-layer LDPE/LLDPE Food-grade Poly Film",
+    "pack_type": "Form-Fill-Seal (FFS) Poly Pouch",
+    "supported_sizes": ["500 mL", "1 L"],
+    "registered_barcodes": {
+      "500ml": "8901262260138",
+      "1L": "8901262150415"
+    },
+    "registered_fssai_license": "10012021000071",
+    "storage_condition": "Store under refrigeration at 8°C or below",
+    "shelf_life": "48 hours from date of packing under refrigeration"
+  },
+  "packaging_versions": [
+    {
+      "version_code": "V1",
+      "status": "HISTORICAL",
+      "effective_period": "2018 - 2021",
+      "visual_cues": "Emerald/green wave graphics, girl flexing with dumbbells, nutritional panel.",
+      "barcode": "8901262260138"
+    },
+    {
+      "version_code": "V2",
+      "status": "ACTIVE",
+      "effective_period": "2021 - Present",
+      "visual_cues": "Modernized green wave artwork, revised energy/fat FSSAI compliance declarations, EAN-13 barcode.",
+      "barcode": "8901262260138"
+    }
+  ]
+}
+

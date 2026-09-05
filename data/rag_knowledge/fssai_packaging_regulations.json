@@ -1,0 +1,26 @@
+{
+  "doc_id": "fssai_packaging_regulations",
+  "title": "FSSAI Packaging and Labelling Regulatory Standards for Milk Pouches",
+  "authority": "Food Safety and Standards Authority of India (FSSAI)",
+  "applicable_regulations": [
+    "Food Safety and Standards (Packaging) Regulations, 2018",
+    "Food Safety and Standards (Labelling and Display) Regulations, 2020",
+    "Legal Metrology (Packaged Commodities) Rules, 2011"
+  ],
+  "mandatory_declarations_on_milk_pouches": {
+    "product_name": "Clear declaration of product name and classification (e.g. Full Cream Milk, Toned Milk, Standardised Milk)",
+    "net_quantity": "Net quantity in standard SI units (mL or L) with minimum numeral height as per pack volume",
+    "fssai_logo_and_license": "FSSAI logo with 14-digit central/state license number displayed prominently",
+    "date_marking": "Date of packaging and 'Use by' / 'Best before' date with explicit temperature storage guidance",
+    "vegetarian_logo": "Green filled circle inside green square border signifying 100% vegetarian product",
+    "consumer_care": "Name, address, email, and telephone number of the manufacturer / consumer care cell",
+    "recyclability_marking": "Plastic waste management thickness declaration and recycling triangle symbol (LDPE 4)"
+  },
+  "analytical_limits": {
+    "full_cream_milk": {"min_fat": 6.0, "min_snf": 9.0},
+    "standardised_milk": {"min_fat": 4.5, "min_snf": 8.5},
+    "toned_milk": {"min_fat": 3.0, "min_snf": 8.5},
+    "double_toned_milk": {"min_fat": 1.5, "min_snf": 9.0}
+  }
+}
+
