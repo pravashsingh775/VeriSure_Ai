@@ -83,11 +83,13 @@ class ReferenceRetriever:
 
                         # Base relevance score starts at 0.0 — requires actual evidence to qualify
                         match_score = 0.0
+                        has_positive_identity = False
 
                         # 1. Barcode match is a definitive candidate indicator
                         if detected_barcode and pv.expected_barcode:
                             if detected_barcode == pv.expected_barcode:
                                 match_score += 0.65
+                                has_positive_identity = True
                             else:
                                 match_score -= 0.30
 
@@ -95,21 +97,27 @@ class ReferenceRetriever:
                         has_amul = any(ak in text_upper for ak in ["AMUL", "अमूल", "GCMMF", "ANAND"])
                         if has_amul:
                             match_score += 0.25
+                            has_positive_identity = True
 
                         if prod.name.upper() in text_upper:
                             match_score += 0.25
+                            has_positive_identity = True
                         if variant.variant_name.upper() in text_upper:
                             match_score += 0.20
+                            has_positive_identity = True
                         if ps.pack_size.upper() in text_upper:
                             match_score += 0.15
 
                         for kw in brand_keywords.get(prod.name, []):
                             if kw in text_upper:
                                 match_score += 0.30
+                                has_positive_identity = True
                                 break
 
                         # 3. Visual color signature cues
-                        if dominant_color and prod.name == dominant_color:
+                        # Color cues can only boost an already-identified candidate,
+                        # NEVER introduce an Amul candidate out of thin air on a generic color patch!
+                        if dominant_color and prod.name == dominant_color and has_positive_identity:
                             match_score += 0.25
 
                         # Strict Reference Selection:
@@ -150,9 +158,9 @@ class ReferenceRetriever:
 
                         match_score = min(1.0, max(0.0, match_score))
 
-                        # Strict Gatekeeper Threshold: Ignore candidates with zero or insufficient evidence
+                        # Strict Gatekeeper Threshold: Require at least one positive identity marker!
                         # Prevents non-packaging diagrams or competitor brands from hallucinating Amul Gold
-                        if match_score < 0.30:
+                        if not has_positive_identity or match_score < 0.30:
                             continue
 
                         is_historical = (pv.status == "DEPRECATED")

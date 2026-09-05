@@ -150,6 +150,24 @@ async def download_scan_pdf_report(
     report_rel_path = f"reports/report_{scan_id}.pdf"
     abs_path = storage.get_absolute_path(report_rel_path)
 
+    if not abs_path.exists() and scan_detail.decision:
+        abs_path.parent.mkdir(parents=True, exist_ok=True)
+        from backend.app.ai.reporting.pdf_generator import VeriSurePDFGenerator
+        product_metadata = {
+            "brand": "AMUL",
+            "product": scan_detail.identified_product_name or "Amul Dairy Product",
+            "variant": scan_detail.identified_variant_name or "Standard",
+            "pack_size": scan_detail.identified_pack_size or "500ml",
+            "packaging_version": scan_detail.packaging_version_code or "V1",
+        }
+        VeriSurePDFGenerator.generate_report(
+            output_pdf_path=str(abs_path),
+            scan_id=scan_id,
+            product_metadata=product_metadata,
+            decision=scan_detail.decision,
+            evidences=scan_detail.evidences,
+        )
+
     if not abs_path.exists():
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,

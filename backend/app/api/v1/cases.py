@@ -21,8 +21,10 @@ async def list_suspicious_cases(
     List suspicious verification cases pending triage and human review.
     """
     # Scope brand users to their own brand
-    if not current_user.is_superuser and current_user.brand_id:
-        brand_id = current_user.brand_id
+    if not current_user.is_superuser:
+        user_brand = getattr(current_user, "brand_id", None)
+        if user_brand:
+            brand_id = user_brand
 
     return await CaseService.list_cases(db, brand_id=brand_id, status_filter=status)
 

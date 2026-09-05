@@ -15,6 +15,12 @@ class User(BaseModel):
     scans = relationship("Scan", back_populates="user", cascade="all, delete-orphan")
     brand_memberships = relationship("BrandUser", back_populates="user", cascade="all, delete-orphan")
 
+    @property
+    def brand_id(self):
+        if self.brand_memberships:
+            return self.brand_memberships[0].brand_id
+        return None
+
 
 class Role(BaseModel):
     __tablename__ = "roles"

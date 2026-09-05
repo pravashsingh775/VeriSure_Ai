@@ -101,6 +101,23 @@ class DomainGatekeeperEngine:
 
         return True, "PHYSICAL_PACKAGING", 0.88
 
+
+    COMPETITOR_PATTERNS = [
+        ("Mother Dairy", re.compile(r"\bM[O0]TH[A-Z0-9]{1,4}\s*DAIRY\b|\bMOTHER\s*DAIRY\b|\bMOTHERDAIRY\b|\bMOTHLRA\b|\bमदर\s*डेयरी\b", re.IGNORECASE)),
+        ("Nandini", re.compile(r"\bNAND[I1]N[I1]\b|\bKMF\b|\bನಂದಿನಿ\b", re.IGNORECASE)),
+        ("Country Delight", re.compile(r"\bCOUNTRY\s*DEL[I1]GHT\b", re.IGNORECASE)),
+        ("Nestle", re.compile(r"\bNESTL[EÉ3]\b", re.IGNORECASE)),
+        ("Gokul", re.compile(r"\bG[O0]KUL\b|\bगोकुळ\b|\bKOLHAPUR\s*ZILLA\b", re.IGNORECASE)),
+        ("Saras", re.compile(r"\bSARAS\b|\bसरस\b|\bRCDF\b", re.IGNORECASE)),
+        ("Verka", re.compile(r"\bVERKA\b|\bਵਰਕਾ\b|\bMILKFED\b", re.IGNORECASE)),
+        ("Sudha", re.compile(r"\bSUDHA\b|\bसुधा\b|\bCOMFED\b", re.IGNORECASE)),
+        ("Aavin", re.compile(r"\bAAV[I1]N\b|\bஆவின்\b|\bTCMPF\b", re.IGNORECASE)),
+        ("Vijaya", re.compile(r"\bV[I1]JAYA\b|\bविजया\b|\bTSDDCF\b", re.IGNORECASE)),
+        ("Milma", re.compile(r"\bM[I1]LMA\b|\bமில்மா\b|\bKCMMF\b", re.IGNORECASE)),
+        ("Heritage", re.compile(r"\bHER[I1]TAGE\b", re.IGNORECASE)),
+        ("Dodla", re.compile(r"\bD[O0]DLA\b", re.IGNORECASE)),
+    ]
+
     @staticmethod
     def detect_brand(image_bgr: np.ndarray, ocr_text: str = "") -> Dict[str, Any]:
         """
@@ -116,6 +133,18 @@ class DomainGatekeeperEngine:
         text_upper = ocr_text.upper() if ocr_text else ""
 
         # 1. Check for competitor/unsupported brands first
+        # 1. Check for competitor/unsupported brands via regex patterns
+        for brand_name, pattern in DomainGatekeeperEngine.COMPETITOR_PATTERNS:
+            m = pattern.search(text_upper)
+            if m:
+                return {
+                    "brand": brand_name,
+                    "is_supported": False,
+                    "confidence": 0.95,
+                    "reason": f"Detected competitor brand '{brand_name}' via trademark pattern '{m.group(0)}'."
+                }
+
+        # Also check exact substring keyword matches
         for brand_name, keywords in DomainGatekeeperEngine.COMPETITOR_BRANDS.items():
             for kw in keywords:
                 if kw in text_upper:
@@ -162,6 +191,9 @@ class DomainGatekeeperEngine:
                 }
 
         # 4. Unknown / Undetermined Brand
+        # 3. Unknown / Undetermined Brand
+        # Note: We intentionally avoid assuming that arbitrary red, blue, or green packages
+        # are Amul, because competitor packaging (e.g. Mother Dairy, Nandini) shares the same hues.
         return {
             "brand": "UNKNOWN",
             "is_supported": False,
