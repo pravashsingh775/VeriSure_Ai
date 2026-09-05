@@ -57,6 +57,14 @@ export const RiskBadge: React.FC<RiskBadgeProps> = ({ decision }) => {
           title: 'TAMPERED / DAMAGED',
           subtitle: 'Heat-seal crimp or package integrity compromised. DO NOT CONSUME.',
         };
+      case 'UNSUPPORTED_PRODUCT':
+        return {
+          bg: 'bg-amber-50 border-amber-300 text-amber-900',
+          badgeBg: 'bg-amber-600 text-white',
+          icon: <AlertCircle className="w-8 h-8 text-amber-600" />,
+          title: 'UNSUPPORTED BRAND / PRODUCT',
+          subtitle: 'Non-Amul product or competitor brand detected. VeriSure AI only assesses authorized Amul products.',
+        };
       case 'INSUFFICIENT_EVIDENCE':
       default:
         return {

@@ -237,6 +237,204 @@ class ScanService:
         return await ScanService.get_scan_detail(db, scan.id)
 
     @staticmethod
+    async def process_dual_scan(
+        db: AsyncSession,
+        file_front: UploadFile,
+        file_back: UploadFile,
+        user_id: Optional[str] = None
+    ) -> ScanDetailResponse:
+        """
+        Executes dual-image 360° verification using both Front and Back panels:
+        - Front panel: Evaluates Logo, Layout, Colour, Typography, Shape, Texture, Front Seals.
+        - Back panel: Evaluates 1D Barcode (EAN-13), QR Code, FSSAI License, Print Quality, Back Seals, Nutrition OCR.
+        - Cross-side check: Ensures front variant matches back barcode identity.
+        """
+        # 1. Create Scan record
+        scan = Scan(
+            user_id=user_id,
+            status="ANALYZING",
+            total_images=2,
+            is_multi_angle=True
+        )
+        db.add(scan)
+        await db.flush()
+
+        # 2. Validate and Save both files
+        max_bytes = settings.MAX_UPLOAD_SIZE_MB * 1024 * 1024
+        raw_front = await file_front.read()
+        raw_back = await file_back.read()
+
+        for raw_data, side_label in [(raw_front, "front"), (raw_back, "back")]:
+            if len(raw_data) == 0:
+                raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=f"Uploaded {side_label} file is empty.")
+            if len(raw_data) > max_bytes:
+                raise HTTPException(status_code=status.HTTP_413_REQUEST_ENTITY_TOO_LARGE, detail=f"{side_label.capitalize()} image exceeds {settings.MAX_UPLOAD_SIZE_MB} MB.")
+            if not ScanService._is_decodable_image(raw_data):
+                raise HTTPException(status_code=status.HTTP_415_UNSUPPORTED_MEDIA_TYPE, detail=f"Unsupported format for {side_label} image (must be JPEG, PNG, or WebP).")
+
+        rel_front, abs_front = await storage.save_bytes(
+            data=raw_front,
+            subfolder="raw_scans",
+            filename=f"scan_{scan.id}_front_{file_front.filename}",
+            extension=".png"
+        )
+        rel_back, abs_back = await storage.save_bytes(
+            data=raw_back,
+            subfolder="raw_scans",
+            filename=f"scan_{scan.id}_back_{file_back.filename}",
+            extension=".png"
+        )
+
+        # 3. Read both images via OpenCV
+        img_front_bgr = cv2.imread(abs_front)
+        img_back_bgr = cv2.imread(abs_back)
+        if img_front_bgr is None or img_front_bgr.size == 0 or img_back_bgr is None or img_back_bgr.size == 0:
+            scan.status = "FAILED"
+            scan.error_code = "VERISURE-IMG-001"
+            scan.error_message = "Unable to decode one or more image files."
+            await db.commit()
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=scan.error_message)
+
+        # 4. Execute Full AI Dual Orchestration Pipeline
+        pipeline_output = await orchestrator.execute_dual_pipeline(
+            db=db,
+            scan_id=scan.id,
+            image_front_bgr=img_front_bgr,
+            image_back_bgr=img_back_bgr
+        )
+
+        decision_res: DecisionResult = pipeline_output["decision"]
+        evidences: List[EvidenceObject] = pipeline_output["evidences"]
+        best_candidate = pipeline_output.get("identified_product")
+        images_info = pipeline_output.get("images", [])
+
+        # 5. Persist both ScanImage records
+        for img_info in images_info:
+            v_type = img_info["view_type"]
+            q_res = img_info["quality"]
+            d_box = img_info["detection"]
+            orig_name = file_front.filename if v_type == "FRONT" else file_back.filename
+            raw_rel = rel_front if v_type == "FRONT" else rel_back
+
+            s_img = ScanImage(
+                scan_id=scan.id,
+                view_type=v_type,
+                image_path=raw_rel,
+                original_filename=orig_name,
+                quality_score=q_res.overall_quality if q_res else None,
+                quality_details=q_res.model_dump() if q_res else None,
+                detected_bbox=list(d_box.bbox) if d_box else None,
+                crop_path=img_info.get("crop_path"),
+                heatmap_path=img_info.get("heatmap_path")
+            )
+            db.add(s_img)
+
+        # 6. Persist Evidences
+        for ev in evidences:
+            ev_record = Evidence(
+                scan_id=scan.id,
+                evidence_type=ev.type.value,
+                score=ev.score,
+                confidence=ev.confidence,
+                availability=ev.availability,
+                quality=ev.quality,
+                source=ev.source,
+                reference_id=best_candidate.get("reference_image_id") if best_candidate else None,
+                model_version=ev.model_version,
+                features=ev.features,
+                regions=[r.model_dump() for r in ev.regions],
+                explanation=ev.explanation,
+                warnings=ev.warnings
+            )
+            db.add(ev_record)
+
+        # 7. Persist Decision
+        decision_record = Decision(
+            scan_id=scan.id,
+            decision_state=decision_res.state.value,
+            risk_score=decision_res.risk_score,
+            confidence=decision_res.confidence,
+            uncertainty=decision_res.uncertainty,
+            evidence_coverage=decision_res.evidence_coverage,
+            recommendation=decision_res.recommendation,
+            reason_codes=decision_res.reason_codes,
+            explanation_summary=decision_res.explanation_summary,
+            contradictions=decision_res.contradictions
+        )
+        db.add(decision_record)
+
+        # 8. Persist Fingerprint
+        if fingerprint := pipeline_output.get("fingerprint"):
+            fp_record = PackagingFingerprintRecord(
+                scan_id=scan.id,
+                fingerprint_json=fingerprint.model_dump()
+            )
+            db.add(fp_record)
+
+        # 9. Persist Report Record
+        if report_rel := pipeline_output.get("report_path"):
+            report_abs = storage.get_absolute_path(report_rel)
+            file_size = os.path.getsize(report_abs) if report_abs.exists() else 0
+            pdf_sha = None
+            if report_abs.exists():
+                import hashlib
+                with open(report_abs, "rb") as f:
+                    pdf_sha = hashlib.sha256(f.read()).hexdigest()
+            rep_record = ReportRecord(
+                scan_id=scan.id,
+                pdf_path=report_rel,
+                pdf_sha256=pdf_sha,
+                file_size_bytes=file_size,
+                generated_at=datetime.utcnow()
+            )
+            db.add(rep_record)
+
+        # 10. Update Scan Metadata
+        scan.status = "REPORT_READY"
+        scan.completed_at = datetime.utcnow()
+        if best_candidate:
+            scan.identified_product_id = best_candidate.get("product_id")
+            scan.identified_packaging_version_id = best_candidate.get("packaging_version_id")
+            scan.matched_reference_id = best_candidate.get("reference_image_id")
+
+        # 11. Auto-Triage Suspicious Case if high risk or tampered
+        if decision_res.risk_score >= 60.0 or decision_res.state in [
+            DecisionState.CRITICAL_RISK,
+            DecisionState.HIGH_RISK,
+            DecisionState.TAMPERED_OR_DAMAGED
+        ]:
+            from backend.app.models.brand import Brand
+            brand_id = (await db.execute(select(Brand.id).where(Brand.code == "AMUL"))).scalar_one_or_none()
+            if brand_id:
+                case = SuspiciousCase(
+                    scan_id=scan.id,
+                    brand_id=brand_id,
+                    case_number=f"CASE-{datetime.utcnow().strftime('%Y%m%d')}-{scan.id[:8].upper()}",
+                    status="OPEN",
+                    priority="HIGH" if decision_res.risk_score >= 75.0 else "MEDIUM",
+                    notes=f"Auto-generated triage case from 360° dual-side scan. Risk Score: {decision_res.risk_score}/100. State: {decision_res.state.value}."
+                )
+                db.add(case)
+
+        await log_audit_event(
+            session=db,
+            action="DUAL_SCAN_PROCESSED",
+            resource_type="SCAN",
+            resource_id=scan.id,
+            user_id=user_id,
+            changes={
+                "risk_score": decision_res.risk_score,
+                "state": decision_res.state.value,
+                "product": best_candidate.get("product_name") if best_candidate else "Unknown",
+                "images_analyzed": 2
+            }
+        )
+        await db.commit()
+
+        # Construct and return full response
+        return await ScanService.get_scan_detail(db, scan.id)
+
+    @staticmethod
     async def get_scan_detail(db: AsyncSession, scan_id: str) -> ScanDetailResponse:
         stmt = (
             select(Scan)

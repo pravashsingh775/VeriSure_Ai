@@ -85,6 +85,18 @@ export const scanApi = {
     });
     return res.data;
   },
+  uploadDualScan: async (fileFront: File, fileBack: File): Promise<ScanDetail> => {
+    const formData = new FormData();
+    formData.append('file_front', fileFront);
+    formData.append('file_back', fileBack);
+
+    const res = await apiClient.post<ScanDetail>('/scans/upload-dual', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    return res.data;
+  },
   getScanDetail: async (scanId: string): Promise<ScanDetail> => {
     const res = await apiClient.get<ScanDetail>(`/scans/${scanId}`);
     return res.data;

@@ -12,7 +12,12 @@ class DecisionEngine:
         fusion_result: Dict[str, Any],
         quality_result: QualityAssessmentResult,
         evidences: List[EvidenceObject],
-        product_identified: bool = True
+        product_identified: bool = True,
+        is_packaging: bool = True,
+        packaging_category: str = "PHYSICAL_PACKAGING",
+        detected_brand: Optional[str] = None,
+        is_supported_brand: bool = True,
+        brand_reason: Optional[str] = None
     ) -> DecisionResult:
         risk_score = fusion_result["risk_score"]
         confidence = fusion_result["confidence"]
@@ -24,7 +29,49 @@ class DecisionEngine:
         reason_codes: List[str] = []
         ev_map = {e.type.value: e for e in evidences if e.availability and e.score is not None}
 
-        # 1. Quality gate
+        # 0. Domain & Non-Packaging Gate (Diagrams, schematics, documents, screenshots)
+        if not is_packaging:
+            return DecisionResult(
+                state=DecisionState.INSUFFICIENT_EVIDENCE,
+                risk_score=0.0,
+                confidence=0.10,
+                uncertainty=0.95,
+                evidence_coverage=0.0,
+                recommendation="Please upload a clear photograph of a physical Amul flexible milk pouch.",
+                reason_codes=["NOT_PHYSICAL_PACKAGING", f"DETECTED_{packaging_category.upper()}"],
+                explanation_summary=(
+                    "The uploaded image is not a physical flexible milk pouch packaging "
+                    f"(detected: {packaging_category.lower().replace('_', ' ')}). VeriSure AI requires "
+                    "a photograph of physical FMCG dairy packaging to conduct authenticity risk analysis."
+                ),
+                contradictions=[],
+                suspicious_regions=[]
+            )
+
+        # 1. Competitor / Unsupported Brand Gate (e.g. Mother Dairy, Nandini, Nestle)
+        if not is_supported_brand and detected_brand and detected_brand != "UNKNOWN":
+            return DecisionResult(
+                state=DecisionState.UNSUPPORTED_PRODUCT,
+                risk_score=0.0,
+                confidence=0.90,
+                uncertainty=0.10,
+                evidence_coverage=coverage,
+                recommendation=(
+                    f"System currently supports Amul dairy packaging only. "
+                    f"Please upload an Amul milk pouch (Amul Gold, Amul Taaza, or Amul Shakti)."
+                ),
+                reason_codes=["UNSUPPORTED_BRAND", f"DETECTED_BRAND_{detected_brand.upper().replace(' ', '_')}"],
+                explanation_summary=(
+                    f"Unsupported Brand Detected: This product appears to be '{detected_brand}'. "
+                    "VeriSure AI V1 is calibrated specifically for Amul flexible milk pouches "
+                    "(Amul Gold, Amul Taaza, Amul Shakti). Authenticity verification cannot be performed "
+                    f"on unsupported or competitor brand packaging."
+                ),
+                contradictions=[],
+                suspicious_regions=[]
+            )
+
+        # 2. Quality gate
         if not quality_result.usable:
             return DecisionResult(
                 state=DecisionState.INSUFFICIENT_EVIDENCE,
@@ -39,22 +86,22 @@ class DecisionEngine:
                 suspicious_regions=[]
             )
 
-        # 2. Product identity gate
+        # 3. Product identity gate
         if not product_identified:
             return DecisionResult(
                 state=DecisionState.UNSUPPORTED_PRODUCT,
-                risk_score=50.0,
-                confidence=0.40,
+                risk_score=0.0,
+                confidence=0.30,
                 uncertainty=0.85,
                 evidence_coverage=coverage,
-                recommendation="This product is currently not cataloged in the VeriSure reference database.",
-                reason_codes=["UNSUPPORTED_OR_UNKNOWN_PRODUCT"],
-                explanation_summary="The detected packaging does not match any registered product variant or authorized packaging version.",
+                recommendation="System can only verify Amul product packaging (Amul Gold, Amul Taaza, Amul Shakti). Please upload a valid Amul milk pouch.",
+                reason_codes=["UNRECOGNIZED_PACKAGING_OR_BRAND"],
+                explanation_summary="The detected packaging does not match any registered product variant or authorized Amul packaging version in the factory reference corpus.",
                 contradictions=[],
                 suspicious_regions=[]
             )
 
-        # 3. Seal integrity gate
+        # 4. Seal integrity gate
         seal_ev = ev_map.get(EvidenceType.SEAL.value)
         if seal_ev and seal_ev.score is not None and seal_ev.score < 0.35:
             reason_codes.append("SEAL_INTEGRITY_COMPROMISED")

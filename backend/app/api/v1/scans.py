@@ -64,6 +64,28 @@ async def upload_and_scan_product(
     )
 
 
+@router.post("/upload-dual", response_model=ScanDetailResponse, status_code=201)
+async def upload_dual_product_scan(
+    file_front: UploadFile = File(...),
+    file_back: UploadFile = File(...),
+    db: AsyncSession = Depends(get_db),
+    optional_user: Optional[User] = Depends(get_optional_user)
+):
+    """
+    Submits both Front and Back product photographs for comprehensive 360° verification:
+    - Front panel: Evaluates Logo, Typography, Layout, Colour, Shape, Texture, Front Seals.
+    - Back panel: Evaluates 1D Barcode (EAN-13), QR Code, FSSAI License, Print Quality, Back Seals, Nutrition OCR.
+    - Cross-side check: Ensures front variant matches back barcode identity.
+    """
+    user_id = optional_user.id if optional_user else None
+    return await ScanService.process_dual_scan(
+        db=db,
+        file_front=file_front,
+        file_back=file_back,
+        user_id=user_id
+    )
+
+
 @router.get("/history/me", response_model=List[ScanSummaryResponse])
 async def get_my_scan_history(
     db: AsyncSession = Depends(get_db),

@@ -81,17 +81,21 @@ class ReferenceRetriever:
                         if pv.status not in ["ACTIVE", "DEPRECATED", "APPROVED"]:
                             continue
 
-                        # Base relevance score
-                        match_score = 0.40
+                        # Base relevance score starts at 0.0 — requires actual evidence to qualify
+                        match_score = 0.0
 
                         # 1. Barcode match is a definitive candidate indicator
                         if detected_barcode and pv.expected_barcode:
                             if detected_barcode == pv.expected_barcode:
-                                match_score += 0.50
+                                match_score += 0.65
                             else:
                                 match_score -= 0.30
 
-                        # 2. Text token & keyword matches (English and Devanagari)
+                        # 2. Brand and product keyword matches (English and Devanagari)
+                        has_amul = any(ak in text_upper for ak in ["AMUL", "अमूल", "GCMMF", "ANAND"])
+                        if has_amul:
+                            match_score += 0.25
+
                         if prod.name.upper() in text_upper:
                             match_score += 0.25
                         if variant.variant_name.upper() in text_upper:
@@ -101,12 +105,12 @@ class ReferenceRetriever:
 
                         for kw in brand_keywords.get(prod.name, []):
                             if kw in text_upper:
-                                match_score += 0.35
+                                match_score += 0.30
                                 break
 
                         # 3. Visual color signature cues
                         if dominant_color and prod.name == dominant_color:
-                            match_score += 0.30
+                            match_score += 0.25
 
                         # Strict Reference Selection:
                         # MUST be APPROVED and MUST NOT be a SYNTHETIC_TEST_STUB
@@ -140,13 +144,17 @@ class ReferenceRetriever:
                                 if ref_img:
                                     break
 
-                        # Packaging versions that directly or via fallback possess reference images rank higher
-                        if ref_img is not None:
-                            match_score += 0.20
-                        else:
-                            match_score -= 0.20
+                        # Only reward reference presence if some positive candidate evidence was found
+                        if ref_img is not None and match_score > 0.15:
+                            match_score += 0.10
 
-                        match_score = min(1.0, max(0.1, match_score))
+                        match_score = min(1.0, max(0.0, match_score))
+
+                        # Strict Gatekeeper Threshold: Ignore candidates with zero or insufficient evidence
+                        # Prevents non-packaging diagrams or competitor brands from hallucinating Amul Gold
+                        if match_score < 0.30:
+                            continue
+
                         is_historical = (pv.status == "DEPRECATED")
 
                         candidates.append({
@@ -174,4 +182,5 @@ class ReferenceRetriever:
 
         # Sort candidates descending by score
         candidates.sort(key=lambda x: x["retrieval_score"], reverse=True)
+        return candidates
         return candidates
