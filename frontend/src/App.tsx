@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { AdminPortal } from './components/AdminPortal';
 import { BrandPortal } from './components/BrandPortal';
 import { LoginModal } from './components/LoginModal';
@@ -10,24 +10,22 @@ import { authApi } from './services/api';
 import type { ScanDetail, User } from './types';
 
 export const App: React.FC = () => {
-  const [currentUser, setCurrentUser] = useState<User | null>(null);
+  const [currentUser, setCurrentUser] = useState<User | null>(() => {
+    const savedUser = localStorage.getItem('verisure_user');
+    if (savedUser) {
+      try {
+        return JSON.parse(savedUser);
+      } catch {
+        localStorage.removeItem('verisure_user');
+      }
+    }
+    return null;
+  });
   const [activeTab, setActiveTab] = useState<'consumer' | 'brand' | 'admin'>('consumer');
   const [currentScan, setCurrentScan] = useState<ScanDetail | null>(null);
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   const [loginModalMode, setLoginModalMode] = useState<'signin' | 'register'>('signin');
-
-  useEffect(() => {
-    // Check existing stored user session
-    const savedUser = localStorage.getItem('verisure_user');
-    if (savedUser) {
-      try {
-        setCurrentUser(JSON.parse(savedUser));
-      } catch {
-        localStorage.removeItem('verisure_user');
-      }
-    }
-  }, []);
 
   const handleLogout = () => {
     authApi.logout();
@@ -106,6 +104,7 @@ export const App: React.FC = () => {
 
       {/* Role Switcher & Login Modal */}
       <LoginModal
+        key={isLoginOpen ? `login-${loginModalMode}` : 'closed'}
         isOpen={isLoginOpen}
         initialMode={loginModalMode}
         onClose={() => setIsLoginOpen(false)}

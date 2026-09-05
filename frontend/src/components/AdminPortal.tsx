@@ -22,13 +22,7 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ currentUser, onOpenLog
   const [hasAdminAccess, setHasAdminAccess] = useState<boolean | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    loadAdminData();
-  }, [currentUser]);
-
   const loadAdminData = async () => {
-    setIsLoading(true);
-
     // Pre-flight client credential check: prevents 403 Forbidden log spam for unauthorized visitors
     const token = localStorage.getItem('verisure_token');
     const storedUserStr = localStorage.getItem('verisure_user');
@@ -47,14 +41,18 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ currentUser, onOpenLog
     );
 
     if (!token || !hasAnyAdminRole) {
-      setHasCaseAccess(false);
-      setHasAdminAccess(false);
-      setCases([]);
-      setModels([]);
-      setAnalytics(null);
-      setIsLoading(false);
+      Promise.resolve().then(() => {
+        setHasCaseAccess(false);
+        setHasAdminAccess(false);
+        setCases([]);
+        setModels([]);
+        setAnalytics(null);
+        setIsLoading(false);
+      });
       return;
     }
+
+    Promise.resolve().then(() => setIsLoading(true));
 
     const [casesRes, modelsRes, analyticsRes] = await Promise.allSettled([
       caseApi.listCases(),
@@ -83,6 +81,18 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ currentUser, onOpenLog
     }
     setIsLoading(false);
   };
+
+  useEffect(() => {
+    let ignore = false;
+    Promise.resolve().then(() => {
+      if (!ignore) {
+        loadAdminData();
+      }
+    });
+    return () => {
+      ignore = true;
+    };
+  }, [currentUser]);
 
   const handleReviewAction = async (status: string) => {
     if (!selectedCase) return;

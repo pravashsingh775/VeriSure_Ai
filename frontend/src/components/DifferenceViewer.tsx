@@ -14,8 +14,11 @@ export const DifferenceViewer: React.FC<DifferenceViewerProps> = ({
   const [viewMode, setViewMode] = useState<'crop' | 'heatmap' | 'side-by-side'>('heatmap');
   const [activeRegion, setActiveRegion] = useState<RegionBox | null>(null);
 
-  const cropUrl = imageDetail.crop_path ? `/data/storage/${imageDetail.crop_path}` : null;
-  const heatUrl = imageDetail.heatmap_path ? `/data/storage/${imageDetail.heatmap_path}` : null;
+  const [cropError, setCropError] = useState(false);
+  const [heatError, setHeatError] = useState(false);
+
+  const cropUrl = imageDetail.crop_path && !cropError ? `/data/storage/${imageDetail.crop_path}` : null;
+  const heatUrl = imageDetail.heatmap_path && !heatError ? `/data/storage/${imageDetail.heatmap_path}` : null;
 
   return (
     <div className="bg-white rounded-2xl border border-slate-200 p-5 shadow-xs">
@@ -77,6 +80,7 @@ export const DifferenceViewer: React.FC<DifferenceViewerProps> = ({
                 <img
                   src={cropUrl}
                   alt="Packaging Crop"
+                  onError={() => setCropError(true)}
                   className="max-h-[380px] w-auto object-contain rounded-lg"
                 />
               ) : (
@@ -93,6 +97,7 @@ export const DifferenceViewer: React.FC<DifferenceViewerProps> = ({
                 <img
                   src={heatUrl}
                   alt="Difference Heatmap"
+                  onError={() => setHeatError(true)}
                   className="max-h-[380px] w-auto object-contain rounded-lg"
                 />
               ) : (
@@ -108,12 +113,14 @@ export const DifferenceViewer: React.FC<DifferenceViewerProps> = ({
               <img
                 src={heatUrl}
                 alt="Difference Heatmap"
+                onError={() => setHeatError(true)}
                 className="max-h-[440px] w-auto object-contain rounded-lg shadow-md"
               />
             ) : cropUrl ? (
               <img
                 src={cropUrl}
                 alt="Packaging Crop"
+                onError={() => setCropError(true)}
                 className="max-h-[440px] w-auto object-contain rounded-lg shadow-md"
               />
             ) : (

@@ -19,22 +19,24 @@ export const ScanHistoryDrawer: React.FC<ScanHistoryDrawerProps> = ({
   const [loadingId, setLoadingId] = useState<string | null>(null);
 
   useEffect(() => {
-    if (isOpen) {
-      loadHistory();
-    }
-  }, [isOpen]);
+    if (!isOpen) return;
+    let ignore = false;
+    Promise.resolve().then(() => {
+      if (!ignore) setLoading(true);
+    });
+    scanApi.getMyHistory()
+      .then((data) => {
+        if (!ignore) setHistory(data);
+      })
+      .catch(() => {})
+      .finally(() => {
+        if (!ignore) setLoading(false);
+      });
 
-  const loadHistory = async () => {
-    setLoading(true);
-    try {
-      const data = await scanApi.getMyHistory();
-      setHistory(data);
-    } catch {
-      // User might be guest or token expired
-    } finally {
-      setLoading(false);
-    }
-  };
+    return () => {
+      ignore = true;
+    };
+  }, [isOpen]);
 
   const handleSelect = async (scanId: string) => {
     setLoadingId(scanId);

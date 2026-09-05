@@ -28,29 +28,27 @@ export const BrandPortal: React.FC = () => {
   const [selectedImage, setSelectedImage] = useState<ReferenceImage | null>(null);
 
   useEffect(() => {
-    loadAllData();
-  }, []);
-
-  const loadAllData = async () => {
-    setLoading(true);
-    try {
-      const [pvRes, prodRes, refRes, analyticsRes] = await Promise.allSettled([
-        brandApi.getPackagingVersions(),
-        brandApi.getProducts(),
-        brandApi.getReferences(),
-        brandApi.getBrandAnalytics('AMUL'),
-      ]);
-
+    let active = true;
+    Promise.allSettled([
+      brandApi.getPackagingVersions(),
+      brandApi.getProducts(),
+      brandApi.getReferences(),
+      brandApi.getBrandAnalytics('AMUL'),
+    ]).then(([pvRes, prodRes, refRes, analyticsRes]) => {
+      if (!active) return;
       if (pvRes.status === 'fulfilled') setPackagingVersions(pvRes.value);
       if (prodRes.status === 'fulfilled') setProducts(prodRes.value);
       if (refRes.status === 'fulfilled') setReferences(refRes.value);
       if (analyticsRes.status === 'fulfilled') setAnalytics(analyticsRes.value);
-    } catch {
-      // Graceful fallback
-    } finally {
       setLoading(false);
-    }
-  };
+    }).catch(() => {
+      if (active) setLoading(false);
+    });
+
+    return () => {
+      active = false;
+    };
+  }, []);
 
   const filteredReferences = references.filter((ref) => {
     if (productFilter === 'ALL') return true;
@@ -178,6 +176,9 @@ export const BrandPortal: React.FC = () => {
                       alt={ref.original_filename || ref.view_type}
                       className="w-full h-full object-contain p-2 group-hover:scale-105 transition-transform duration-300"
                       loading="lazy"
+                      onError={(e) => {
+                        (e.currentTarget as HTMLImageElement).src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 24 24" fill="none" stroke="%2394a3b8" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>';
+                      }}
                     />
                     <div className="absolute top-2 left-2 flex gap-1">
                       <span className="px-2 py-0.5 bg-slate-900/80 backdrop-blur-xs text-white text-[10px] font-black rounded-md uppercase">
@@ -392,6 +393,9 @@ export const BrandPortal: React.FC = () => {
                 src={`/data/storage/${selectedImage.image_path}`}
                 alt={selectedImage.original_filename || selectedImage.view_type}
                 className="max-h-[55vh] w-auto object-contain rounded-lg shadow-sm"
+                onError={(e) => {
+                  (e.currentTarget as HTMLImageElement).src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 24 24" fill="none" stroke="%2394a3b8" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>';
+                }}
               />
             </div>
 

@@ -17,13 +17,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
   onLoginSuccess,
 }) => {
   const [mode, setMode] = useState<'signin' | 'register'>(initialMode);
-
-  React.useEffect(() => {
-    if (isOpen) {
-      setMode(initialMode);
-      setError(null);
-    }
-  }, [isOpen, initialMode]);
+  const [prevInitialMode, setPrevInitialMode] = useState(initialMode);
   
   // Sign In fields
   const [email, setEmail] = useState('');
@@ -38,6 +32,12 @@ export const LoginModal: React.FC<LoginModalProps> = ({
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  if (initialMode !== prevInitialMode) {
+    setPrevInitialMode(initialMode);
+    setMode(initialMode);
+    setError(null);
+  }
 
   if (!isOpen) return null;
 
