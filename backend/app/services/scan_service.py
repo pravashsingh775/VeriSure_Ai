@@ -315,6 +315,16 @@ class ScanService:
                 files_to_cleanup.clear()
                 raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=scan.error_message)
 
+            # Guard against decompression bombs (pixel-count cap; ~80 MP).
+            for img, side in [(img_front_bgr, "Front"), (img_back_bgr, "Back")]:
+                if img.shape[0] * img.shape[1] > 80_000_000:
+                    scan.status = "FAILED"
+                    scan.error_code = "VERISURE-IMG-002"
+                    scan.error_message = f"{side} image dimensions exceed supported maximum (80 MP)."
+                    await db.commit()
+                    files_to_cleanup.clear()
+                    raise HTTPException(status_code=status.HTTP_413_REQUEST_ENTITY_TOO_LARGE, detail=scan.error_message)
+
             # 4. Execute Full AI Dual Orchestration Pipeline
             pipeline_output = await orchestrator.execute_dual_pipeline(
                 db=db,

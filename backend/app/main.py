@@ -67,6 +67,43 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+import logging
+import uuid
+from starlette.middleware.base import BaseHTTPMiddleware
+from fastapi import Request
+from fastapi.responses import JSONResponse
+
+logger = logging.getLogger("verisure.api")
+
+
+class RequestCorrelationMiddleware(BaseHTTPMiddleware):
+    async def dispatch(self, request: Request, call_next):
+        req_id = request.headers.get("X-Request-ID") or str(uuid.uuid4())
+        request.state.request_id = req_id
+        response = await call_next(request)
+        response.headers["X-Request-ID"] = req_id
+        return response
+
+
+app.add_middleware(RequestCorrelationMiddleware)
+
+
+@app.exception_handler(Exception)
+async def unhandled_exception_handler(request: Request, exc: Exception):
+    req_id = getattr(request.state, "request_id", str(uuid.uuid4()))
+    logger.exception(f"Unhandled internal server error during request [{req_id}]: {exc}")
+    return JSONResponse(
+        status_code=500,
+        headers={"X-Request-ID": req_id},
+        content={
+            "error": {
+                "code": "INTERNAL_SERVER_ERROR",
+                "message": "An unexpected internal error occurred. Please contact system support.",
+                "request_id": req_id,
+            }
+        },
+    )
+
 # API Routers
 app.include_router(auth.router, prefix=f"{settings.API_V1_STR}/auth", tags=["Authentication & RBAC"])
 app.include_router(brands.router, prefix=f"{settings.API_V1_STR}/brands", tags=["Brands"])
