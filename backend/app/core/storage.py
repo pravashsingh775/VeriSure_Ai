@@ -38,7 +38,19 @@ class LocalStorage(BaseStorage):
         self._ensure_directories()
 
     def _ensure_directories(self):
-        for sub in ["raw_scans", "crops", "heatmaps", "references", "reports", "artifacts"]:
+        subdirs = [
+            "raw_scans",
+            "crops",
+            "heatmaps",
+            "references",
+            "references_v2",
+            "synthetic_tampers",
+            "negative_samples",
+            "reports",
+            "artifacts",
+            "temp"
+        ]
+        for sub in subdirs:
             (self.base_path / sub).mkdir(parents=True, exist_ok=True)
 
     def _sanitize_filename(self, filename: str) -> str:

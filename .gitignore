@@ -20,6 +20,8 @@ data/storage/heatmaps/*
 !data/storage/heatmaps/.gitkeep
 data/storage/reports/*
 !data/storage/reports/.gitkeep
+data/storage/artifacts/*
+!data/storage/artifacts/.gitkeep
 data/storage/temp/*
 !data/storage/temp/.gitkeep
 
