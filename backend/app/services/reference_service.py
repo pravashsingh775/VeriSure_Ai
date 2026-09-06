@@ -50,8 +50,18 @@ class ReferenceService:
 
         trust = custom_trust_level if custom_trust_level is not None else ReferenceService.DEFAULT_TRUST_LEVELS[source_type]
 
-        # 2. Save file
+        # 2. Save file (with upload security validation)
         contents = await file.read()
+        from backend.app.core.config import settings
+        from backend.app.services.scan_service import ScanService
+        max_bytes = settings.MAX_UPLOAD_SIZE_MB * 1024 * 1024
+        if len(contents) == 0:
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Uploaded file is empty.")
+        if len(contents) > max_bytes:
+            raise HTTPException(status_code=status.HTTP_413_REQUEST_ENTITY_TOO_LARGE, detail=f"Reference image exceeds {settings.MAX_UPLOAD_SIZE_MB} MB upload limit.")
+        if not ScanService._is_decodable_image(contents):
+            raise HTTPException(status_code=status.HTTP_415_UNSUPPORTED_MEDIA_TYPE, detail="Unsupported reference image format. Must be JPEG, PNG, or WebP.")
+
         rel_path, abs_path = await storage.save_bytes(
             data=contents,
             subfolder="references",

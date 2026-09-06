@@ -165,6 +165,69 @@ async def health():
     )
 
 
+@app.get("/liveness", tags=["Health"])
+async def liveness():
+    """
+    Lightweight liveness probe for Kubernetes / container orchestration.
+    Confirms application process is responsive.
+    """
+    return JSONResponse(
+        status_code=200,
+        content={"status": "alive", "service": settings.PROJECT_NAME}
+    )
+
+
+@app.get("/readiness", tags=["Health"])
+async def readiness():
+    """
+    Comprehensive readiness probe validating critical dependencies:
+    - PostgreSQL database connectivity
+    - Storage subsystem read/write capability
+    - AI runtime availability
+    """
+    checks = {
+        "database": "unknown",
+        "storage": "unknown",
+        "ai_device": settings.AI_DEVICE
+    }
+    is_ready = True
+
+    # 1. Database Connectivity Probe
+    try:
+        async with AsyncSessionLocal() as session:
+            await session.execute(text("SELECT 1"))
+        checks["database"] = "connected"
+    except Exception as e:
+        logger.error(f"Readiness probe database failure: {e}")
+        checks["database"] = "unreachable"
+        is_ready = False
+
+    # 2. Storage Read/Write Probe
+    try:
+        probe_path = settings.storage_path / ".readiness_probe"
+        probe_path.write_text("probe_ok", encoding="utf-8")
+        if probe_path.read_text(encoding="utf-8") == "probe_ok":
+            probe_path.unlink(missing_ok=True)
+            checks["storage"] = "read_write_verified"
+        else:
+            checks["storage"] = "integrity_mismatch"
+            is_ready = False
+    except Exception as e:
+        logger.error(f"Readiness probe storage failure: {e}")
+        checks["storage"] = f"inaccessible: {str(e)[:50]}"
+        is_ready = False
+
+    status_code = 200 if is_ready else 503
+    return JSONResponse(
+        status_code=status_code,
+        content={
+            "status": "ready" if is_ready else "unready",
+            "environment": settings.ENVIRONMENT,
+            "checks": checks
+        }
+    )
+
+
 from pathlib import Path
 from fastapi.responses import FileResponse
 frontend_dist = Path(__file__).resolve().parent.parent.parent / "frontend" / "dist"

@@ -67,6 +67,7 @@ async def seed_database():
         users_data = [
             ("admin@verisure.ai", "Platform Admin", "Admin@12345", "PLATFORM_ADMIN", None, True),
             ("amul_admin@verisure.ai", "Amul Brand Lead", "Amul@12345", "BRAND_ADMIN", amul_brand.id, False),
+            ("amul_reviewer@verisure.ai", "Amul Triage Reviewer", "Reviewer@12345", "BRAND_REVIEWER", amul_brand.id, False),
             ("consumer@verisure.ai", "Jane Consumer", "Consumer@12345", "CONSUMER", None, False),
         ]
         for email, name, pwd, role_name, b_id, is_super in users_data:

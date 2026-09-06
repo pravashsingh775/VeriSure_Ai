@@ -24,19 +24,28 @@ async def _authorize_scan_access(
     """Ownership or staff-role check to prevent scan ID enumeration.
 
     Consumers may only access their own scans; staff roles (platform/brand
-    triage) may access any scan for review purposes.
+    triage) may access scans within their brand scope (or any for platform admins).
     """
     if current_user.is_superuser:
         return
-    user_roles = {r.name for r in current_user.roles}
-    if user_roles & STAFF_ROLES:
-        return
+
     scan = (
         await db.execute(select(Scan).where(Scan.id == scan_id))
     ).scalar_one_or_none()
     if scan is None:
         # Do not reveal existence to non-owners.
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Scan not found")
+
+    user_roles = {r.name for r in current_user.roles}
+    if user_roles & STAFF_ROLES:
+        # Cross-brand isolation check for brand staff:
+        if scan.identified_product_id and current_user.brand_id:
+            from backend.app.models.product import Product
+            product = (await db.execute(select(Product).where(Product.id == scan.identified_product_id))).scalar_one_or_none()
+            if product and product.brand_id != current_user.brand_id:
+                raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Cross-brand scan access denied.")
+        return
+
     if scan.user_id is not None and scan.user_id != current_user.id:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Not authorized to access this scan")
 

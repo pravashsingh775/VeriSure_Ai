@@ -1,0 +1,84 @@
+{
+  "system": {
+    "python_version": "3.10.0 (tags/v3.10.0:b494f59, Oct  4 2021, 19:00:18) [MSC v.1929 64 bit (AMD64)]",
+    "os": "nt",
+    "cpu_percent": 24.0,
+    "ram_before_mb": 116.03,
+    "ram_after_mb": 412.46,
+    "ram_delta_mb": 296.43
+  },
+  "benchmarks": [
+    {
+      "workload": "Health",
+      "concurrency": 25,
+      "total_requests": 50,
+      "duration_sec": 2.39,
+      "rps": 20.9,
+      "p50_ms": 1189.41,
+      "p95_ms": 1340.93,
+      "p99_ms": 1352.59,
+      "error_rate_pct": 0.0,
+      "errors": 0
+    },
+    {
+      "workload": "Login",
+      "concurrency": 10,
+      "total_requests": 20,
+      "duration_sec": 7.81,
+      "rps": 2.56,
+      "p50_ms": 3899.46,
+      "p95_ms": 3978.49,
+      "p99_ms": 3984.82,
+      "error_rate_pct": 0.0,
+      "errors": 0
+    },
+    {
+      "workload": "Product API",
+      "concurrency": 25,
+      "total_requests": 50,
+      "duration_sec": 2.77,
+      "rps": 18.04,
+      "p50_ms": 1375.72,
+      "p95_ms": 1549.9,
+      "p99_ms": 1571.72,
+      "error_rate_pct": 0.0,
+      "errors": 0
+    },
+    {
+      "workload": "Single Scan",
+      "concurrency": 5,
+      "total_requests": 10,
+      "duration_sec": 89.96,
+      "rps": 0.11,
+      "p50_ms": 44963.82,
+      "p95_ms": 50162.12,
+      "p99_ms": 50166.08,
+      "error_rate_pct": 0.0,
+      "errors": 0
+    },
+    {
+      "workload": "Dual Scan",
+      "concurrency": 3,
+      "total_requests": 6,
+      "duration_sec": 38.72,
+      "rps": 0.15,
+      "p50_ms": 19359.22,
+      "p95_ms": 19416.66,
+      "p99_ms": 19417.25,
+      "error_rate_pct": 0.0,
+      "errors": 0
+    },
+    {
+      "workload": "PDF Report",
+      "concurrency": 5,
+      "total_requests": 10,
+      "duration_sec": 1.83,
+      "rps": 5.47,
+      "p50_ms": 903.78,
+      "p95_ms": 1409.8,
+      "p99_ms": 1410.92,
+      "error_rate_pct": 0.0,
+      "errors": 0
+    }
+  ]
+}

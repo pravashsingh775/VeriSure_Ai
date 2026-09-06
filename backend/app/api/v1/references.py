@@ -26,6 +26,23 @@ async def upload_reference_image(
     """
     Upload a genuine reference image for a specific packaging version and view angle.
     """
+    if not current_user.is_superuser:
+        from fastapi import HTTPException, status
+        from sqlalchemy import select
+        from backend.app.models.packaging import PackagingVersion
+        from backend.app.models.product import Product, ProductPackSize, ProductVariant
+        pv = (await db.execute(select(PackagingVersion).where(PackagingVersion.id == packaging_version_id))).scalar_one_or_none()
+        if not pv:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Packaging version not found")
+        pack_size = (await db.execute(select(ProductPackSize).where(ProductPackSize.id == pv.pack_size_id))).scalar_one_or_none()
+        if pack_size:
+            variant = (await db.execute(select(ProductVariant).where(ProductVariant.id == pack_size.variant_id))).scalar_one_or_none()
+            if variant:
+                product = (await db.execute(select(Product).where(Product.id == variant.product_id))).scalar_one_or_none()
+                user_brand = getattr(current_user, "brand_id", None)
+                if user_brand and product and product.brand_id != user_brand:
+                    raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Cannot upload reference images for other brands.")
+
     return await ReferenceService.upload_reference_image(
         db=db,
         packaging_version_id=packaging_version_id,
@@ -47,6 +64,26 @@ async def approve_reference_image(
     """
     Approve or reject a reference image and optionally adjust its trust weighting.
     """
+    if not current_user.is_superuser:
+        from fastapi import HTTPException, status
+        from sqlalchemy import select
+        from backend.app.models.packaging import PackagingVersion
+        from backend.app.models.product import Product, ProductPackSize, ProductVariant
+        from backend.app.models.reference import ReferenceImage
+        ref = (await db.execute(select(ReferenceImage).where(ReferenceImage.id == reference_id))).scalar_one_or_none()
+        if not ref:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Reference image not found.")
+        pv = (await db.execute(select(PackagingVersion).where(PackagingVersion.id == ref.packaging_version_id))).scalar_one_or_none()
+        if pv:
+            pack_size = (await db.execute(select(ProductPackSize).where(ProductPackSize.id == pv.pack_size_id))).scalar_one_or_none()
+            if pack_size:
+                variant = (await db.execute(select(ProductVariant).where(ProductVariant.id == pack_size.variant_id))).scalar_one_or_none()
+                if variant:
+                    product = (await db.execute(select(Product).where(Product.id == variant.product_id))).scalar_one_or_none()
+                    user_brand = getattr(current_user, "brand_id", None)
+                    if user_brand and product and product.brand_id != user_brand:
+                        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Cannot approve reference images for other brands.")
+
     return await ReferenceService.approve_reference(
         db=db,
         reference_id=reference_id,

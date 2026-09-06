@@ -28,17 +28,18 @@ if !EXIT_CODE! neq 0 (
     exit /b !EXIT_CODE!
 )
 
-if "%1"=="--no-browser" exit /b 0
-if "%1"=="-n" exit /b 0
+if /i "%1"=="--no-browser" exit /b 0
+if /i "%1"=="-n" exit /b 0
+if /i "%1"=="-no-browser" exit /b 0
 
 echo.
 echo -------------------------------------------------------
 echo [INFO] Press [ENTER] to open http://localhost:5173 in browser,
 echo        or type 'N' to skip.
 echo -------------------------------------------------------
+set "OPEN_UI=y"
 set /p OPEN_UI="Open Web UI now? (Y/n): "
-if /i not "!OPEN_UI!"=="n" (
-    start http://localhost:5173
+if /i not "!OPEN_UI!"=="n" if /i not "!OPEN_UI!"=="no" (
+    start "" "http://localhost:5173"
 )
-
 exit /b 0

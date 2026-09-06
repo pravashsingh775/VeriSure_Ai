@@ -48,7 +48,7 @@ class AuthService:
             hashed_password=get_password_hash(data.password),
             full_name=data.full_name,
             is_active=True,
-            is_superuser=True if data.role_name.upper() == "PLATFORM_ADMIN" else False
+            is_superuser=False  # Privileged roles blocked by FORBIDDEN_SELF_ASSIGN_ROLES
         )
         db.add(new_user)
         await db.flush()

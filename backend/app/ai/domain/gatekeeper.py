@@ -27,7 +27,19 @@ class DomainGatekeeperEngine:
     # Supported Brand keywords (GCMMF / Amul)
     AMUL_KEYWORDS = {
         "AMUL", "अमूल", "GCMMF", "ANAND", "GUJARAT COOPERATIVE",
-        "GUJARAT CO-OPERATIVE", "MILK MARKETING FEDERATION", "KAIRA DISTRICT"
+        "GUJARAT CO-OPERATIVE", "MILK MARKETING FEDERATION", "KAIRA DISTRICT",
+        "TAAZA", "AMUL GOLD", "AMUL TAAZA", "AMUL SHAKTI", "AMUL COW", "AMUL SLIM"
+    }
+
+    # Packaging / Food Retail Domain Keywords
+    PACKAGING_KEYWORDS = {
+        "MILK", "DAIRY", "PASTEURISED", "PASTEURIZED", "NUTRITIONAL", "NUTRITION",
+        "FSSAI", "FAT", "PROTEIN", "AMUL", "ENERGY", "BATCH", "INGREDIENTS",
+        "TONED", "HOMOGENISED", "HOMOGENIZED", "STANDARDISED", "STANDARDIZED",
+        "REFRIGERATED", "POUCH", "POLYPACK", "LITRE", "LITER", "ML", "CALCIUM",
+        "VITAMIN", "CHOLESTEROL", "CARBOHYDRATE", "NET", "MRP", "MFD", "PKD",
+        "TAAZA", "GOLD", "MAZA", "COW", "BUFFALO", "CURD", "DTH", "EXPIRY",
+        "USE BY", "BEST BEFORE", "CONSUME", "STORAGE", "POLYETHYLENE"
     }
 
     # Competitor / Unsupported Brands in Indian dairy retail
@@ -64,7 +76,9 @@ class DomainGatekeeperEngine:
 
         # Check 1: Semantic Keyword Signature
         diagram_matches = text_tokens.intersection(DomainGatekeeperEngine.DIAGRAM_KEYWORDS)
-        if len(diagram_matches) >= 2:
+        packaging_matches = text_tokens.intersection(DomainGatekeeperEngine.PACKAGING_KEYWORDS) | text_tokens.intersection(DomainGatekeeperEngine.AMUL_KEYWORDS)
+
+        if len(diagram_matches) >= 2 and len(packaging_matches) == 0:
             return False, "DIGITAL_DIAGRAM_OR_SCHEMATIC", 0.95
 
         # Check 2: Visual Diagram Analysis (Large uniform light background + high-contrast line network)
@@ -88,11 +102,16 @@ class DomainGatekeeperEngine:
                 sat = hsv[:, :, 1]
                 # Diagrams have low overall color saturation across most of the image
                 low_sat_pct = np.sum(sat < 30) / float(h * w)
-                if low_sat_pct > 0.70 and len(diagram_matches) >= 1:
-                    return False, "DIGITAL_DIAGRAM_OR_SCHEMATIC", 0.90
-                elif low_sat_pct > 0.85 and white_pixels > 0.45:
-                    # Very high monochrome background with diagram layout
-                    return False, "DIGITAL_DIAGRAM_OR_DOCUMENT", 0.85
+                
+                # Packaging with white back panels (nutrition tables, barcodes, ingredients)
+                # will have low saturation and white backgrounds, BUT contain packaging keywords.
+                # A digital diagram or document will NOT have packaging keywords.
+                if len(packaging_matches) == 0:
+                    if low_sat_pct > 0.70 and len(diagram_matches) >= 1:
+                        return False, "DIGITAL_DIAGRAM_OR_SCHEMATIC", 0.90
+                    elif low_sat_pct > 0.85 and white_pixels > 0.55:
+                        # Very high monochrome background with diagram layout and zero packaging tokens
+                        return False, "DIGITAL_DIAGRAM_OR_DOCUMENT", 0.85
 
         # Check 3: Aspect Ratio Extremes
         aspect_ratio = float(w) / float(max(1, h))

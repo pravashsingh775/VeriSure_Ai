@@ -38,10 +38,24 @@ async def get_admin_analytics(
 @router.get("/brand/{brand_id}", response_model=BrandAnalyticsResponse)
 async def get_brand_analytics(
     brand_id: str,
-    db: AsyncSession = Depends(get_db)
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(require_roles(["PLATFORM_ADMIN", "BRAND_ADMIN", "BRAND_REVIEWER"]))
 ):
     """
     Brand-specific telemetry, active packaging versions, and counterfeit anomaly rate.
+    Scoped to authorized brand representatives or platform administrators.
     """
+    if not current_user.is_superuser:
+        from fastapi import HTTPException, status
+        from sqlalchemy import select
+        from backend.app.models.brand import Brand
+        brand = (await db.execute(
+            select(Brand).where((Brand.id == brand_id) | (Brand.code == brand_id.upper()))
+        )).scalar_one_or_none()
+        if not brand:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Brand not found")
+        if current_user.brand_id and current_user.brand_id != brand.id:
+            raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Cross-brand telemetry access denied.")
+
     return await AnalyticsService.get_brand_analytics(db, brand_id)
 

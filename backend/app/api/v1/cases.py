@@ -38,7 +38,13 @@ async def get_case_details(
     """
     Retrieve suspicious case details, audit history, and associated scan evidence.
     """
-    return await CaseService.get_case_by_id(db, case_id)
+    case = await CaseService.get_case_by_id(db, case_id)
+    if not current_user.is_superuser:
+        from fastapi import HTTPException, status
+        user_brand = getattr(current_user, "brand_id", None)
+        if user_brand and case.brand_id and case.brand_id != user_brand:
+            raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Cross-brand case access denied.")
+    return case
 
 
 @router.post("/{case_id}/review", response_model=CaseResponse)
@@ -51,6 +57,13 @@ async def submit_case_review(
     """
     Records an expert human review transition (e.g. VERIFIED_SUSPICIOUS, VERIFIED_GENUINE, REJECTED).
     """
+    case = await CaseService.get_case_by_id(db, case_id)
+    if not current_user.is_superuser:
+        from fastapi import HTTPException, status
+        user_brand = getattr(current_user, "brand_id", None)
+        if user_brand and case.brand_id and case.brand_id != user_brand:
+            raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Cross-brand case review denied.")
+
     return await CaseService.add_review(
         db=db,
         case_id=case_id,

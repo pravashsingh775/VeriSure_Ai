@@ -24,6 +24,11 @@ async def create_product(
     """
     Create a new product with optional variants and pack sizes.
     """
+    if not current_user.is_superuser:
+        from fastapi import HTTPException, status
+        user_brand = getattr(current_user, "brand_id", None)
+        if user_brand and data.brand_id != user_brand:
+            raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Cannot create products for other brands.")
     return await ProductService.create_product(db, data, actor_id=current_user.id)
 
 
@@ -59,4 +64,10 @@ async def add_variant(
     """
     Add a new variant to an existing product.
     """
+    if not current_user.is_superuser:
+        from fastapi import HTTPException, status
+        product = await ProductService.get_product_by_id(db, product_id)
+        user_brand = getattr(current_user, "brand_id", None)
+        if user_brand and product.brand_id != user_brand:
+            raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Cannot modify products for other brands.")
     return await ProductService.add_variant(db, product_id, data, actor_id=current_user.id)

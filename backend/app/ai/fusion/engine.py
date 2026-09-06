@@ -108,29 +108,34 @@ class MultiEvidenceFusionEngine:
         qualities = []
 
         for ev in evidences:
-            if not ev.availability or ev.score is None:
+            if not ev.availability or ev.score is None or np.isnan(ev.score):
                 continue
 
+            # Guard against invalid confidence or quality values
+            conf = float(np.clip(ev.confidence if ev.confidence is not None and not np.isnan(ev.confidence) else 0.5, 0.01, 1.0))
+            qual = float(np.clip(ev.quality if ev.quality is not None and not np.isnan(ev.quality) else 0.5, 0.01, 1.0))
+            score = float(np.clip(ev.score, 0.0, 1.0))
+
             available_count += 1
-            qualities.append(ev.quality)
+            qualities.append(qual)
             base_w = self.BASE_WEIGHTS.get(ev.type.value, 0.05)
 
             # Effective weight calculation
-            w_eff = base_w * ev.confidence * ev.quality
+            w_eff = base_w * conf * qual
             total_weight += w_eff
-            weighted_score_sum += w_eff * ev.score
+            weighted_score_sum += w_eff * score
 
-        # Avoid zero division
-        if total_weight <= 0:
+        # Avoid zero division or NaN
+        if total_weight <= 0.0 or np.isnan(total_weight) or np.isnan(weighted_score_sum):
             raw_fused_score = 0.50
         else:
-            raw_fused_score = weighted_score_sum / total_weight
+            raw_fused_score = float(weighted_score_sum / total_weight)
 
         # Dampen by contradiction penalty
         fused_score = float(np.clip(raw_fused_score * (1.0 - conflict_penalty), 0.05, 0.98))
 
         # Risk score is inverted scale (0 = Lowest Risk, 100 = Highest Counterfeit/Tamper Risk)
-        risk_score = float(round((1.0 - fused_score) * 100.0, 1))
+        risk_score = float(round(np.clip((1.0 - fused_score) * 100.0, 0.0, 100.0), 1))
 
         # Evidence Coverage
         total_expected_types = len(self.BASE_WEIGHTS)
@@ -138,7 +143,8 @@ class MultiEvidenceFusionEngine:
 
         # Confidence & Uncertainty Calibration
         mean_quality = float(np.mean(qualities)) if qualities else 0.5
-        composite_confidence = float(round(quality_result.overall_quality * 0.40 + mean_quality * 0.60, 3))
+        overall_q = quality_result.overall_quality if (quality_result and quality_result.overall_quality is not None and not np.isnan(quality_result.overall_quality)) else 0.5
+        composite_confidence = float(round(np.clip(overall_q * 0.40 + mean_quality * 0.60, 0.05, 0.99), 3))
         uncertainty = float(round(np.clip(1.0 - (evidence_coverage * composite_confidence * (1.0 - conflict_penalty)), 0.05, 0.95), 3))
 
         return {

@@ -17,7 +17,8 @@ class DecisionEngine:
         packaging_category: str = "PHYSICAL_PACKAGING",
         detected_brand: Optional[str] = None,
         is_supported_brand: bool = True,
-        brand_reason: Optional[str] = None
+        brand_reason: Optional[str] = None,
+        duplicate_views: bool = False
     ) -> DecisionResult:
         risk_score = fusion_result["risk_score"]
         confidence = fusion_result["confidence"]
@@ -71,6 +72,27 @@ class DecisionEngine:
                 suspicious_regions=[]
             )
 
+        # 1.5 Duplicate-View Gate (e.g. Case D: Two front panels or duplicate pair)
+        if duplicate_views:
+            return DecisionResult(
+                state=DecisionState.INSUFFICIENT_EVIDENCE,
+                risk_score=50.0,
+                confidence=0.30,
+                uncertainty=0.85,
+                evidence_coverage=coverage,
+                recommendation=(
+                    "Both submitted images appear to be the same packaging panel or identical views. "
+                    "Dual-side verification requires one Front panel and one Back panel image."
+                ),
+                reason_codes=["DUPLICATE_VIEW_SUBMITTED", "MISSING_COMPLEMENTARY_PANEL"],
+                explanation_summary=(
+                    "Dual-side verification aborted: Duplicate or identical packaging panel detected. "
+                    "Please capture and submit both the Front and Back panels of the physical package."
+                ),
+                contradictions=conflicts,
+                suspicious_regions=[]
+            )
+
         # 2. Quality gate
         if not quality_result.usable:
             return DecisionResult(
@@ -118,8 +140,7 @@ class DecisionEngine:
                 suspicious_regions=seal_ev.regions
             )
 
-        # 4. Standard Risk Classification Matrix
-        # 4. Explicit Abstention Gate (Section 13: Coverage < 0.50 or Uncertainty > 0.65)
+        # 5. Explicit Abstention Gate (Coverage < 0.50 or Uncertainty > 0.65)
         if coverage < 0.50 or uncertainty > 0.65:
             abstain_reasons = []
             if coverage < 0.50:
@@ -140,7 +161,7 @@ class DecisionEngine:
                 suspicious_regions=[]
             )
 
-        # 5. Standard Risk Classification Matrix
+        # 6. Standard Risk Classification Matrix
         if logo_ev := ev_map.get(EvidenceType.LOGO.value):
             if logo_ev.score > 0.85:
                 reason_codes.append("LOGO_CONGRUENT")

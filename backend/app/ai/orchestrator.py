@@ -7,7 +7,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from backend.app.ai.certification.engine import CertificationAnalyzer
 from backend.app.ai.codes.barcode import BarcodeAnalyzer
 from backend.app.ai.codes.qr import QRAnalyzer
-from backend.app.ai.contracts import DecisionResult, DecisionState, EvidenceObject, QualityAssessmentResult
+from backend.app.ai.contracts import DecisionResult, DecisionState, EvidenceObject, EvidenceType, QualityAssessmentResult
 from backend.app.ai.decision.engine import DecisionEngine
 from backend.app.ai.detection.engine import ProductDetector
 from backend.app.ai.explainability.engine import DifferenceHeatmapEngine, ExplanationEngine
@@ -54,6 +54,40 @@ class AIOrchestrator:
         self.print_analyzer = PrintQualityAnalyzer()
         self.fusion_engine = MultiEvidenceFusionEngine()
         self.decision_engine = DecisionEngine()
+
+    @staticmethod
+    def _safe_analyze(analyzer_fn, *args, ev_type: EvidenceType, source: str, **kwargs) -> EvidenceObject:
+        """
+        Fault-isolation barrier: ensures any engine crash or exception returns a standardized
+        non-available EvidenceObject rather than crashing the pipeline or fabricating evidence.
+        """
+        try:
+            res = analyzer_fn(*args, **kwargs)
+            if isinstance(res, EvidenceObject):
+                return res
+            return EvidenceObject(
+                type=ev_type,
+                score=None,
+                confidence=0.10,
+                quality=0.10,
+                availability=False,
+                source=source,
+                explanation=f"Analyzer returned non-EvidenceObject: {type(res)}",
+                features={}
+            )
+        except Exception as exc:
+            import logging
+            logging.getLogger("verisure.ai").warning(f"Engine {source} ({ev_type.value}) exception: {exc}")
+            return EvidenceObject(
+                type=ev_type,
+                score=None,
+                confidence=0.10,
+                quality=0.10,
+                availability=False,
+                source=source,
+                explanation=f"Evidence extraction unavailable due to engine exception: {str(exc)[:100]}",
+                features={"error": str(exc)}
+            )
 
     async def execute_pipeline(
         self,
@@ -220,23 +254,23 @@ class AIOrchestrator:
             }
 
         # Stage 5: Independent Evidence Analysis Engines
-        evidences: List[EvidenceObject] = []
+        evidences: List[EvidenceObject] = [
+            # Vision Engines
+            self._safe_analyze(self.logo_analyzer.analyze, crop_bgr, ref_crop_bgr, ref_meta, ev_type=EvidenceType.LOGO, source="verisure-logo-orb-v1"),
+            self._safe_analyze(self.layout_analyzer.analyze, crop_bgr, ref_crop_bgr, ref_meta, ev_type=EvidenceType.LAYOUT, source="verisure-layout-sift-v1"),
+            self._safe_analyze(self.colour_analyzer.analyze, crop_bgr, ref_crop_bgr, ref_meta, ev_type=EvidenceType.COLOUR, source="verisure-colour-hist-v1"),
+            self._safe_analyze(self.typography_analyzer.analyze, crop_bgr, ref_crop_bgr, ref_meta, ev_type=EvidenceType.TYPOGRAPHY, source="verisure-typo-contour-v1"),
+            self._safe_analyze(self.texture_analyzer.analyze, crop_bgr, ref_crop_bgr, ref_meta, ev_type=EvidenceType.TEXTURE, source="verisure-texture-glcm-v1"),
+            self._safe_analyze(self.shape_analyzer.analyze, crop_bgr, ref_crop_bgr, ref_meta, ev_type=EvidenceType.SHAPE, source="verisure-shape-hu-v1"),
+            self._safe_analyze(self.seal_analyzer.analyze, crop_bgr, ref_crop_bgr, ref_meta, ev_type=EvidenceType.SEAL, source="verisure-seal-sobel-v1"),
+            self._safe_analyze(self.print_analyzer.analyze, crop_bgr, ref_crop_bgr, ref_meta, ev_type=EvidenceType.PRINT, source="verisure-print-laplacian-v1"),
 
-        # Vision Engines
-        evidences.append(self.logo_analyzer.analyze(crop_bgr, ref_crop_bgr, ref_meta))
-        evidences.append(self.layout_analyzer.analyze(crop_bgr, ref_crop_bgr, ref_meta))
-        evidences.append(self.colour_analyzer.analyze(crop_bgr, ref_crop_bgr, ref_meta))
-        evidences.append(self.typography_analyzer.analyze(crop_bgr, ref_crop_bgr, ref_meta))
-        evidences.append(self.texture_analyzer.analyze(crop_bgr, ref_crop_bgr, ref_meta))
-        evidences.append(self.shape_analyzer.analyze(crop_bgr, ref_crop_bgr, ref_meta))
-        evidences.append(self.seal_analyzer.analyze(crop_bgr, ref_crop_bgr, ref_meta))
-        evidences.append(self.print_analyzer.analyze(crop_bgr, ref_crop_bgr, ref_meta))
-
-        # Text & Codes
-        evidences.append(self.ocr_engine.analyze(crop_bgr, ref_meta))
-        evidences.append(barcode_ev)
-        evidences.append(self.qr_analyzer.analyze(crop_bgr, ref_meta))
-        evidences.append(self.cert_analyzer.analyze(raw_text, ref_meta))
+            # Text & Codes
+            self._safe_analyze(self.ocr_engine.analyze, crop_bgr, ref_meta, ev_type=EvidenceType.OCR, source="verisure-ocr-engine-v1"),
+            barcode_ev if isinstance(barcode_ev, EvidenceObject) else self._safe_analyze(lambda: barcode_ev, ev_type=EvidenceType.BARCODE, source="verisure-barcode-pyzbar-v1"),
+            self._safe_analyze(self.qr_analyzer.analyze, crop_bgr, ref_meta, ev_type=EvidenceType.QR, source="verisure-qr-wechat-v1"),
+            self._safe_analyze(self.cert_analyzer.analyze, raw_text, ref_meta, ev_type=EvidenceType.CERTIFICATION, source="verisure-cert-regex-v1"),
+        ]
 
         # Stage 6: Difference Heatmap & Suspicious Regions
         heatmap_bgr, anomaly_regions = DifferenceHeatmapEngine.generate_heatmap(crop_bgr, ref_crop_bgr)
@@ -390,6 +424,35 @@ class AIOrchestrator:
             )
             return {"images": [{"view_type": "FRONT", "quality": qual_front, "detection": det_front, "crop_path": crop_front_rel, "heatmap_path": None}, {"view_type": "BACK", "quality": qual_back, "detection": det_back, "crop_path": crop_back_rel, "heatmap_path": None}], "decision": dec, "evidences": [], "report_path": None, "identified_product": None}
 
+        # Check for duplicate / identical views (Case D: Two front images or identical pair submitted)
+        is_duplicate = False
+        try:
+            gray1 = cv2.cvtColor(cv2.resize(crop_front_bgr, (256, 256)), cv2.COLOR_BGR2GRAY)
+            gray2 = cv2.cvtColor(cv2.resize(crop_back_bgr, (256, 256)), cv2.COLOR_BGR2GRAY)
+            mse = float(np.mean((gray1.astype(np.float32) - gray2.astype(np.float32)) ** 2))
+            if mse < 50.0:
+                is_duplicate = True
+        except Exception:
+            pass
+
+        if is_duplicate:
+            dec = self.decision_engine.evaluate(
+                fusion_result={"fused_authenticity_score": 0.50, "risk_score": 50.0, "confidence": 0.30, "uncertainty": 0.85, "evidence_coverage": 0.0, "conflicts": []},
+                quality_result=qual_front,
+                evidences=[],
+                duplicate_views=True
+            )
+            return {
+                "images": [
+                    {"view_type": "FRONT", "quality": qual_front, "detection": det_front, "crop_path": crop_front_rel, "heatmap_path": None},
+                    {"view_type": "BACK", "quality": qual_back, "detection": det_back, "crop_path": crop_back_rel, "heatmap_path": None}
+                ],
+                "decision": dec,
+                "evidences": [],
+                "report_path": None,
+                "identified_product": None
+            }
+
         # --- CANDIDATE RETRIEVAL (Fused Front + Back text and Barcode) ---
         fused_text = f"{raw_text_front} {raw_text_back}"
         candidates = await ReferenceRetriever.retrieve_candidates(
@@ -433,23 +496,23 @@ class AIOrchestrator:
                     ref_back_bgr = cv2.imread(str(p))
 
         # --- DUAL-SIDE EVIDENCE ENGINES ---
-        evidences: List[EvidenceObject] = []
+        evidences: List[EvidenceObject] = [
+            # Front Vision Models
+            self._safe_analyze(self.logo_analyzer.analyze, crop_front_bgr, ref_front_bgr, ref_meta, ev_type=EvidenceType.LOGO, source="verisure-logo-orb-v1"),
+            self._safe_analyze(self.layout_analyzer.analyze, crop_front_bgr, ref_front_bgr, ref_meta, ev_type=EvidenceType.LAYOUT, source="verisure-layout-sift-v1"),
+            self._safe_analyze(self.colour_analyzer.analyze, crop_front_bgr, ref_front_bgr, ref_meta, ev_type=EvidenceType.COLOUR, source="verisure-colour-hist-v1"),
+            self._safe_analyze(self.typography_analyzer.analyze, crop_front_bgr, ref_front_bgr, ref_meta, ev_type=EvidenceType.TYPOGRAPHY, source="verisure-typo-contour-v1"),
+            self._safe_analyze(self.shape_analyzer.analyze, crop_front_bgr, ref_front_bgr, ref_meta, ev_type=EvidenceType.SHAPE, source="verisure-shape-hu-v1"),
+            self._safe_analyze(self.texture_analyzer.analyze, crop_front_bgr, ref_front_bgr, ref_meta, ev_type=EvidenceType.TEXTURE, source="verisure-texture-glcm-v1"),
+            self._safe_analyze(self.seal_analyzer.analyze, crop_front_bgr, ref_front_bgr, ref_meta, ev_type=EvidenceType.SEAL, source="verisure-seal-sobel-v1"),
 
-        # Front Vision Models
-        evidences.append(self.logo_analyzer.analyze(crop_front_bgr, ref_front_bgr, ref_meta))
-        evidences.append(self.layout_analyzer.analyze(crop_front_bgr, ref_front_bgr, ref_meta))
-        evidences.append(self.colour_analyzer.analyze(crop_front_bgr, ref_front_bgr, ref_meta))
-        evidences.append(self.typography_analyzer.analyze(crop_front_bgr, ref_front_bgr, ref_meta))
-        evidences.append(self.shape_analyzer.analyze(crop_front_bgr, ref_front_bgr, ref_meta))
-        evidences.append(self.texture_analyzer.analyze(crop_front_bgr, ref_front_bgr, ref_meta))
-        evidences.append(self.seal_analyzer.analyze(crop_front_bgr, ref_front_bgr, ref_meta))
-
-        # Back Compliance Models
-        evidences.append(barcode_ev)
-        evidences.append(self.qr_analyzer.analyze(crop_back_bgr, ref_meta))
-        evidences.append(self.cert_analyzer.analyze(raw_text_back, ref_meta))
-        evidences.append(self.print_analyzer.analyze(crop_back_bgr, ref_back_bgr, ref_meta))
-        evidences.append(self.ocr_engine.analyze(crop_back_bgr, ref_meta))
+            # Back Compliance Models
+            barcode_ev if isinstance(barcode_ev, EvidenceObject) else self._safe_analyze(lambda: barcode_ev, ev_type=EvidenceType.BARCODE, source="verisure-barcode-pyzbar-v1"),
+            self._safe_analyze(self.qr_analyzer.analyze, crop_back_bgr, ref_meta, ev_type=EvidenceType.QR, source="verisure-qr-wechat-v1"),
+            self._safe_analyze(self.cert_analyzer.analyze, raw_text_back, ref_meta, ev_type=EvidenceType.CERTIFICATION, source="verisure-cert-regex-v1"),
+            self._safe_analyze(self.print_analyzer.analyze, crop_back_bgr, ref_back_bgr, ref_meta, ev_type=EvidenceType.PRINT, source="verisure-print-laplacian-v1"),
+            self._safe_analyze(self.ocr_engine.analyze, crop_back_bgr, ref_meta, ev_type=EvidenceType.OCR, source="verisure-ocr-engine-v1"),
+        ]
 
         # --- HEATMAPS FOR BOTH SIDES ---
         heat_front_bgr, front_anomalies = DifferenceHeatmapEngine.generate_heatmap(crop_front_bgr, ref_front_bgr)

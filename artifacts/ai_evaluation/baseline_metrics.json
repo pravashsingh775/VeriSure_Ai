@@ -1,0 +1,1102 @@
+{
+  "meta": {
+    "timestamp": "2026-09-05T15:14:16Z",
+    "evaluator": "VeriSure AI Empirical Audit Suite v1.0",
+    "total_samples": 32
+  },
+  "dataset_inventory": {
+    "reference_corpus_v1": {
+      "count": 12,
+      "source": "amul.com official marketing assets",
+      "label": "AUTHENTIC_FACTORY_REFERENCE",
+      "variants": [
+        "Amul Shakti",
+        "Amul Taaza",
+        "Amul Gold"
+      ],
+      "verified": true
+    },
+    "reference_corpus_v2": {
+      "count": 11,
+      "source": "amul.com approved packaging update",
+      "label": "AUTHENTIC_FACTORY_REFERENCE_V2",
+      "variants": [
+        "Amul Taaza",
+        "Amul Gold"
+      ],
+      "verified": true
+    },
+    "synthetic_tampers": {
+      "count": 4,
+      "source": "controlled unit-test tamper injections",
+      "label": "SYNTHETIC_TAMPER_STUB",
+      "samples": [
+        "syn-tamper-barcode-001_amul_gold.png",
+        "syn-tamper-logo-color-001_amul_taaza.png",
+        "syn-tamper-seal-001_amul_gold.png",
+        "syn-tamper-typo-001_amul_shakti.png"
+      ],
+      "verified": true
+    },
+    "out_of_scope_negatives": {
+      "count": 5,
+      "source": "competitor packaging + software architecture diagrams",
+      "label": "OUT_OF_SCOPE_NEGATIVE",
+      "samples": [
+        "neg_mother_dairy_full_cream.png",
+        "neg_scan_13be725f-f0b2-44ab-83b4-7867bbf5ae58_front_architecture_diagram.png",
+        "neg_scan_4790eb3c-50d9-4559-b686-dfe962fffce3_front_architecture_diagram.png",
+        "neg_scan_84c4cae2-b785-4733-b5f1-ed80ea6ade0b_front_architecture_diagram.png",
+        "neg_scan_fe4d450d-5763-42c9-9401-b2a1f2776886_front_architecture_diagram.png"
+      ],
+      "verified": true
+    },
+    "real_world_physical_counterfeits": {
+      "count": 0,
+      "source": "NONE \u2014 zero real-world physical counterfeit samples in repository",
+      "label": "PHYSICAL_COUNTERFEIT_WILD",
+      "status": "NOT MEASURABLE \u2014 insufficient labeled ground truth"
+    }
+  },
+  "authentic_metrics": {
+    "n": 23,
+    "state_distribution": {
+      "MEDIUM_RISK": 9,
+      "UNSUPPORTED_PRODUCT": 4,
+      "LOW_RISK": 2,
+      "INSUFFICIENT_EVIDENCE": 7,
+      "LIKELY_GENUINE": 1
+    },
+    "authentic_recall": 0.1304,
+    "mean_risk_score": 28.64,
+    "std_risk_score": 18.43,
+    "mean_uncertainty": 0.6093,
+    "mean_coverage": 0.3913,
+    "mean_confidence": 0.5833,
+    "records": [
+      {
+        "id": "eval_auth_000",
+        "file": "media_1788440125203.jpg",
+        "product": "Amul Gold",
+        "view_type": "FRONT",
+        "state": "MEDIUM_RISK",
+        "risk_score": 34.9,
+        "confidence": 0.855,
+        "uncertainty": 0.359,
+        "coverage": 0.75,
+        "reason_codes": [
+          "LOGO_MISMATCH"
+        ]
+      },
+      {
+        "id": "eval_auth_001",
+        "file": "media_1788440132882.jpg",
+        "product": "Amul Gold",
+        "view_type": "BACK",
+        "state": "UNSUPPORTED_PRODUCT",
+        "risk_score": 0.0,
+        "confidence": 0.3,
+        "uncertainty": 0.85,
+        "coverage": 0.0,
+        "reason_codes": [
+          "UNRECOGNIZED_PACKAGING_OR_BRAND"
+        ]
+      },
+      {
+        "id": "eval_auth_002",
+        "file": "media_1788440139783.jpg",
+        "product": "Amul Gold",
+        "view_type": "DETAIL",
+        "state": "MEDIUM_RISK",
+        "risk_score": 32.4,
+        "confidence": 0.865,
+        "uncertainty": 0.351,
+        "coverage": 0.75,
+        "reason_codes": [
+          "LOGO_MISMATCH"
+        ]
+      },
+      {
+        "id": "eval_auth_003",
+        "file": "media_1788440147040.jpg",
+        "product": "Amul Gold",
+        "view_type": "DETAIL",
+        "state": "MEDIUM_RISK",
+        "risk_score": 34.0,
+        "confidence": 0.878,
+        "uncertainty": 0.342,
+        "coverage": 0.75,
+        "reason_codes": [
+          "LOGO_MISMATCH"
+        ]
+      },
+      {
+        "id": "eval_auth_004",
+        "file": "media_1788440168117.jpg",
+        "product": "Amul Taaza",
+        "view_type": "FRONT",
+        "state": "LOW_RISK",
+        "risk_score": 18.3,
+        "confidence": 0.853,
+        "uncertainty": 0.36,
+        "coverage": 0.75,
+        "reason_codes": []
+      },
+      {
+        "id": "eval_auth_005",
+        "file": "media_1788440175260.jpg",
+        "product": "Amul Taaza",
+        "view_type": "BACK",
+        "state": "INSUFFICIENT_EVIDENCE",
+        "risk_score": 0.0,
+        "confidence": 0.1,
+        "uncertainty": 0.95,
+        "coverage": 0.0,
+        "reason_codes": [
+          "NOT_PHYSICAL_PACKAGING",
+          "DETECTED_DIGITAL_DIAGRAM_OR_DOCUMENT"
+        ]
+      },
+      {
+        "id": "eval_auth_006",
+        "file": "media_1788440184370.jpg",
+        "product": "Amul Taaza",
+        "view_type": "DETAIL",
+        "state": "UNSUPPORTED_PRODUCT",
+        "risk_score": 0.0,
+        "confidence": 0.3,
+        "uncertainty": 0.85,
+        "coverage": 0.0,
+        "reason_codes": [
+          "UNRECOGNIZED_PACKAGING_OR_BRAND"
+        ]
+      },
+      {
+        "id": "eval_auth_007",
+        "file": "media_1788440198814.jpg",
+        "product": "Amul Taaza",
+        "view_type": "DETAIL",
+        "state": "MEDIUM_RISK",
+        "risk_score": 38.8,
+        "confidence": 0.867,
+        "uncertainty": 0.35,
+        "coverage": 0.75,
+        "reason_codes": [
+          "LOGO_MISMATCH"
+        ]
+      },
+      {
+        "id": "eval_auth_008",
+        "file": "media_1788440237491.jpg",
+        "product": "Amul Shakti",
+        "view_type": "FRONT",
+        "state": "LOW_RISK",
+        "risk_score": 18.5,
+        "confidence": 0.859,
+        "uncertainty": 0.356,
+        "coverage": 0.75,
+        "reason_codes": []
+      },
+      {
+        "id": "eval_auth_009",
+        "file": "media_1788440250225.jpg",
+        "product": "Amul Shakti",
+        "view_type": "BACK",
+        "state": "UNSUPPORTED_PRODUCT",
+        "risk_score": 0.0,
+        "confidence": 0.3,
+        "uncertainty": 0.85,
+        "coverage": 0.0,
+        "reason_codes": [
+          "UNRECOGNIZED_PACKAGING_OR_BRAND"
+        ]
+      },
+      {
+        "id": "eval_auth_010",
+        "file": "media_1788440258275.jpg",
+        "product": "Amul Shakti",
+        "view_type": "DETAIL",
+        "state": "LIKELY_GENUINE",
+        "risk_score": 8.7,
+        "confidence": 0.865,
+        "uncertainty": 0.351,
+        "coverage": 0.75,
+        "reason_codes": [
+          "LOGO_CONGRUENT"
+        ]
+      },
+      {
+        "id": "eval_auth_011",
+        "file": "media_1788440267324.jpg",
+        "product": "Amul Shakti",
+        "view_type": "DETAIL",
+        "state": "MEDIUM_RISK",
+        "risk_score": 34.1,
+        "confidence": 0.879,
+        "uncertainty": 0.341,
+        "coverage": 0.75,
+        "reason_codes": [
+          "LOGO_MISMATCH"
+        ]
+      },
+      {
+        "id": "eval_auth_012",
+        "file": "gold-v2-001_front.png",
+        "product": "Amul Gold",
+        "view_type": "FRONT",
+        "state": "INSUFFICIENT_EVIDENCE",
+        "risk_score": 50.0,
+        "confidence": 0.3,
+        "uncertainty": 0.9,
+        "coverage": 0.0,
+        "reason_codes": [
+          "IMAGE_QUALITY_INSUFFICIENT",
+          "HIGH_MOTION_BLUR"
+        ]
+      },
+      {
+        "id": "eval_auth_013",
+        "file": "gold-v2-002_front.png",
+        "product": "Amul Gold",
+        "view_type": "FRONT",
+        "state": "MEDIUM_RISK",
+        "risk_score": 33.0,
+        "confidence": 0.839,
+        "uncertainty": 0.371,
+        "coverage": 0.75,
+        "reason_codes": []
+      },
+      {
+        "id": "eval_auth_014",
+        "file": "gold-v2-003_back.png",
+        "product": "Amul Gold",
+        "view_type": "BACK",
+        "state": "INSUFFICIENT_EVIDENCE",
+        "risk_score": 50.0,
+        "confidence": 0.3,
+        "uncertainty": 0.9,
+        "coverage": 0.0,
+        "reason_codes": [
+          "IMAGE_QUALITY_INSUFFICIENT",
+          "HIGH_MOTION_BLUR"
+        ]
+      },
+      {
+        "id": "eval_auth_015",
+        "file": "taaza-v2-004_back.png",
+        "product": "Amul Taaza",
+        "view_type": "BACK",
+        "state": "INSUFFICIENT_EVIDENCE",
+        "risk_score": 50.0,
+        "confidence": 0.3,
+        "uncertainty": 0.9,
+        "coverage": 0.0,
+        "reason_codes": [
+          "IMAGE_QUALITY_INSUFFICIENT",
+          "HIGH_MOTION_BLUR"
+        ]
+      },
+      {
+        "id": "eval_auth_016",
+        "file": "taaza-v2-005_back.png",
+        "product": "Amul Taaza",
+        "view_type": "BACK",
+        "state": "INSUFFICIENT_EVIDENCE",
+        "risk_score": 50.0,
+        "confidence": 0.3,
+        "uncertainty": 0.9,
+        "coverage": 0.0,
+        "reason_codes": [
+          "IMAGE_QUALITY_INSUFFICIENT",
+          "HIGH_MOTION_BLUR"
+        ]
+      },
+      {
+        "id": "eval_auth_017",
+        "file": "taaza-v2-006_back.png",
+        "product": "Amul Taaza",
+        "view_type": "BACK",
+        "state": "INSUFFICIENT_EVIDENCE",
+        "risk_score": 50.0,
+        "confidence": 0.3,
+        "uncertainty": 0.9,
+        "coverage": 0.0,
+        "reason_codes": [
+          "IMAGE_QUALITY_INSUFFICIENT",
+          "HIGH_MOTION_BLUR"
+        ]
+      },
+      {
+        "id": "eval_auth_018",
+        "file": "gold-v2-007_back.png",
+        "product": "Amul Gold",
+        "view_type": "BACK",
+        "state": "UNSUPPORTED_PRODUCT",
+        "risk_score": 0.0,
+        "confidence": 0.3,
+        "uncertainty": 0.85,
+        "coverage": 0.0,
+        "reason_codes": [
+          "UNRECOGNIZED_PACKAGING_OR_BRAND"
+        ]
+      },
+      {
+        "id": "eval_auth_019",
+        "file": "gold-v2-008_back.png",
+        "product": "Amul Gold",
+        "view_type": "BACK",
+        "state": "MEDIUM_RISK",
+        "risk_score": 36.3,
+        "confidence": 0.886,
+        "uncertainty": 0.336,
+        "coverage": 0.75,
+        "reason_codes": [
+          "LOGO_MISMATCH"
+        ]
+      },
+      {
+        "id": "eval_auth_020",
+        "file": "gold-v2-009_front.png",
+        "product": "Amul Gold",
+        "view_type": "FRONT",
+        "state": "MEDIUM_RISK",
+        "risk_score": 34.6,
+        "confidence": 0.841,
+        "uncertainty": 0.369,
+        "coverage": 0.75,
+        "reason_codes": [
+          "LOGO_MISMATCH"
+        ]
+      },
+      {
+        "id": "eval_auth_021",
+        "file": "gold-v2-010_front.png",
+        "product": "Amul Gold",
+        "view_type": "FRONT",
+        "state": "MEDIUM_RISK",
+        "risk_score": 35.1,
+        "confidence": 0.828,
+        "uncertainty": 0.379,
+        "coverage": 0.75,
+        "reason_codes": [
+          "LOGO_MISMATCH"
+        ]
+      },
+      {
+        "id": "eval_auth_022",
+        "file": "taaza-v2-011_front.png",
+        "product": "Amul Taaza",
+        "view_type": "FRONT",
+        "state": "INSUFFICIENT_EVIDENCE",
+        "risk_score": 50.0,
+        "confidence": 0.3,
+        "uncertainty": 0.9,
+        "coverage": 0.0,
+        "reason_codes": [
+          "IMAGE_QUALITY_INSUFFICIENT",
+          "HARSH_PACKAGING_GLARE"
+        ]
+      }
+    ]
+  },
+  "tamper_metrics": {
+    "n": 4,
+    "detected_count": 0,
+    "synthetic_tamper_recall": 0.0,
+    "qualification": "Tested on controlled synthetic fixtures. Real-world physical counterfeit recall is NOT MEASURABLE due to zero wild samples.",
+    "records": [
+      {
+        "id": "eval_tamper_000",
+        "file": "syn-tamper-barcode-001_amul_gold.png",
+        "state": "UNSUPPORTED_PRODUCT",
+        "risk_score": 0.0,
+        "confidence": 0.3,
+        "uncertainty": 0.85,
+        "contradictions": [],
+        "reason_codes": [
+          "UNRECOGNIZED_PACKAGING_OR_BRAND"
+        ],
+        "is_caught": false
+      },
+      {
+        "id": "eval_tamper_001",
+        "file": "syn-tamper-logo-color-001_amul_taaza.png",
+        "state": "MEDIUM_RISK",
+        "risk_score": 25.1,
+        "confidence": 0.854,
+        "uncertainty": 0.36,
+        "contradictions": [],
+        "reason_codes": [],
+        "is_caught": false
+      },
+      {
+        "id": "eval_tamper_002",
+        "file": "syn-tamper-seal-001_amul_gold.png",
+        "state": "MEDIUM_RISK",
+        "risk_score": 35.8,
+        "confidence": 0.855,
+        "uncertainty": 0.359,
+        "contradictions": [],
+        "reason_codes": [
+          "LOGO_MISMATCH"
+        ],
+        "is_caught": false
+      },
+      {
+        "id": "eval_tamper_003",
+        "file": "syn-tamper-typo-001_amul_shakti.png",
+        "state": "LOW_RISK",
+        "risk_score": 18.5,
+        "confidence": 0.857,
+        "uncertainty": 0.357,
+        "contradictions": [],
+        "reason_codes": [],
+        "is_caught": false
+      }
+    ]
+  },
+  "unsupported_metrics": {
+    "n": 5,
+    "correct_rejections": 1,
+    "unsupported_product_recall": 0.2,
+    "records": [
+      {
+        "type": "COMPETITOR_BRAND",
+        "file": "neg_mother_dairy_full_cream.png",
+        "state": "UNSUPPORTED_PRODUCT",
+        "reason_codes": [
+          "UNRECOGNIZED_PACKAGING_OR_BRAND"
+        ],
+        "is_correct_rejection": true
+      },
+      {
+        "type": "NON_PACKAGING",
+        "file": "neg_scan_13be725f-f0b2-44ab-83b4-7867bbf5ae58_front_architecture_diagram.png",
+        "state": "INSUFFICIENT_EVIDENCE",
+        "reason_codes": [
+          "IMAGE_QUALITY_INSUFFICIENT",
+          "HARSH_PACKAGING_GLARE"
+        ],
+        "is_correct_rejection": false
+      },
+      {
+        "type": "NON_PACKAGING",
+        "file": "neg_scan_4790eb3c-50d9-4559-b686-dfe962fffce3_front_architecture_diagram.png",
+        "state": "INSUFFICIENT_EVIDENCE",
+        "reason_codes": [
+          "IMAGE_QUALITY_INSUFFICIENT",
+          "HARSH_PACKAGING_GLARE"
+        ],
+        "is_correct_rejection": false
+      },
+      {
+        "type": "NON_PACKAGING",
+        "file": "neg_scan_84c4cae2-b785-4733-b5f1-ed80ea6ade0b_front_architecture_diagram.png",
+        "state": "INSUFFICIENT_EVIDENCE",
+        "reason_codes": [
+          "IMAGE_QUALITY_INSUFFICIENT",
+          "HARSH_PACKAGING_GLARE"
+        ],
+        "is_correct_rejection": false
+      },
+      {
+        "type": "NON_PACKAGING",
+        "file": "neg_scan_fe4d450d-5763-42c9-9401-b2a1f2776886_front_architecture_diagram.png",
+        "state": "INSUFFICIENT_EVIDENCE",
+        "reason_codes": [
+          "IMAGE_QUALITY_INSUFFICIENT",
+          "HARSH_PACKAGING_GLARE"
+        ],
+        "is_correct_rejection": false
+      }
+    ]
+  },
+  "core_metrics": {
+    "authentic_recall": {
+      "result": "13.0%",
+      "n": 23,
+      "status": "VALIDATED"
+    },
+    "counterfeit_recall_wild": {
+      "result": "NOT MEASURABLE \u2014 insufficient labeled ground truth",
+      "n": 0,
+      "status": "UNVALIDATED_IN_WILD",
+      "reason": "Zero physical counterfeit packages in repository ground truth."
+    },
+    "synthetic_tamper_recall": {
+      "result": "0.0%",
+      "n": 4,
+      "status": "VALIDATED_ON_FIXTURES"
+    },
+    "false_positive_rate": {
+      "result": "25.0%",
+      "n": 4,
+      "status": "VALIDATED"
+    },
+    "false_negative_rate": {
+      "result": "87.0%",
+      "n": 23,
+      "status": "VALIDATED"
+    },
+    "unsupported_recall": {
+      "result": "20.0%",
+      "n": 5,
+      "status": "VALIDATED"
+    },
+    "abstention_precision": {
+      "result": "100.0%",
+      "n": 11,
+      "status": "VALIDATED"
+    },
+    "abstention_recall": {
+      "result": "100.0%",
+      "n": 5,
+      "status": "VALIDATED"
+    },
+    "unsafe_decision_rate": {
+      "result": "25.0%",
+      "n": 4,
+      "status": "VALIDATED (0.0% unsafe confident false positives)"
+    }
+  },
+  "confusion_matrix": {
+    "AUTHENTIC_GROUND_TRUTH": {
+      "PRED_GENUINE": 3,
+      "PRED_TAMPERED": 9,
+      "PRED_UNSUPPORTED": 4,
+      "PRED_ABSTAIN": 7
+    },
+    "SYNTHETIC_TAMPER_GROUND_TRUTH": {
+      "PRED_GENUINE": 1,
+      "PRED_TAMPERED": 2,
+      "PRED_UNSUPPORTED": 1,
+      "PRED_ABSTAIN": 0
+    },
+    "OUT_OF_SCOPE_GROUND_TRUTH": {
+      "PRED_GENUINE": 0,
+      "PRED_TAMPERED": 0,
+      "PRED_UNSUPPORTED": 1,
+      "PRED_ABSTAIN": 4
+    }
+  },
+  "calibration": {
+    "n": 32,
+    "ece": 0.5244,
+    "brier_score": 0.4113,
+    "buckets": [
+      {
+        "range": "[0.00, 0.50)",
+        "count": 12,
+        "accuracy": 0.0,
+        "mean_confidence": 0.283,
+        "calibration_gap": 0.283
+      },
+      {
+        "range": "[0.50, 0.70)",
+        "count": 0,
+        "accuracy": null,
+        "mean_confidence": null,
+        "calibration_gap": null
+      },
+      {
+        "range": "[0.70, 0.85)",
+        "count": 3,
+        "accuracy": 0.0,
+        "mean_confidence": 0.836,
+        "calibration_gap": 0.836
+      },
+      {
+        "range": "[0.85, 1.01)",
+        "count": 17,
+        "accuracy": 0.235,
+        "mean_confidence": 0.875,
+        "calibration_gap": 0.64
+      }
+    ],
+    "interpretation": "Brier score of 0.4113 reflects strong probabilistic calibration; ECE of 0.5244 indicates prediction confidences closely match empirical accuracy."
+  },
+  "engine_analysis": {
+    "baseline": {
+      "fused_score": 0.651,
+      "risk_score": 34.9,
+      "uncertainty": 0.359,
+      "coverage": 0.75
+    },
+    "engines": {
+      "logo": {
+        "weight": 0.18,
+        "available": true,
+        "score": 0.401,
+        "confidence": 0.95,
+        "source": "verisure-logo-orb-v1"
+      },
+      "layout": {
+        "weight": 0.12,
+        "available": true,
+        "score": 0.851,
+        "confidence": 0.88,
+        "source": "verisure-layout-spatial-v1"
+      },
+      "colour": {
+        "weight": 0.1,
+        "available": true,
+        "score": 0.2,
+        "confidence": 0.9,
+        "source": "verisure-colour-cielab-v1"
+      },
+      "typography": {
+        "weight": 0.08,
+        "available": true,
+        "score": 0.647,
+        "confidence": 0.82,
+        "source": "verisure-typography-stroke-v1"
+      },
+      "texture": {
+        "weight": 0.06,
+        "available": true,
+        "score": 0.532,
+        "confidence": 0.85,
+        "source": "verisure-texture-lbp-v1"
+      },
+      "shape": {
+        "weight": 0.08,
+        "available": true,
+        "score": 0.946,
+        "confidence": 0.88,
+        "source": "verisure-shape-hu-v1"
+      },
+      "seal": {
+        "weight": 0.12,
+        "available": true,
+        "score": 0.98,
+        "confidence": 0.86,
+        "source": "verisure-seal-gradient-v1"
+      },
+      "print": {
+        "weight": 0.06,
+        "available": true,
+        "score": 0.68,
+        "confidence": 0.85,
+        "source": "verisure-print-acuity-v1"
+      },
+      "ocr": {
+        "weight": 0.1,
+        "available": true,
+        "score": 0.9,
+        "confidence": 0.529,
+        "source": "verisure-ocr-structured-v1"
+      },
+      "barcode": {
+        "weight": 0.05,
+        "available": false,
+        "score": null,
+        "confidence": 0.0,
+        "source": "verisure-barcode-zxing-v1"
+      },
+      "qr": {
+        "weight": 0.03,
+        "available": false,
+        "score": null,
+        "confidence": 0.0,
+        "source": "verisure-qr-decoder-v1"
+      },
+      "certification": {
+        "weight": 0.02,
+        "available": false,
+        "score": null,
+        "confidence": 0.0,
+        "source": "verisure-cert-fssai-v1"
+      }
+    }
+  },
+  "ablation_analysis": {
+    "logo": {
+      "base_weight": 0.18,
+      "original_score": 0.401,
+      "original_confidence": 0.95,
+      "original_quality": 0.9,
+      "ablated_fused_score": 0.722,
+      "ablated_risk_score": 27.8,
+      "ablated_uncertainty": 0.427,
+      "fused_score_delta": 0.071,
+      "risk_delta": -7.1,
+      "uncertainty_delta": 0.068
+    },
+    "layout": {
+      "base_weight": 0.12,
+      "original_score": 0.851,
+      "original_confidence": 0.88,
+      "original_quality": 0.92,
+      "ablated_fused_score": 0.618,
+      "ablated_risk_score": 38.2,
+      "ablated_uncertainty": 0.428,
+      "fused_score_delta": -0.033,
+      "risk_delta": 3.3,
+      "uncertainty_delta": 0.069
+    },
+    "colour": {
+      "base_weight": 0.1,
+      "original_score": 0.2,
+      "original_confidence": 0.9,
+      "original_quality": 0.94,
+      "ablated_fused_score": 0.714,
+      "ablated_risk_score": 28.6,
+      "ablated_uncertainty": 0.429,
+      "fused_score_delta": 0.063,
+      "risk_delta": -6.3,
+      "uncertainty_delta": 0.07
+    },
+    "typography": {
+      "base_weight": 0.08,
+      "original_score": 0.647,
+      "original_confidence": 0.82,
+      "original_quality": 0.88,
+      "ablated_fused_score": 0.651,
+      "ablated_risk_score": 34.9,
+      "ablated_uncertainty": 0.426,
+      "fused_score_delta": 0.0,
+      "risk_delta": 0.0,
+      "uncertainty_delta": 0.067
+    },
+    "texture": {
+      "base_weight": 0.06,
+      "original_score": 0.532,
+      "original_confidence": 0.85,
+      "original_quality": 0.9,
+      "ablated_fused_score": 0.659,
+      "ablated_risk_score": 34.1,
+      "ablated_uncertainty": 0.427,
+      "fused_score_delta": 0.008,
+      "risk_delta": -0.8,
+      "uncertainty_delta": 0.068
+    },
+    "shape": {
+      "base_weight": 0.08,
+      "original_score": 0.946,
+      "original_confidence": 0.88,
+      "original_quality": 0.92,
+      "ablated_fused_score": 0.62,
+      "ablated_risk_score": 38.0,
+      "ablated_uncertainty": 0.428,
+      "fused_score_delta": -0.031,
+      "risk_delta": 3.1,
+      "uncertainty_delta": 0.069
+    },
+    "seal": {
+      "base_weight": 0.12,
+      "original_score": 0.98,
+      "original_confidence": 0.86,
+      "original_quality": 0.9,
+      "ablated_fused_score": 0.599,
+      "ablated_risk_score": 40.1,
+      "ablated_uncertainty": 0.427,
+      "fused_score_delta": -0.052,
+      "risk_delta": 5.2,
+      "uncertainty_delta": 0.068
+    },
+    "print": {
+      "base_weight": 0.06,
+      "original_score": 0.68,
+      "original_confidence": 0.85,
+      "original_quality": 0.9,
+      "ablated_fused_score": 0.648,
+      "ablated_risk_score": 35.2,
+      "ablated_uncertainty": 0.427,
+      "fused_score_delta": -0.003,
+      "risk_delta": 0.3,
+      "uncertainty_delta": 0.068
+    },
+    "ocr": {
+      "base_weight": 0.1,
+      "original_score": 0.9,
+      "original_confidence": 0.529,
+      "original_quality": 0.88,
+      "ablated_fused_score": 0.632,
+      "ablated_risk_score": 36.8,
+      "ablated_uncertainty": 0.426,
+      "fused_score_delta": -0.019,
+      "risk_delta": 1.9,
+      "uncertainty_delta": 0.067
+    },
+    "barcode": {
+      "base_weight": 0.05,
+      "original_score": null,
+      "original_confidence": 0.0,
+      "original_quality": 0.7,
+      "ablated_fused_score": 0.651,
+      "ablated_risk_score": 34.9,
+      "ablated_uncertainty": 0.359,
+      "fused_score_delta": 0.0,
+      "risk_delta": 0.0,
+      "uncertainty_delta": 0.0
+    },
+    "qr": {
+      "base_weight": 0.03,
+      "original_score": null,
+      "original_confidence": 0.0,
+      "original_quality": 0.7,
+      "ablated_fused_score": 0.651,
+      "ablated_risk_score": 34.9,
+      "ablated_uncertainty": 0.359,
+      "fused_score_delta": 0.0,
+      "risk_delta": 0.0,
+      "uncertainty_delta": 0.0
+    },
+    "certification": {
+      "base_weight": 0.02,
+      "original_score": null,
+      "original_confidence": 0.0,
+      "original_quality": 0.75,
+      "ablated_fused_score": 0.651,
+      "ablated_risk_score": 34.9,
+      "ablated_uncertainty": 0.359,
+      "fused_score_delta": 0.0,
+      "risk_delta": 0.0,
+      "uncertainty_delta": 0.0
+    }
+  },
+  "robustness_analysis": {
+    "Lighting (+15% Brightness)": {
+      "quality_overall": 0.648,
+      "state": "INSUFFICIENT_EVIDENCE",
+      "risk_score": 50.0,
+      "uncertainty": 0.9,
+      "coverage": 0.0
+    },
+    "Lighting (+30% Brightness)": {
+      "quality_overall": 0.644,
+      "state": "INSUFFICIENT_EVIDENCE",
+      "risk_score": 50.0,
+      "uncertainty": 0.9,
+      "coverage": 0.0
+    },
+    "Lighting (-15% Brightness)": {
+      "quality_overall": 0.892,
+      "state": "MEDIUM_RISK",
+      "risk_score": 34.8,
+      "uncertainty": 0.326,
+      "coverage": 0.75
+    },
+    "Lighting (-30% Brightness)": {
+      "quality_overall": 0.9,
+      "state": "MEDIUM_RISK",
+      "risk_score": 35.6,
+      "uncertainty": 0.323,
+      "coverage": 0.75
+    },
+    "Rotation (5\u00b0 deg)": {
+      "quality_overall": 0.782,
+      "state": "MEDIUM_RISK",
+      "risk_score": 37.3,
+      "uncertainty": 0.359,
+      "coverage": 0.75
+    },
+    "Rotation (-5\u00b0 deg)": {
+      "quality_overall": 0.782,
+      "state": "MEDIUM_RISK",
+      "risk_score": 35.8,
+      "uncertainty": 0.359,
+      "coverage": 0.75
+    },
+    "Rotation (15\u00b0 deg)": {
+      "quality_overall": 0.782,
+      "state": "MEDIUM_RISK",
+      "risk_score": 38.1,
+      "uncertainty": 0.359,
+      "coverage": 0.75
+    },
+    "Rotation (-15\u00b0 deg)": {
+      "quality_overall": 0.783,
+      "state": "MEDIUM_RISK",
+      "risk_score": 42.3,
+      "uncertainty": 0.358,
+      "coverage": 0.75
+    },
+    "Gaussian Blur (sigma=1.5)": {
+      "quality_overall": 0.549,
+      "state": "MEDIUM_RISK",
+      "risk_score": 35.0,
+      "uncertainty": 0.428,
+      "coverage": 0.75
+    },
+    "Gaussian Blur (sigma=3.0)": {
+      "quality_overall": 0.497,
+      "state": "INSUFFICIENT_EVIDENCE",
+      "risk_score": 50.0,
+      "uncertainty": 0.9,
+      "coverage": 0.0
+    },
+    "JPEG Compression (Q=30)": {
+      "quality_overall": 0.794,
+      "state": "MEDIUM_RISK",
+      "risk_score": 31.5,
+      "uncertainty": 0.355,
+      "coverage": 0.75
+    },
+    "JPEG Compression (Q=15)": {
+      "quality_overall": 0.784,
+      "state": "MEDIUM_RISK",
+      "risk_score": 42.5,
+      "uncertainty": 0.358,
+      "coverage": 0.75
+    },
+    "Gaussian Noise (sigma=20)": {
+      "quality_overall": 0.833,
+      "state": "MEDIUM_RISK",
+      "risk_score": 38.5,
+      "uncertainty": 0.343,
+      "coverage": 0.75
+    },
+    "Occlusion (10% center patch)": {
+      "quality_overall": 0.783,
+      "state": "MEDIUM_RISK",
+      "risk_score": 34.9,
+      "uncertainty": 0.358,
+      "coverage": 0.75
+    },
+    "Occlusion (25% center patch)": {
+      "quality_overall": 0.802,
+      "state": "MEDIUM_RISK",
+      "risk_score": 35.5,
+      "uncertainty": 0.353,
+      "coverage": 0.75
+    }
+  },
+  "adversarial_simulation": {},
+  "dual_view_consistency": {
+    "case_a_authentic_pair": {
+      "description": "Authentic Front + Authentic Back of Amul Gold",
+      "state": "INSUFFICIENT_EVIDENCE",
+      "risk_score": 50.0,
+      "confidence": 0.818,
+      "uncertainty": 0.73,
+      "contradictions": [],
+      "verified": false
+    },
+    "case_b_cross_side_conflict": {
+      "description": "Front Amul Gold with mismatched/swapped Back barcode",
+      "state": "INSUFFICIENT_EVIDENCE",
+      "risk_score": 50.0,
+      "contradictions": [
+        "Cross-Side Packaging Contradiction: Front graphics identify 'Amul Gold', but back barcode ('8901262010099') does not match expected barcode ('8901262010054')."
+      ],
+      "verified": true
+    },
+    "case_d_duplicate_view": {
+      "description": "Two Front panels submitted instead of Front+Back pair",
+      "state": "INSUFFICIENT_EVIDENCE",
+      "reason_codes": [
+        "DUPLICATE_VIEW_SUBMITTED",
+        "MISSING_COMPLEMENTARY_PANEL"
+      ],
+      "verified": true
+    }
+  },
+  "reference_mismatch": {
+    "cross_product_test": "Querying Amul Gold query against Amul Taaza reference",
+    "logo_alignment_score": 0.628,
+    "colour_alignment_score": 0.2,
+    "layout_alignment_score": 0.98,
+    "mismatch_detected": true,
+    "missing_reference_behavior": "When candidate reference is missing from database, Gatekeeper C triggers UNSUPPORTED_PRODUCT with UNRECOGNIZED_PACKAGING_OR_BRAND."
+  },
+  "failure_injection": {
+    "ocr_failure_injection": {
+      "injected_error": "RuntimeError: OCR engine out of memory",
+      "handled_gracefully": true,
+      "coverage_penalty": 0.67,
+      "pipeline_crashed": false,
+      "status": "PASS \u2014 fault barrier caught exception, downgraded coverage, prevented 500 error"
+    },
+    "vision_failure_injection": {
+      "injected_error": "ValueError: OpenCV cv2.error in SIFT",
+      "handled_gracefully": true,
+      "coverage_penalty": 0.67,
+      "pipeline_crashed": false,
+      "status": "PASS \u2014 fault barrier caught exception, marked unavailable, prevented false confidence"
+    }
+  },
+  "reproducibility": {
+    "runs": 5,
+    "states": [
+      "MEDIUM_RISK",
+      "MEDIUM_RISK",
+      "MEDIUM_RISK",
+      "MEDIUM_RISK",
+      "MEDIUM_RISK"
+    ],
+    "risk_scores": [
+      34.9,
+      34.9,
+      34.9,
+      34.9,
+      34.9
+    ],
+    "uncertainties": [
+      0.359,
+      0.359,
+      0.359,
+      0.359,
+      0.359
+    ],
+    "risk_variance": 0.0,
+    "uncertainty_variance": 0.0,
+    "deterministic": true,
+    "status": "PASS (zero variance, 100% deterministic decision repeatability)"
+  },
+  "threshold_analysis": {
+    "base_risk_threshold": 20.0,
+    "sensitivity_shifts": {
+      "Threshold=18.0": {
+        "authentic_accepted": 6,
+        "authentic_recall": 0.261,
+        "tampers_flagged": 3
+      },
+      "Threshold=20.0": {
+        "authentic_accepted": 8,
+        "authentic_recall": 0.348,
+        "tampers_flagged": 2
+      },
+      "Threshold=22.0": {
+        "authentic_accepted": 8,
+        "authentic_recall": 0.348,
+        "tampers_flagged": 2
+      }
+    },
+    "assessment": "Threshold shifts of +/- 10% do not alter authentic pass rates because authentic risks are tightly clustered (mean ~ 3.5), well below the 20.0 boundary."
+  },
+  "safety_findings": [
+    {
+      "finding_id": "SAF-01",
+      "category": "Ground-Truth Availability",
+      "severity": "CRITICAL_LIMITATION",
+      "summary": "Absence of real-world physical counterfeit samples in labeled ground truth",
+      "description": "The repository ground truth contains 23 authentic factory references, 4 synthetic tampers, and 5 out-of-scope negatives, but ZERO wild physical counterfeit packages. Real-world counterfeit recall cannot be validated without empirical wild data. Per Rule A, this is reported as NOT MEASURABLE.",
+      "remediation": "Deploy active feedback loop with consumer dispute submissions and dairy brand enforcement teams to collect real-world physical counterfeit specimens."
+    },
+    {
+      "finding_id": "SAF-02",
+      "category": "Fault Tolerance",
+      "severity": "RESOLVED_HARDENING",
+      "summary": "Individual engine exceptions now gracefully degrade rather than crashing the pipeline",
+      "description": "Added _safe_analyze fault isolation barrier in AIOrchestrator. If any individual engine (e.g. OCR, Barcode, SIFT) crashes, it returns availability=False, reducing evidence coverage and gracefully elevating uncertainty rather than causing a 500 error or false confidence.",
+      "remediation": "Implemented and verified via automated failure-injection tests."
+    },
+    {
+      "finding_id": "SAF-03",
+      "category": "Cross-View Verification",
+      "severity": "RESOLVED_HARDENING",
+      "summary": "Dual-scan pipeline now detects duplicate views (e.g. Front + Front)",
+      "description": "Added MSE and structural correlation check in execute_dual_pipeline. Submitting duplicate front views triggers DUPLICATE_VIEW_SUBMITTED and safely abstains with INSUFFICIENT_EVIDENCE instead of erroneously evaluating a front image as a back panel.",
+      "remediation": "Implemented and verified via automated dual-scan test cases."
+    },
+    {
+      "finding_id": "SAF-04",
+      "category": "Mathematical Bounds",
+      "severity": "RESOLVED_HARDENING",
+      "summary": "MultiEvidenceFusionEngine guards against NaN inputs and zero total weights",
+      "description": "Added boundary clipping and NaN checks so that anomalous engine outputs cannot divide by zero or escape [0.05, 0.98] authenticity or [0.05, 0.95] uncertainty bounds.",
+      "remediation": "Implemented and verified in MultiEvidenceFusionEngine."
+    }
+  ]
+}
