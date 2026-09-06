@@ -43,6 +43,10 @@ $BackendPort  = 8000
 $FrontendPort = 5173
 $WslDistro    = "Ubuntu"
 
+# Canonical Windows-side PostgreSQL endpoint for WSL mirrored networking.
+$PostgresHost = "127.0.0.1"
+$PostgresPort = 5432
+
 $BackendHealthUrl  = "http://127.0.0.1:$BackendPort/health"
 $FrontendHealthUrl = "http://127.0.0.1:$FrontendPort"
 
@@ -107,34 +111,6 @@ function Test-TcpPort {
     }
 }
 
-function Get-WslIPv4 {
-    param(
-        [Parameter(Mandatory = $true)]
-        [string]$Distribution
-    )
-
-    try {
-        $raw = & wsl -d $Distribution -e hostname -I 2>$null
-
-        if ($LASTEXITCODE -ne 0 -or -not $raw) {
-            return $null
-        }
-
-        $ips = $raw.Trim() -split "\s+"
-
-        foreach ($ip in $ips) {
-            if ($ip -match '^(?:\d{1,3}\.){3}\d{1,3}$') {
-                return $ip
-            }
-        }
-    }
-    catch {
-        return $null
-    }
-
-    return $null
-}
-
 function Test-BackendHealth {
     try {
         $response = Invoke-RestMethod `
@@ -182,15 +158,26 @@ function Get-ListeningProcess {
     )
 
     try {
-        return Get-NetTCPConnection `
-            -LocalPort $Port `
-            -State Listen `
-            -ErrorAction SilentlyContinue |
-            Select-Object -First 1
+        # Materialize the result into an array so PowerShell 5.1 does not
+        # ambiguously collapse a single/multiple connection into pipeline
+        # behavior that can affect truthiness and property access.
+        $connections = @(
+            Get-NetTCPConnection `
+                -LocalPort $Port `
+                -State Listen `
+                -ErrorAction SilentlyContinue
+        )
+
+        if ($connections.Count -gt 0) {
+            return $connections[0]
+        }
     }
     catch {
-        return $null
+        # Port/process discovery is advisory. Health checks below are
+        # authoritative for services managed by this launcher.
     }
+
+    return $null
 }
 
 # -------------------------------------------------------------------
@@ -203,7 +190,7 @@ Write-Host "=======================================================" -Foreground
 Write-Host " Repository : $RepoRoot" -ForegroundColor DarkGray
 Write-Host " Backend    : http://localhost:$BackendPort" -ForegroundColor DarkGray
 Write-Host " Frontend   : http://localhost:$FrontendPort" -ForegroundColor DarkGray
-Write-Host " PostgreSQL : WSL $WslDistro" -ForegroundColor DarkGray
+Write-Host " PostgreSQL : $PostgresHost`:$PostgresPort (WSL $WslDistro)" -ForegroundColor DarkGray
 Write-Host "=======================================================" -ForegroundColor Cyan
 
 try {
@@ -290,44 +277,38 @@ try {
     Write-Section "[2/5] Ensuring PostgreSQL Database is Ready"
 
     # ---------------------------------------------------------------
-    # Dynamically determine WSL IPv4.
+    # Ensure the WSL distribution is running.
     # ---------------------------------------------------------------
 
-    $wslIp = Get-WslIPv4 -Distribution $WslDistro
+    Write-Info "Ensuring WSL distribution '$WslDistro' is available..."
 
-    if (-not $wslIp) {
-        Write-Info "WSL IPv4 address not available yet."
-        Write-Info "Attempting to start the Ubuntu distribution..."
+    try {
+        & wsl -d $WslDistro -e true 2>&1 | Out-Null
 
-        try {
-            & wsl -d $WslDistro -e true 2>&1 | Out-Null
+        if ($LASTEXITCODE -ne 0) {
+            throw "WSL returned exit code $LASTEXITCODE."
         }
-        catch {
-            throw "Unable to start WSL distribution '$WslDistro'."
-        }
-
-        Start-Sleep -Seconds 2
-
-        $wslIp = Get-WslIPv4 -Distribution $WslDistro
+    }
+    catch {
+        throw "Unable to start/access WSL distribution '$WslDistro'. $($_.Exception.Message)"
     }
 
-    if (-not $wslIp) {
-        throw "Unable to determine the IPv4 address of WSL distribution '$WslDistro'."
-    }
-
-    Write-Ok "WSL IPv4: $wslIp"
+    Write-Ok "WSL distribution ready"
 
     # ---------------------------------------------------------------
-    # Test PostgreSQL TCP port.
+    # Test the canonical Windows-side PostgreSQL endpoint.
+    # No WSL IP discovery, portproxy, or relay is required.
     # ---------------------------------------------------------------
+
+    Write-Info "Checking PostgreSQL TCP endpoint $PostgresHost`:$PostgresPort..."
 
     $dbReachable = Test-TcpPort `
-        -ComputerName $wslIp `
-        -Port 5432
+        -ComputerName $PostgresHost `
+        -Port $PostgresPort
 
     if (-not $dbReachable) {
 
-        Write-Warn "PostgreSQL is not reachable on $wslIp`:5432."
+        Write-Warn "PostgreSQL is not reachable on $PostgresHost`:$PostgresPort."
         Write-Info "Attempting to start PostgreSQL inside WSL..."
 
         try {
@@ -338,21 +319,14 @@ try {
                 2>&1 | Out-Null
         }
         catch {
-            Write-Warn "Automatic PostgreSQL service start command failed."
+            Write-Warn "Automatic PostgreSQL service start command failed: $($_.Exception.Message)"
         }
 
         Start-Sleep -Seconds 2
 
-        # WSL IP may change after startup.
-        $wslIp = Get-WslIPv4 -Distribution $WslDistro
+        for ($i = 1; $i -le 15; $i++) {
 
-        if (-not $wslIp) {
-            throw "WSL IPv4 address disappeared while starting PostgreSQL."
-        }
-
-        for ($i = 1; $i -le 10; $i++) {
-
-            if (Test-TcpPort -ComputerName $wslIp -Port 5432) {
+            if (Test-TcpPort -ComputerName $PostgresHost -Port $PostgresPort) {
                 $dbReachable = $true
                 break
             }
@@ -362,81 +336,35 @@ try {
     }
 
     if (-not $dbReachable) {
-        throw "PostgreSQL TCP port 5432 is not reachable at $wslIp."
+        throw "PostgreSQL TCP port $PostgresPort is not reachable at $PostgresHost."
     }
 
-    Write-Ok "PostgreSQL TCP endpoint reachable at $wslIp`:5432"
+    Write-Ok "PostgreSQL TCP endpoint reachable at $PostgresHost`:$PostgresPort"
 
     # ---------------------------------------------------------------
-    # Real application-level PostgreSQL validation using asyncpg.
+    # Real application-level PostgreSQL validation.
+    # Use the repository's dedicated connectivity checker rather than
+    # embedding multiline Python in `python -c`, which is fragile under
+    # Windows PowerShell quoting/parsing.
     # ---------------------------------------------------------------
-
-    $dbTestScript = @"
-import asyncio
-import sys
-
-import asyncpg
-
-from backend.app.core.config import settings
-
-
-async def main():
-    url = settings.DATABASE_URL
-
-    if not url:
-        print("DATABASE_URL is empty.", file=sys.stderr)
-        return 1
-
-    if not url.startswith("postgresql+asyncpg://"):
-        print(
-            "DATABASE_URL does not use the expected asyncpg SQLAlchemy scheme.",
-            file=sys.stderr,
-        )
-        return 1
-
-    async_url = url.replace(
-        "postgresql+asyncpg://",
-        "postgresql://",
-        1,
-    )
-
-    try:
-        conn = await asyncpg.connect(
-            async_url,
-            timeout=5,
-        )
-
-        await conn.execute("SELECT 1")
-        await conn.close()
-
-        print("DATABASE_CONNECTION_OK")
-        return 0
-
-    except Exception as exc:
-        print(
-            f"DATABASE_CONNECTION_ERROR: {type(exc).__name__}: {exc}",
-            file=sys.stderr,
-        )
-        return 1
-
-
-raise SystemExit(asyncio.run(main()))
-"@
 
     Write-Info "Verifying application-level PostgreSQL connectivity..."
 
-    $dbCheckOutput = & python -c $dbTestScript 2>&1
+    $dbCheckOutput = & python scripts\db_connectivity_check.py 2>&1
+    $dbCheckExitCode = $LASTEXITCODE
 
-    if ($LASTEXITCODE -ne 0) {
-
+    if ($dbCheckExitCode -ne 0) {
         Write-ErrorMessage "Application-level PostgreSQL connectivity failed."
         Write-Host "$dbCheckOutput" -ForegroundColor Red
-
         Write-Host ""
         Write-Host "Suggested diagnostic:" -ForegroundColor DarkYellow
+        Write-Host "  python scripts\db_connectivity_check.py" -ForegroundColor DarkYellow
         Write-Host "  wsl -d $WslDistro -u root -e service postgresql status" -ForegroundColor DarkYellow
+        throw "Database connection validation failed (exit code $dbCheckExitCode)."
+    }
 
-        throw "Database connection validation failed."
+    if ($dbCheckOutput) {
+        Write-Host "$dbCheckOutput" -ForegroundColor DarkGray
     }
 
     Write-Ok "PostgreSQL application connection verified"
@@ -479,19 +407,26 @@ raise SystemExit(asyncio.run(main()))
 
     $backendReady = $false
 
-    $backendConnection = Get-ListeningProcess -Port $BackendPort
-
-    if ($backendConnection) {
-
-        $backendPid = $backendConnection.OwningProcess
-
-        if (Test-BackendHealth) {
-
-            Write-Ok "VeriSure Backend already healthy (PID: $backendPid)"
-
-            $backendReady = $true
+    # Health-first idempotency:
+    # If VeriSure's health endpoint is already healthy, reuse the existing
+    # service even if socket/process enumeration is temporarily inconsistent.
+    if (Test-BackendHealth) {
+        $backendConnection = Get-ListeningProcess -Port $BackendPort
+        $backendPid = if ($backendConnection) {
+            $backendConnection.OwningProcess
         }
         else {
+            "unknown"
+        }
+
+        Write-Ok "VeriSure Backend already healthy (PID: $backendPid)"
+        $backendReady = $true
+    }
+    else {
+        $backendConnection = Get-ListeningProcess -Port $BackendPort
+
+        if ($backendConnection) {
+            $backendPid = $backendConnection.OwningProcess
 
             try {
                 $backendProcess = Get-CimInstance `
@@ -521,9 +456,6 @@ raise SystemExit(asyncio.run(main()))
 
             throw "Port $BackendPort is occupied by an unhealthy process."
         }
-    }
-
-    if (-not $backendReady) {
 
         Write-Info "Port $BackendPort is available."
         Write-Info "Starting FastAPI Backend..."
@@ -542,7 +474,6 @@ raise SystemExit(asyncio.run(main()))
         Write-Info "Waiting for FastAPI health endpoint..."
 
         for ($i = 1; $i -le 30; $i++) {
-
             Start-Sleep -Seconds 1
 
             if (Test-BackendHealth) {
@@ -552,7 +483,6 @@ raise SystemExit(asyncio.run(main()))
         }
 
         if (-not $backendReady) {
-
             Write-ErrorMessage `
                 "FastAPI Backend failed to become healthy within 30 seconds."
 
@@ -564,12 +494,11 @@ raise SystemExit(asyncio.run(main()))
         }
 
         $backendConnection = Get-ListeningProcess -Port $BackendPort
-
         $backendPid = if ($backendConnection) {
             $backendConnection.OwningProcess
         }
         else {
-            "Unknown"
+            "unknown"
         }
 
         Write-Ok "FastAPI Backend started and healthy (PID: $backendPid)"
@@ -583,19 +512,26 @@ raise SystemExit(asyncio.run(main()))
 
     $frontendReady = $false
 
-    $frontendConnection = Get-ListeningProcess -Port $FrontendPort
-
-    if ($frontendConnection) {
-
-        $frontendPid = $frontendConnection.OwningProcess
-
-        if (Test-FrontendHealth) {
-
-            Write-Ok "Vite Frontend already running and reachable (PID: $frontendPid)"
-
-            $frontendReady = $true
+    # Health-first idempotency:
+    # Reuse an already responding Vite server before relying on socket
+    # enumeration. This prevents duplicate npm/Vite processes on reruns.
+    if (Test-FrontendHealth) {
+        $frontendConnection = Get-ListeningProcess -Port $FrontendPort
+        $frontendPid = if ($frontendConnection) {
+            $frontendConnection.OwningProcess
         }
         else {
+            "unknown"
+        }
+
+        Write-Ok "Vite Frontend already running and reachable (PID: $frontendPid)"
+        $frontendReady = $true
+    }
+    else {
+        $frontendConnection = Get-ListeningProcess -Port $FrontendPort
+
+        if ($frontendConnection) {
+            $frontendPid = $frontendConnection.OwningProcess
 
             try {
                 $frontendProcess = Get-CimInstance `
@@ -625,9 +561,6 @@ raise SystemExit(asyncio.run(main()))
 
             throw "Port $FrontendPort is occupied by an unhealthy process."
         }
-    }
-
-    if (-not $frontendReady) {
 
         Write-Info "Port $FrontendPort is available."
         Write-Info "Starting Vite Frontend..."
@@ -646,7 +579,6 @@ raise SystemExit(asyncio.run(main()))
         Write-Info "Waiting for Vite HTTP endpoint..."
 
         for ($i = 1; $i -le 30; $i++) {
-
             Start-Sleep -Seconds 1
 
             if (Test-FrontendHealth) {
@@ -656,7 +588,6 @@ raise SystemExit(asyncio.run(main()))
         }
 
         if (-not $frontendReady) {
-
             Write-ErrorMessage `
                 "Vite Frontend failed to become reachable within 30 seconds."
 
@@ -668,12 +599,11 @@ raise SystemExit(asyncio.run(main()))
         }
 
         $frontendConnection = Get-ListeningProcess -Port $FrontendPort
-
         $frontendPid = if ($frontendConnection) {
             $frontendConnection.OwningProcess
         }
         else {
-            "Unknown"
+            "unknown"
         }
 
         Write-Ok "Vite Frontend started and reachable (PID: $frontendPid)"
@@ -697,10 +627,17 @@ raise SystemExit(asyncio.run(main()))
         throw "Final verification failed: Frontend health check failed."
     }
 
-    $finalWslIp = Get-WslIPv4 -Distribution $WslDistro
+    # Confirm both application ports have active listeners after health checks.
+    # This catches unusual proxy/redirect situations while keeping health as
+    # the primary readiness signal.
+    $finalBackendConnection = Get-ListeningProcess -Port $BackendPort
+    if (-not $finalBackendConnection) {
+        throw "Final verification failed: Backend port $BackendPort has no listening socket."
+    }
 
-    if (-not $finalWslIp) {
-        throw "Final verification failed: Unable to determine WSL IPv4 address."
+    $finalFrontendConnection = Get-ListeningProcess -Port $FrontendPort
+    if (-not $finalFrontendConnection) {
+        throw "Final verification failed: Frontend port $FrontendPort has no listening socket."
     }
 
     Write-Host ""
@@ -711,8 +648,7 @@ raise SystemExit(asyncio.run(main()))
     Write-Host "  Backend  : http://localhost:$BackendPort" -ForegroundColor White
     Write-Host "  Docs     : http://localhost:$BackendPort/docs" -ForegroundColor White
     Write-Host "  Health   : http://localhost:$BackendPort/health" -ForegroundColor White
-    Write-Host "  Database : PostgreSQL / WSL $WslDistro" -ForegroundColor White
-    Write-Host "  WSL IP   : $finalWslIp" -ForegroundColor White
+    Write-Host "  Database : PostgreSQL / $PostgresHost`:$PostgresPort" -ForegroundColor White
     Write-Host "  Status   : HEALTHY" -ForegroundColor Green
     Write-Host "=======================================================" -ForegroundColor Cyan
     Write-Host ""

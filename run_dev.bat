@@ -1,10 +1,8 @@
 @echo off
 setlocal EnableExtensions
-
 title VeriSure AI - Development Platform
 
 cd /d "%~dp0"
-
 if errorlevel 1 (
     echo.
     echo [ERROR] Failed to switch to repository directory:
@@ -36,12 +34,11 @@ if not exist "%CONTROLLER%" (
 rem -------------------------------------------------------
 rem Translate BAT-friendly browser arguments to PowerShell.
 rem -------------------------------------------------------
-
 set "PS_ARGS="
 
 if /i "%~1"=="--no-browser" set "PS_ARGS=-NoBrowser"
-if /i "%~1"=="-no-browser"  set "PS_ARGS=-NoBrowser"
-if /i "%~1"=="-n"           set "PS_ARGS=-NoBrowser"
+if /i "%~1"=="-no-browser" set "PS_ARGS=-NoBrowser"
+if /i "%~1"=="-n" set "PS_ARGS=-NoBrowser"
 
 echo [INFO] Starting VeriSure AI development controller...
 echo.
