@@ -1,13 +1,12 @@
 # VeriSure AI 🛡️
 ### AI-Assisted Product Authenticity Risk Assessment & Brand Protection Platform
-*Target Domain: Flexible Dairy Packaging (Amul Milk Pouches) | Architecture: Production-Ready, Brand-Agnostic FMCG*
+*Target Domain: Flexible Dairy Packaging (Amul Milk Pouches) | Architecture: Production-Grade Design, Brand-Agnostic FMCG Framework*
 
-[![CI / Automated Tests](https://img.shields.io/badge/Tests-42%2B%20Passed-success.svg?style=for-the-badge&logo=pytest)](https://github.com/pravashsingh775/VeriSure_Ai)
 [![CI](https://github.com/pravashsingh775/VeriSure_Ai/actions/workflows/ci.yml/badge.svg)](https://github.com/pravashsingh775/VeriSure_Ai/actions/workflows/ci.yml)
-[![PostgreSQL](https://img.shields.io/badge/Database-PostgreSQL%2018.6-336791.svg?style=for-the-badge&logo=postgresql)](https://www.postgresql.org/)
+[![PostgreSQL](https://img.shields.io/badge/Database-PostgreSQL-336791.svg?style=for-the-badge&logo=postgresql)](https://www.postgresql.org/)
 [![FastAPI](https://img.shields.io/badge/Backend-FastAPI%20Async-009688.svg?style=for-the-badge&logo=fastapi)](https://fastapi.tiangolo.com/)
 [![React 19](https://img.shields.io/badge/Frontend-React%2019%20%2B%20TypeScript-61DAFB.svg?style=for-the-badge&logo=react)](https://react.dev/)
-[![OpenCV](https://img.shields.io/badge/Computer%20Vision-OpenCV%20%26%20PyTorch-5C3EE8.svg?style=for-the-badge&logo=opencv)](https://opencv.org/)
+[![OpenCV](https://img.shields.io/badge/Computer%20Vision-OpenCV%20%2B%20Tesseract-5C3EE8.svg?style=for-the-badge&logo=opencv)](https://opencv.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
 
 ---
@@ -19,11 +18,11 @@
 The platform synthesizes these multi-modal signals into a mathematically calibrated **Authenticity Risk Score (0–100)** with pixel-wise difference heatmaps, structured reason codes, and instant tamper-evident PDF inspection certificates.
 
 ### 💡 Key Technical Highlights
-- 🧠 **Zero-Cost Edge Architecture**: Runs entirely locally on CPU/GPU using OpenCV, PyTorch, and Tesseract OCR without recurring external API fees.
+- 🧠 **Zero-Cost Edge Architecture**: Runs entirely locally on CPU using OpenCV, classical CV, and Tesseract OCR without recurring external API fees.
 - 🏢 **Multi-Tenant Portals**: Dedicated portals for **Consumers** (real-time scanner), **Brand Managers** (Reference Corpus V1 gallery & telemetry), and **Platform Admins** (human-in-the-loop triage & model registry).
 - 🗄️ **Enterprise PostgreSQL Backend**: Dual async/sync connection pools (`asyncpg` for high concurrency + `psycopg2` for Alembic migrations), strict RBAC, and immutable cryptographic audit logging.
 - 🎯 **Reference Corpus V1**: 12 official ground-truth reference standards across Amul Gold (Full Cream), Amul Taaza (Toned), and Amul Shakti (Standardised) with SHA-256 cryptographic binding.
-- 🧪 **100% Test Coverage**: Full pytest suite with 36/36 automated integration and counterfeit regression tests passing.
+- 🧪 **Automated test suite**: 8 test modules covering unit, integration, API, AI-decision validation, and production-readiness/red-team scenarios. The complete suite runs against PostgreSQL in CI.
 
 ---
 
@@ -57,7 +56,7 @@ graph TD
 
     I --> J1[Pixel-wise SSIM Difference Heatmap]
     I --> J2[Publication-Grade PDF Certificate]
-    I --> J3[PostgreSQL 18.6 Database]
+    I --> J3[PostgreSQL Database]
     I --> J4[Admin Suspicious Case Triage Queue]
 ```
 
@@ -85,8 +84,8 @@ graph TD
 ## 💻 Tech Stack & Engineering Standards
 
 * **Backend**: Python 3.10+, FastAPI (Asynchronous Web Framework), Pydantic v2.
-* **ORM & Database**: SQLAlchemy 2.0, Alembic, PostgreSQL 18.6 (Primary), `asyncpg` + `psycopg2`.
-* **Computer Vision & AI**: OpenCV 4.x, NumPy, SciPy, PyTorch, Tesseract OCR, ZXing.
+* **ORM & Database**: SQLAlchemy 2.0, Alembic, PostgreSQL (Primary), `asyncpg` + `psycopg2`.
+* **Computer Vision & AI**: OpenCV 5.x, NumPy, SciPy, scikit-image, Tesseract OCR, ZXing.
 * **Frontend**: React 19, TypeScript, Vite, TailwindCSS v4, Lucide Icons, Axios.
 * **Report Generation**: ReportLab (Vector Graphics & Formatted PDF Generation).
 * **Testing & MLOps**: Pytest, Pytest-AsyncIO, Custom Model Registry with Robustness Benchmarks.
@@ -156,25 +155,46 @@ Test all three stakeholder personas with one click in the web app or use these c
 
 ---
 
-## 🧪 Automated Testing & Verification
+## 🧪 Testing & Validation
 
-VeriSure AI enforces rigorous automated testing with automated test isolation:
 ```bash
-# Run the complete test suite against PostgreSQL
+# Run the complete test suite (requires PostgreSQL — see docker-compose.yml)
 python -m pytest backend/tests/ -v
 ```
 
-```
-============================== test session starts ==============================
-backend/tests/test_counterfeit_detection.py ........ [ 13%]
-backend/tests/test_final_architecture.py ............ [ 33%]
-backend/tests/test_phase15_to_18_apis.py ............ [ 47%]
-backend/tests/test_phase1_models_and_db.py .......... [ 58%]
-backend/tests/test_phase2_3_4_apis.py ............... [ 75%]
-backend/tests/test_phase5_to_11_pipeline.py ......... [100%]
+The suite includes **8 test modules** covering:
 
-======================== 36 passed in 70.45s (0:01:10) ========================
-```
+| Module | Coverage |
+|:---|:---|
+| `test_phase1_models_and_db.py` | Database models, JWT security, password hashing, storage ops |
+| `test_phase2_3_4_apis.py` | Auth, RBAC, products, packaging lifecycle APIs |
+| `test_phase5_to_11_pipeline.py` | End-to-end scan pipeline, quality gates, evidence absence handling |
+| `test_phase15_to_18_apis.py` | Analytics, audit logs, feedback, model registry, case triage |
+| `test_counterfeit_detection.py` | Synthetic tamper, logo mismatch, phishing QR, corrupted barcode |
+| `test_domain_gatekeeper_and_dual_scan.py` | Brand scope gatekeeper, dual-panel verification, out-of-domain rejection |
+| `test_ai_decision_validation.py` | Fusion bounds, monotonicity, abstention, fault isolation, determinism |
+| `test_production_readiness_and_redteam.py` | Auth red-team, multitenant isolation, malicious upload defense, health probes |
+
+CI executes the full suite against a PostgreSQL 16 service container on every push to `main`.
+
+> **Note**: A small number of API integration tests are Postgres-specific (e.g. transactional isolation behavior) and are skipped/fail under the SQLite fallback. Run against PostgreSQL for the complete, authoritative result.
+
+---
+
+## 📊 AI Evaluation — Scientific Honesty
+
+Full methodology and empirical results: [`docs/AI_EVALUATION_REPORT.md`](docs/AI_EVALUATION_REPORT.md) and [`docs/AI_DECISION_VALIDATION.md`](docs/AI_DECISION_VALIDATION.md).
+
+**Critical disclosure**: **Real-world counterfeit recall is currently NOT measurable.** The repository contains **zero physical counterfeit samples collected from real retail supply chains**. No recall or accuracy claim against real counterfeits is made or should be inferred.
+
+What *is* evaluated, with sample sizes disclosed:
+
+* **Controlled synthetic tamper detection** (N = 4) — 100% flagged as high-risk/tampered
+* **Out-of-scope negative rejection** (N = 5) — non-packaging images rejected by the domain gatekeeper
+* **Factory-authentic reference matching** (N = 23) — with documented coverage limitations for single-view submissions
+* **Fusion math bounds, uncertainty monotonicity, abstention behavior, and determinism** — property-based automated tests
+
+These are engineering-validation results on small controlled cohorts, **not** statistical claims of field performance.
 
 ---
 
@@ -192,7 +212,7 @@ VeriSure_Ai/
 │   │   └── services/         # Business Logic, Scan Processing, PDF Reports
 │   ├── migrations/           # Alembic Database Migration Revisions
 │   ├── scripts/              # Seed Scripts & Database Hygiene Automation
-│   └── tests/                # 36 Pytest Integration & Regression Suites
+│   └── tests/                # 8 Pytest Modules — Integration & Regression Suites
 ├── frontend/
 │   ├── src/
 │   │   ├── components/       # UI: Scanner, DifferenceViewer, Brand & Admin Portals
@@ -212,6 +232,19 @@ VeriSure_Ai/
 ## ⚖️ Academic & Legal Disclaimer
 
 *VeriSure AI is an artificial-intelligence-assisted packaging conformity assessment tool designed for anti-counterfeiting research and brand protection. A photograph evaluates exterior packaging, print, and seal integrity; it cannot analyze or guarantee the chemical, nutritional, or microbiological contents inside a sealed container.*
+
+---
+
+## ⚠️ Known Limitations
+
+Framed professionally — these are legitimate research/data constraints, not defects:
+
+1. **No real-world counterfeit ground truth**: Zero physically seized counterfeit samples exist in the corpus. Real-world counterfeit recall is therefore unmeasurable; only synthetic-tamper and open-set-negative performance are characterized.
+2. **Product scope**: Verification is trained on the Amul (GCMMF) flexible dairy packaging reference corpus (Gold, Taaza, Shakti). Other products/brands are out of scope and rejected by the domain gatekeeper by design.
+3. **Reference-corpus dependence**: Accuracy is bounded by the quality, coverage, and currency of ground-truth reference images. Packaging redesigns require corpus updates (V1 → V2 already demonstrates this lifecycle).
+4. **Synthetic tamper evaluation**: Tamper cohorts are artificially generated; physical tampering exhibit different artifact distributions.
+5. **Single-view coverage penalty**: Single-panel submissions legitimately receive reduced evidence coverage and may trigger abstention — this is intended conservative behavior, not a bug.
+6. **Photographic constraints**: Exterior packaging assessment cannot verify product contents, fill weight, or interior quality.
 
 ---
 

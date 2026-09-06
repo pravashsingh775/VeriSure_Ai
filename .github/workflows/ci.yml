@@ -23,28 +23,54 @@ jobs:
       - run: npm ci
       - run: npx tsc -b
       - run: npx oxlint
+      - run: npm run build
 
   backend:
-    name: Backend — Lint & Unit Tests
+    name: Backend — Compile, Lint & Full Test Suite
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: verisure
+          POSTGRES_PASSWORD: verisure_ci
+          POSTGRES_DB: verisure_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U verisure"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    env:
+      ENVIRONMENT: ci
+      DEBUG: "false"
+      SECRET_KEY: ci-only-secret-not-used-in-production
+      POSTGRES_USER: verisure
+      POSTGRES_PASSWORD: verisure_ci
+      POSTGRES_HOST: localhost
+      POSTGRES_PORT: "5432"
+      POSTGRES_DB: verisure_test
+      DATABASE_URL: postgresql+asyncpg://verisure:verisure_ci@localhost:5432/verisure_test
+      DATABASE_SYNC_URL: postgresql+psycopg2://verisure:verisure_ci@localhost:5432/verisure_test
+      STORAGE_PROVIDER: local
+      STORAGE_LOCAL_DIR: ./data/storage
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: "3.10"
           cache: pip
-      - name: Install dependencies
+      - name: Install system libraries (OpenCV runtime)
+        run: sudo apt-get update && sudo apt-get install -y libgl1 libglib2.0-0
+      - name: Install Python dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install ruff pytest pytest-asyncio aiosqlite
           pip install -r backend/requirements.txt
-      - name: Lint
-        run: ruff check backend/app backend/tests
-      - name: Unit tests (DB-independent)
-        env:
-          DATABASE_URL: sqlite+aiosqlite:///./ci_test.db
-          DATABASE_SYNC_URL: sqlite:///./ci_test.db
-        run: |
-          python -m pytest backend/tests -q --tb=short || true
+          pip install ruff pytest-asyncio
       - name: Compile check
         run: python -m compileall backend/app -q
+      - name: Lint
+        run: ruff check backend/app backend/tests
+      - name: Run full test suite (PostgreSQL)
+        run: python -m pytest backend/tests -q --tb=short
