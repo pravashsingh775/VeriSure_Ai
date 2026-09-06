@@ -1,9 +1,10 @@
+import asyncio
 import os
 import re
 import uuid
 from abc import ABC, abstractmethod
 from pathlib import Path
-from typing import Optional, Tuple
+
 from backend.app.core.config import settings
 
 
@@ -12,7 +13,7 @@ class BaseStorage(ABC):
     Abstract storage provider interface for local disk, AWS S3, or GCP Cloud Storage.
     """
     @abstractmethod
-    async def save_bytes(self, data: bytes, subfolder: str, filename: Optional[str] = None, extension: str = ".png") -> Tuple[str, str]:
+    async def save_bytes(self, data: bytes, subfolder: str, filename: str | None = None, extension: str = ".png") -> tuple[str, str]:
         """Returns (relative_path, absolute_path)"""
         pass
 
@@ -33,7 +34,7 @@ class LocalStorage(BaseStorage):
     """
     Local filesystem storage with path traversal protection and directory isolation.
     """
-    def __init__(self, base_path: Optional[Path] = None):
+    def __init__(self, base_path: Path | None = None):
         self.base_path = base_path or settings.storage_path
         self._ensure_directories()
 
@@ -66,17 +67,17 @@ class LocalStorage(BaseStorage):
         try:
             if os.path.commonpath([str(target), str(base)]) != str(base):
                 raise ValueError(f"Illegal path traversal attempt: {relative_path}")
-        except ValueError:
-            raise ValueError(f"Illegal path traversal attempt: {relative_path}")
+        except ValueError as err:
+            raise ValueError(f"Illegal path traversal attempt: {relative_path}") from err
         return target
 
     async def save_bytes(
         self,
         data: bytes,
         subfolder: str,
-        filename: Optional[str] = None,
+        filename: str | None = None,
         extension: str = ".png"
-    ) -> Tuple[str, str]:
+    ) -> tuple[str, str]:
         folder = self.base_path / subfolder
         folder.mkdir(parents=True, exist_ok=True)
 
@@ -90,8 +91,7 @@ class LocalStorage(BaseStorage):
         rel_path = f"{subfolder}/{filename}".replace("\\", "/")
         abs_path = self._resolve_safe_path(rel_path)
 
-        with open(abs_path, "wb") as f:
-            f.write(data)
+        await asyncio.to_thread(abs_path.write_bytes, data)
 
         return rel_path, str(abs_path)
 

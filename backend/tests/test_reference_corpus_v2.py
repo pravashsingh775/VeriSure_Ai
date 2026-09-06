@@ -1,15 +1,14 @@
 import json
 from pathlib import Path
+
 import cv2
 import numpy as np
-import pytest
 
 from backend.app.curation.duplicate_detector import DuplicateDetector, compute_perceptual_hashes, compute_sha256
 from backend.app.curation.feature_pipeline import ReferenceFeatureExtractionPipeline
 from backend.app.curation.quality_engine import PackagingQualityEngine10D
 from backend.app.curation.rag_knowledge_base import PackagingRAGKnowledgeBase
 from backend.app.curation.variant_validator import VariantValidator
-from backend.app.curation.version_detector import PackagingVersionAndPairingEngine
 from backend.app.curation.view_classifier import PackagingViewClassifier
 
 
@@ -217,7 +216,7 @@ def test_reference_corpus_v2_manifest_integrity():
     manifest_path = Path("data/reference_corpus_v2_manifest.json")
     assert manifest_path.exists(), "Reference Corpus V2 manifest does not exist"
 
-    with open(manifest_path, "r", encoding="utf-8") as f:
+    with open(manifest_path, encoding="utf-8") as f:
         data = json.load(f)
 
     assert data.get("dataset_version") == "v2.0.0"

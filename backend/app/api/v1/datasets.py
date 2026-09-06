@@ -1,6 +1,7 @@
-from typing import List
+
 from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
+
 from backend.app.api.deps import require_roles
 from backend.app.core.database import get_db
 from backend.app.models.user import User
@@ -27,7 +28,7 @@ async def create_dataset(
     return await DatasetService.create_dataset(db, data, actor_id=current_user.id)
 
 
-@router.get("", response_model=List[DatasetResponse])
+@router.get("", response_model=list[DatasetResponse])
 async def list_datasets(
     db: AsyncSession = Depends(get_db),
     current_user: User = Depends(require_roles(["PLATFORM_ADMIN", "BRAND_ADMIN"]))

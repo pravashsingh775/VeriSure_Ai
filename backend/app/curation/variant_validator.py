@@ -1,5 +1,6 @@
 import re
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any
+
 import cv2
 import numpy as np
 
@@ -34,15 +35,15 @@ class VariantValidator:
         self,
         img_bgr: np.ndarray,
         ocr_text: str = "",
-        barcode: Optional[str] = None,
+        barcode: str | None = None,
         source_url: str = ""
-    ) -> Tuple[str, float, Dict[str, Any]]:
+    ) -> tuple[str, float, dict[str, Any]]:
         """
         Determines product variant using multi-signal fusion.
         Returns (variant_class, confidence, signal_breakdown).
         """
         text_lower = ocr_text.lower()
-        signals: Dict[str, Any] = {
+        signals: dict[str, Any] = {
             "barcode_match": None,
             "text_matches": {},
             "color_signature": None,

@@ -1,4 +1,5 @@
-from typing import Any, Dict, List, Optional
+from typing import Any
+
 from backend.app.ai.contracts import DecisionResult, DecisionState, EvidenceObject, EvidenceType, QualityAssessmentResult
 
 
@@ -9,15 +10,15 @@ class DecisionEngine:
     """
     def evaluate(
         self,
-        fusion_result: Dict[str, Any],
+        fusion_result: dict[str, Any],
         quality_result: QualityAssessmentResult,
-        evidences: List[EvidenceObject],
+        evidences: list[EvidenceObject],
         product_identified: bool = True,
         is_packaging: bool = True,
         packaging_category: str = "PHYSICAL_PACKAGING",
-        detected_brand: Optional[str] = None,
+        detected_brand: str | None = None,
         is_supported_brand: bool = True,
-        brand_reason: Optional[str] = None,
+        brand_reason: str | None = None,
         duplicate_views: bool = False
     ) -> DecisionResult:
         risk_score = fusion_result["risk_score"]
@@ -27,7 +28,7 @@ class DecisionEngine:
         conflicts = fusion_result.get("conflicts", [])
 
         # Collect reason codes
-        reason_codes: List[str] = []
+        reason_codes: list[str] = []
         ev_map = {e.type.value: e for e in evidences if e.availability and e.score is not None}
 
         # 0. Domain & Non-Packaging Gate (Diagrams, schematics, documents, screenshots)
@@ -58,8 +59,8 @@ class DecisionEngine:
                 uncertainty=0.10,
                 evidence_coverage=coverage,
                 recommendation=(
-                    f"System currently supports Amul dairy packaging only. "
-                    f"Please upload an Amul milk pouch (Amul Gold, Amul Taaza, or Amul Shakti)."
+                    "System currently supports Amul dairy packaging only. "
+                    "Please upload an Amul milk pouch (Amul Gold, Amul Taaza, or Amul Shakti)."
                 ),
                 reason_codes=["UNSUPPORTED_BRAND", f"DETECTED_BRAND_{detected_brand.upper().replace(' ', '_')}"],
                 explanation_summary=(

@@ -1,10 +1,11 @@
 import asyncio
 import io
+
 import cv2
 import numpy as np
-import pytest
 from fastapi.testclient import TestClient
-from backend.app.ai.contracts import DecisionResult, DecisionState, EvidenceObject, EvidenceType, QualityAssessmentResult
+
+from backend.app.ai.contracts import DecisionState, EvidenceObject, EvidenceType, QualityAssessmentResult
 from backend.app.ai.decision.engine import DecisionEngine
 from backend.app.ai.ocr.engine import OCREngine
 from backend.app.ai.quality.engine import ImageQualityEngine
@@ -257,6 +258,7 @@ def test_historical_packaging_retrieval_supported():
     and flags is_historical=True.
     """
     from sqlalchemy import select
+
     from backend.app.core.database import AsyncSessionLocal
     from backend.app.models.brand import Brand
     from backend.app.models.packaging import PackagingVersion

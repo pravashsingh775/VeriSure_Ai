@@ -1,6 +1,8 @@
 # Pytest configuration and fixtures for VeriSure AI
 import pytest
+
 from backend.scripts.cleanup_test_artifacts import cleanup
+
 
 @pytest.fixture(scope='session', autouse=True)
 def clean_test_artifacts_after_suite():

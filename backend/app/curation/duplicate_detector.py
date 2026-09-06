@@ -1,13 +1,14 @@
 import hashlib
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple, Union
+from typing import Any
+
 import cv2
 import imagehash
 import numpy as np
 from PIL import Image
 
 
-def compute_sha256(data: Union[bytes, str, Path]) -> str:
+def compute_sha256(data: bytes | str | Path) -> str:
     """Computes SHA-256 hexadecimal digest from raw bytes or file path."""
     if isinstance(data, (str, Path)):
         with open(data, "rb") as f:
@@ -18,7 +19,7 @@ def compute_sha256(data: Union[bytes, str, Path]) -> str:
         raise ValueError("Data must be bytes or a valid file path")
 
 
-def compute_perceptual_hashes(img: Union[np.ndarray, Image.Image]) -> Dict[str, str]:
+def compute_perceptual_hashes(img: np.ndarray | Image.Image) -> dict[str, str]:
     """Computes pHash, dHash, and wHash for a given BGR OpenCV image or PIL Image."""
     if isinstance(img, np.ndarray):
         rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
@@ -55,17 +56,17 @@ class DuplicateDetector:
     def __init__(self, duplicate_threshold: int = 4, near_duplicate_threshold: int = 10):
         self.duplicate_threshold = duplicate_threshold
         self.near_duplicate_threshold = near_duplicate_threshold
-        self.sha_index: Dict[str, str] = {}  # sha256 -> image_id
-        self.phash_index: Dict[str, str] = {}  # image_id -> phash_str
-        self.dhash_index: Dict[str, str] = {}  # image_id -> dhash_str
-        self.canonical_records: Dict[str, Dict[str, Any]] = {}
-        self.duplicate_sources: Dict[str, List[Dict[str, Any]]] = {}  # canonical_id -> list of dup sources
+        self.sha_index: dict[str, str] = {}  # sha256 -> image_id
+        self.phash_index: dict[str, str] = {}  # image_id -> phash_str
+        self.dhash_index: dict[str, str] = {}  # image_id -> dhash_str
+        self.canonical_records: dict[str, dict[str, Any]] = {}
+        self.duplicate_sources: dict[str, list[dict[str, Any]]] = {}  # canonical_id -> list of dup sources
 
     def check_duplicate(
         self,
         sha256_hash: str,
         phash_str: str
-    ) -> Tuple[bool, bool, Optional[str], int]:
+    ) -> tuple[bool, bool, str | None, int]:
         """
         Evaluates whether a candidate image is an exact or perceptual duplicate.
         Returns:
@@ -93,7 +94,7 @@ class DuplicateDetector:
 
         return False, False, closest_canonical_id, min_dist
 
-    def is_near_duplicate(self, phash_str: str) -> Tuple[bool, Optional[str], int]:
+    def is_near_duplicate(self, phash_str: str) -> tuple[bool, str | None, int]:
         """Checks if an image is a near-duplicate variation."""
         cand_ph = imagehash.hex_to_hash(phash_str)
         min_dist = 999
@@ -112,8 +113,8 @@ class DuplicateDetector:
         self,
         image_id: str,
         sha256_hash: str,
-        hashes: Dict[str, str],
-        metadata: Optional[Dict[str, Any]] = None
+        hashes: dict[str, str],
+        metadata: dict[str, Any] | None = None
     ) -> None:
         """Registers an image as a canonical reference."""
         self.sha_index[sha256_hash] = image_id

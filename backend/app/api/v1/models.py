@@ -1,6 +1,7 @@
-from typing import List
+
 from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
+
 from backend.app.api.deps import require_roles
 from backend.app.core.database import get_db
 from backend.app.models.user import User
@@ -17,7 +18,7 @@ from backend.app.services.model_service import ModelService
 router = APIRouter()
 
 
-@router.get("", response_model=List[ModelResponse])
+@router.get("", response_model=list[ModelResponse])
 async def list_registered_models(
     db: AsyncSession = Depends(get_db),
     current_user: User = Depends(require_roles(["PLATFORM_ADMIN", "BRAND_ADMIN"]))

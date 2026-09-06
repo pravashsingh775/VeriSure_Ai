@@ -1,15 +1,15 @@
 from datetime import datetime
-from typing import List, Optional
+
 from fastapi import HTTPException, status
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
+
 from backend.app.core.audit import log_audit_event
 from backend.app.models.packaging import PackagingVersion
 from backend.app.models.product import ProductPackSize
 from backend.app.schemas.packaging import (
     PackagingVersionCreate,
     PackagingVersionResponse,
-    PackagingVersionUpdate,
 )
 
 
@@ -18,7 +18,7 @@ class PackagingService:
     async def create_version(
         db: AsyncSession,
         data: PackagingVersionCreate,
-        creator_id: Optional[str] = None
+        creator_id: str | None = None
     ) -> PackagingVersionResponse:
         # Verify pack size exists
         ps = (await db.execute(select(ProductPackSize).where(ProductPackSize.id == data.pack_size_id))).scalar_one_or_none()
@@ -57,7 +57,7 @@ class PackagingService:
         db: AsyncSession,
         version_id: str,
         new_status: str,
-        actor_id: Optional[str] = None
+        actor_id: str | None = None
     ) -> PackagingVersionResponse:
         valid_statuses = ["DRAFT", "PENDING_REVIEW", "APPROVED", "ACTIVE", "DEPRECATED", "ARCHIVED"]
         new_status = new_status.upper()
@@ -94,7 +94,7 @@ class PackagingService:
         db: AsyncSession,
         pack_size_id: str,
         only_active: bool = False
-    ) -> List[PackagingVersionResponse]:
+    ) -> list[PackagingVersionResponse]:
         stmt = select(PackagingVersion).where(PackagingVersion.pack_size_id == pack_size_id)
         if only_active:
             stmt = stmt.where(PackagingVersion.status == "ACTIVE")
@@ -108,7 +108,7 @@ class PackagingService:
     async def list_all_versions(
         db: AsyncSession,
         only_active: bool = False
-    ) -> List[PackagingVersionResponse]:
+    ) -> list[PackagingVersionResponse]:
         stmt = select(PackagingVersion)
         if only_active:
             stmt = stmt.where(PackagingVersion.status == "ACTIVE")

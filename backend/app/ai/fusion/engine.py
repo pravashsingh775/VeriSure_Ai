@@ -1,5 +1,7 @@
-from typing import Any, Dict, List, Tuple
+from typing import Any
+
 import numpy as np
+
 from backend.app.ai.contracts import EvidenceObject, EvidenceType, QualityAssessmentResult
 
 
@@ -9,40 +11,37 @@ class ConflictDetector:
     Applies pairwise contradiction detection to spot adversarial replicas or tampered packages.
     """
     @staticmethod
-    def detect_conflicts(evidences: List[EvidenceObject]) -> Tuple[List[str], float]:
+    def detect_conflicts(evidences: list[EvidenceObject]) -> tuple[list[str], float]:
         ev_map = {e.type.value: e for e in evidences if e.availability and e.score is not None}
-        conflicts: List[str] = []
+        conflicts: list[str] = []
         penalty: float = 0.0
 
         # Conflict 1: Strong visual resemblance but Barcode mismatch
         logo_ev = ev_map.get(EvidenceType.LOGO.value)
         barcode_ev = ev_map.get(EvidenceType.BARCODE.value)
 
-        if logo_ev and barcode_ev:
-            if logo_ev.score > 0.80 and barcode_ev.score < 0.30:
-                conflicts.append(
-                    "CONTRADICTION: Logo geometry matches reference, but barcode is inconsistent with registered packaging."
-                )
-                penalty += 0.20
+        if logo_ev and barcode_ev and logo_ev.score > 0.80 and barcode_ev.score < 0.30:
+            conflicts.append(
+                "CONTRADICTION: Logo geometry matches reference, but barcode is inconsistent with registered packaging."
+            )
+            penalty += 0.20
 
         # Conflict 2: Authentic exterior but Tampered/Compromised Seal
         seal_ev = ev_map.get(EvidenceType.SEAL.value)
-        if seal_ev and logo_ev:
-            if seal_ev.score < 0.35 and logo_ev.score > 0.75:
-                conflicts.append(
-                    "CONTRADICTION: Brand artwork appears genuine, but heat-seal crimp band exhibits physical tampering anomalies."
-                )
-                penalty += 0.25
+        if seal_ev and logo_ev and seal_ev.score < 0.35 and logo_ev.score > 0.75:
+            conflicts.append(
+                "CONTRADICTION: Brand artwork appears genuine, but heat-seal crimp band exhibits physical tampering anomalies."
+            )
+            penalty += 0.25
 
         # Conflict 3: QR destination suspicious despite valid OCR
         qr_ev = ev_map.get(EvidenceType.QR.value)
         ocr_ev = ev_map.get(EvidenceType.OCR.value)
-        if qr_ev and ocr_ev:
-            if qr_ev.score < 0.40 and ocr_ev.score > 0.80:
-                conflicts.append(
-                    "CONTRADICTION: Packaging text is consistent, but QR code routes to an unverified non-brand domain."
-                )
-                penalty += 0.15
+        if qr_ev and ocr_ev and qr_ev.score < 0.40 and ocr_ev.score > 0.80:
+            conflicts.append(
+                "CONTRADICTION: Packaging text is consistent, but QR code routes to an unverified non-brand domain."
+            )
+            penalty += 0.15
 
         penalty = float(np.clip(penalty, 0.0, 0.45))
         return conflicts, penalty
@@ -97,9 +96,9 @@ class MultiEvidenceFusionEngine:
 
     def fuse(
         self,
-        evidences: List[EvidenceObject],
+        evidences: list[EvidenceObject],
         quality_result: QualityAssessmentResult
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         conflicts, conflict_penalty = ConflictDetector.detect_conflicts(evidences)
 
         total_weight = 0.0

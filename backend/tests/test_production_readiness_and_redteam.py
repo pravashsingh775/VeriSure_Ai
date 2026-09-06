@@ -1,13 +1,14 @@
 import io
-import os
 import uuid
+
 import pytest
 from fastapi.testclient import TestClient
 from sqlalchemy import select
+
 from backend.app.core.database import AsyncSessionLocal
 from backend.app.core.security import get_password_hash
 from backend.app.main import app
-from backend.app.models import Brand, BrandUser, Product, Role, User, UserRole
+from backend.app.models import Brand, BrandUser, Role, User, UserRole
 
 client = TestClient(app)
 

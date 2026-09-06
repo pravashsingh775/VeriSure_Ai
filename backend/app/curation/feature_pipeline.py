@@ -1,4 +1,5 @@
-from typing import Any, Dict, Optional
+from typing import Any
+
 import cv2
 import numpy as np
 
@@ -44,8 +45,8 @@ class ReferenceFeatureExtractionPipeline:
         variant: str,
         packaging_version: str = "V2",
         view_type: str = "FRONT",
-        reference_metadata: Optional[Dict[str, Any]] = None
-    ) -> Dict[str, Any]:
+        reference_metadata: dict[str, Any] | None = None
+    ) -> dict[str, Any]:
         """
         Executes all 12 analyzers on an approved packaging reference image
         and constructs a structured packaging fingerprint.

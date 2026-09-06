@@ -1,6 +1,8 @@
-from typing import Any, Dict, List, Optional
+from typing import Any
+
 import cv2
 import numpy as np
+
 from backend.app.ai.contracts import BaseVisionAnalyzer, EvidenceObject, EvidenceType, RegionBox
 
 
@@ -12,8 +14,8 @@ class SealAnalyzer(BaseVisionAnalyzer):
     def analyze(
         self,
         scan_crop_bgr: np.ndarray,
-        reference_crop_bgr: Optional[np.ndarray] = None,
-        reference_metadata: Optional[Dict[str, Any]] = None
+        reference_crop_bgr: np.ndarray | None = None,
+        reference_metadata: dict[str, Any] | None = None
     ) -> EvidenceObject:
         h, w = scan_crop_bgr.shape[:2]
         gray = cv2.cvtColor(scan_crop_bgr, cv2.COLOR_BGR2GRAY)
@@ -34,7 +36,7 @@ class SealAnalyzer(BaseVisionAnalyzer):
         # Normal industrial crimp machines produce strong periodic ridge gradients (var > 120)
         # Smooth un-crimped or hand-melted reseals lack regular crimp variance
         crimp_score = float(np.clip(mean_crimp_activity / 220.0, 0.20, 0.98))
-        regions: List[RegionBox] = []
+        regions: list[RegionBox] = []
 
         if crimp_score < 0.35:
             regions.append(RegionBox(

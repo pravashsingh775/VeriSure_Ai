@@ -1,0 +1,49 @@
+# Ruff configuration for the VeriSure AI backend.
+# CI runs: ruff check backend/app backend/tests  (from the repo root)
+
+target-version = "py310"
+line-length = 140
+exclude = ["migrations", "alembic", "data", ".venv", "venv"]
+
+[lint]
+select = [
+    "E",    # pycodestyle errors
+    "W",    # pycodestyle warnings
+    "F",    # pyflakes
+    "I",    # isort
+    "UP",   # pyupgrade
+    "B",    # bugbear
+    "SIM",  # simplify
+    "C4",   # comprehensions
+    "RET",  # return
+    "ASYNC",# async correctness
+]
+
+ignore = [
+    # FastAPI dependency injection uses function calls in defaults on purpose
+    "B008",
+    # Broad excepts are used at API boundaries to return clean error responses
+    "BLE001",
+    # Mutable class defaults are fine for Pydantic settings/models
+    "RUF012",
+    # try/except-pass is used for optional cleanup paths
+    "S110",
+    # Logging f-strings / lazy formatting tweaks
+    "G004",
+    # Long inline prompt strings / URLs
+    "E501",
+    # Import order after dotenv/env setup at module top (e.g. settings loading)
+    "E402",
+]
+
+[lint.per-file-ignores]
+"backend/tests/**" = [
+    "S101",    # asserts in tests
+    "S105",    # hardcoded test tokens
+    "S106",    # hardcoded test passwords
+    "ASYNC230",# blocking file I/O is fine in tests
+    "ASYNC240",
+]
+
+[lint.isort]
+known-first-party = ["app"]

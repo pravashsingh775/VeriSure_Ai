@@ -1,6 +1,7 @@
 import re
-from typing import Any, Dict, List, Optional
-from backend.app.ai.contracts import EvidenceObject, EvidenceType, RegionBox
+from typing import Any
+
+from backend.app.ai.contracts import EvidenceObject, EvidenceType
 
 
 class CertificationAnalyzer:
@@ -24,7 +25,7 @@ class CertificationAnalyzer:
         "27": "Maharashtra",
     }
 
-    def validate_fssai(self, lic_no: str) -> Dict[str, Any]:
+    def validate_fssai(self, lic_no: str) -> dict[str, Any]:
         if not lic_no or not lic_no.isdigit() or len(lic_no) != 14:
             return {
                 "valid_format": False,
@@ -47,7 +48,7 @@ class CertificationAnalyzer:
     def analyze(
         self,
         extracted_text: str,
-        reference_metadata: Optional[Dict[str, Any]] = None
+        reference_metadata: dict[str, Any] | None = None
     ) -> EvidenceObject:
         match = re.search(r"(?:FSSAI|Lic\.?\s*No\.?)\s*[:\.]?\s*([0-9]{14})", extracted_text, re.IGNORECASE)
 
@@ -78,9 +79,9 @@ class CertificationAnalyzer:
             else:
                 score = 0.25
                 warnings.append(f"Extracted license ({fssai_no}) differs from expected brand license ({expected_fssai}).")
-                status_text = f"contradicts registered brand license"
+                status_text = "contradicts registered brand license"
         else:
-            status_text = f"satisfies official 14-digit syntax"
+            status_text = "satisfies official 14-digit syntax"
 
         explanation = (
             f"FSSAI License {fssai_no} detected ({val_info.get('jurisdiction', 'National')}, est. {val_info.get('year_enrolled', 'N/A')}). "

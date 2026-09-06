@@ -1,8 +1,9 @@
-from typing import List, Optional
+
 from fastapi import HTTPException, status
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
+
 from backend.app.core.audit import log_audit_event
 from backend.app.models.case import CaseReview, SuspiciousCase
 from backend.app.schemas.case import CaseResponse, CaseReviewCreate, CaseReviewResponse
@@ -12,9 +13,9 @@ class CaseService:
     @staticmethod
     async def list_cases(
         db: AsyncSession,
-        brand_id: Optional[str] = None,
-        status_filter: Optional[str] = None
-    ) -> List[CaseResponse]:
+        brand_id: str | None = None,
+        status_filter: str | None = None
+    ) -> list[CaseResponse]:
         stmt = select(SuspiciousCase).options(selectinload(SuspiciousCase.reviews))
         if brand_id:
             stmt = stmt.where(SuspiciousCase.brand_id == brand_id)

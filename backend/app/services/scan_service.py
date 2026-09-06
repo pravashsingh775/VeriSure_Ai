@@ -1,13 +1,14 @@
+import asyncio
+import contextlib
 import os
-import uuid
 from datetime import datetime
-from typing import Any, Dict, List, Optional
+
 import cv2
-import numpy as np
 from fastapi import HTTPException, UploadFile, status
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
+
 from backend.app.ai.contracts import DecisionResult, DecisionState, EvidenceObject, EvidenceType, RegionBox
 from backend.app.ai.orchestrator import orchestrator
 from backend.app.core.audit import log_audit_event
@@ -16,7 +17,7 @@ from backend.app.core.storage import storage
 from backend.app.models.case import SuspiciousCase
 from backend.app.models.decision import Decision
 from backend.app.models.evidence import Evidence, PackagingFingerprintRecord
-from backend.app.models.product import Product, ProductPackSize, ProductVariant
+from backend.app.models.product import Product, ProductPackSize
 from backend.app.models.report import ReportRecord
 from backend.app.models.scan import Scan, ScanImage
 from backend.app.schemas.scan import ScanDetailResponse, ScanImageDetail, ScanSummaryResponse
@@ -41,7 +42,7 @@ class ScanService:
         db: AsyncSession,
         file: UploadFile,
         view_type: str = "FRONT",
-        user_id: Optional[str] = None,
+        user_id: str | None = None,
         is_multi_angle: bool = False
     ) -> ScanDetailResponse:
         # 1. Create Scan record
@@ -115,7 +116,7 @@ class ScanService:
             quality_res = pipeline_output["quality"]
             det_box = pipeline_output["detection"]
             decision_res: DecisionResult = pipeline_output["decision"]
-            evidences: List[EvidenceObject] = pipeline_output["evidences"]
+            evidences: list[EvidenceObject] = pipeline_output["evidences"]
             best_candidate = pipeline_output.get("identified_product")
 
             # 5. Persist Scan Image
@@ -178,12 +179,14 @@ class ScanService:
             if report_rel := pipeline_output.get("report_path"):
                 files_to_cleanup.append(report_rel)
                 report_abs = storage.get_absolute_path(report_rel)
-                file_size = os.path.getsize(report_abs) if report_abs.exists() else 0
+                file_size = await asyncio.to_thread(lambda: os.path.getsize(report_abs) if report_abs.exists() else 0)
                 pdf_sha = None
                 if report_abs.exists():
                     import hashlib
-                    with open(report_abs, "rb") as f:
-                        pdf_sha = hashlib.sha256(f.read()).hexdigest()
+                    def _hash_pdf() -> str:
+                        with open(report_abs, "rb") as f:
+                            return hashlib.sha256(f.read()).hexdigest()
+                    pdf_sha = await asyncio.to_thread(_hash_pdf)
                 rep_record = ReportRecord(
                     scan_id=scan.id,
                     pdf_path=report_rel,
@@ -202,7 +205,6 @@ class ScanService:
                 scan.matched_reference_id = best_candidate.get("reference_image_id")
 
             # 11. Auto-Triage Suspicious Case if high risk or tampered
-            suspicious_case_id = None
             if decision_res.risk_score >= 60.0 or decision_res.state in [
                 DecisionState.CRITICAL_RISK,
                 DecisionState.HIGH_RISK,
@@ -226,7 +228,6 @@ class ScanService:
                     )
                     db.add(case)
                     await db.flush()
-                    suspicious_case_id = case.id
 
             await log_audit_event(
                 session=db,
@@ -244,10 +245,8 @@ class ScanService:
             files_to_cleanup.clear()
         except Exception:
             for f in files_to_cleanup:
-                try:
+                with contextlib.suppress(Exception):
                     storage.delete(f)
-                except Exception:
-                    pass
             raise
 
         # Construct and return full response
@@ -258,7 +257,7 @@ class ScanService:
         db: AsyncSession,
         file_front: UploadFile,
         file_back: UploadFile,
-        user_id: Optional[str] = None
+        user_id: str | None = None
     ) -> ScanDetailResponse:
         """
         Executes dual-image 360° verification using both Front and Back panels:
@@ -334,7 +333,7 @@ class ScanService:
             )
 
             decision_res: DecisionResult = pipeline_output["decision"]
-            evidences: List[EvidenceObject] = pipeline_output["evidences"]
+            evidences: list[EvidenceObject] = pipeline_output["evidences"]
             best_candidate = pipeline_output.get("identified_product")
             images_info = pipeline_output.get("images", [])
 
@@ -410,12 +409,14 @@ class ScanService:
             if report_rel := pipeline_output.get("report_path"):
                 files_to_cleanup.append(report_rel)
                 report_abs = storage.get_absolute_path(report_rel)
-                file_size = os.path.getsize(report_abs) if report_abs.exists() else 0
+                file_size = await asyncio.to_thread(lambda: os.path.getsize(report_abs) if report_abs.exists() else 0)
                 pdf_sha = None
                 if report_abs.exists():
                     import hashlib
-                    with open(report_abs, "rb") as f:
-                        pdf_sha = hashlib.sha256(f.read()).hexdigest()
+                    def _hash_pdf() -> str:
+                        with open(report_abs, "rb") as f:
+                            return hashlib.sha256(f.read()).hexdigest()
+                    pdf_sha = await asyncio.to_thread(_hash_pdf)
                 rep_record = ReportRecord(
                     scan_id=scan.id,
                     pdf_path=report_rel,
@@ -469,10 +470,8 @@ class ScanService:
             files_to_cleanup.clear()
         except Exception:
             for f in files_to_cleanup:
-                try:
+                with contextlib.suppress(Exception):
                     storage.delete(f)
-                except Exception:
-                    pass
             raise
 
         # Construct and return full response
@@ -584,7 +583,7 @@ class ScanService:
         )
 
     @staticmethod
-    async def list_user_scans(db: AsyncSession, user_id: str) -> List[ScanSummaryResponse]:
+    async def list_user_scans(db: AsyncSession, user_id: str) -> list[ScanSummaryResponse]:
         stmt = (
             select(Scan)
             .where(Scan.user_id == user_id)
@@ -596,7 +595,7 @@ class ScanService:
         result = await db.execute(stmt)
         scans = result.scalars().all()
 
-        summaries: List[ScanSummaryResponse] = []
+        summaries: list[ScanSummaryResponse] = []
         for s in scans:
             p_name = "Unknown"
             if s.identified_product_id:

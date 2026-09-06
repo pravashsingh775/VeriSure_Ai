@@ -1,6 +1,8 @@
-from typing import Any, Dict, List, Optional
+from typing import Any
+
 import cv2
 import numpy as np
+
 from backend.app.ai.contracts import BaseVisionAnalyzer, EvidenceObject, EvidenceType, RegionBox
 
 
@@ -11,8 +13,8 @@ class LayoutAnalyzer(BaseVisionAnalyzer):
     def analyze(
         self,
         scan_crop_bgr: np.ndarray,
-        reference_crop_bgr: Optional[np.ndarray] = None,
-        reference_metadata: Optional[Dict[str, Any]] = None
+        reference_crop_bgr: np.ndarray | None = None,
+        reference_metadata: dict[str, Any] | None = None
     ) -> EvidenceObject:
         h, w = scan_crop_bgr.shape[:2]
         gray_scan = cv2.cvtColor(scan_crop_bgr, cv2.COLOR_BGR2GRAY)
@@ -53,7 +55,7 @@ class LayoutAnalyzer(BaseVisionAnalyzer):
             edges_ref_densities.append(float(np.mean(ref_band > 0)))
 
         band_diffs = []
-        regions: List[RegionBox] = []
+        regions: list[RegionBox] = []
         for i in range(4):
             ref_band = edges_ref[i * ref_band_h:(i + 1) * ref_band_h, :]
             ref_density = float(np.mean(ref_band > 0))

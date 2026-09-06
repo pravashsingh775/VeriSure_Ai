@@ -1,6 +1,7 @@
-from typing import List, Optional
+
 from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
+
 from backend.app.api.deps import require_roles
 from backend.app.core.database import get_db
 from backend.app.models.user import User
@@ -32,9 +33,9 @@ async def create_product(
     return await ProductService.create_product(db, data, actor_id=current_user.id)
 
 
-@router.get("", response_model=List[ProductResponse])
+@router.get("", response_model=list[ProductResponse])
 async def list_products(
-    brand_id: Optional[str] = None,
+    brand_id: str | None = None,
     db: AsyncSession = Depends(get_db)
 ):
     """

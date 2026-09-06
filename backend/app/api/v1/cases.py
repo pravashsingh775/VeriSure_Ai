@@ -1,7 +1,8 @@
-from typing import List, Optional
+
 from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
-from backend.app.api.deps import get_current_user, require_roles
+
+from backend.app.api.deps import require_roles
 from backend.app.core.database import get_db
 from backend.app.models.user import User
 from backend.app.schemas.case import CaseResponse, CaseReviewCreate
@@ -10,10 +11,10 @@ from backend.app.services.case_service import CaseService
 router = APIRouter()
 
 
-@router.get("", response_model=List[CaseResponse])
+@router.get("", response_model=list[CaseResponse])
 async def list_suspicious_cases(
-    brand_id: Optional[str] = None,
-    status: Optional[str] = None,
+    brand_id: str | None = None,
+    status: str | None = None,
     db: AsyncSession = Depends(get_db),
     current_user: User = Depends(require_roles(["PLATFORM_ADMIN", "BRAND_ADMIN", "BRAND_REVIEWER"]))
 ):

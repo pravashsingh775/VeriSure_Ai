@@ -1,23 +1,21 @@
 import io
 from pathlib import Path
+
 import numpy as np
-import pytest
 from fastapi.testclient import TestClient
 
-from backend.app.ai.codes.barcode import BarcodeAnalyzer
 from backend.app.ai.certification.engine import CertificationAnalyzer
+from backend.app.ai.codes.barcode import BarcodeAnalyzer
 from backend.app.ai.codes.qr import QRAnalyzer
 from backend.app.ai.contracts import (
-    DecisionResult,
     DecisionState,
     EvidenceObject,
-    EvidenceResult,
     EvidenceType,
     QualityAssessmentResult,
 )
 from backend.app.ai.decision.engine import DecisionEngine
 from backend.app.ai.fingerprint.engine import PackagingFingerprintEngine
-from backend.app.ai.fusion.engine import ConflictDetector, MultiEvidenceFusionEngine
+from backend.app.ai.fusion.engine import MultiEvidenceFusionEngine
 from backend.app.main import app
 
 client = TestClient(app)

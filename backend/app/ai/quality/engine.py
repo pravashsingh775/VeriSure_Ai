@@ -1,6 +1,7 @@
+
 import cv2
 import numpy as np
-from typing import List, Tuple
+
 from backend.app.ai.contracts import BaseImageQualityEngine, QualityAssessmentResult
 
 
@@ -74,8 +75,8 @@ class ImageQualityEngine(BaseImageQualityEngine):
         overall_quality = float(np.clip(overall, 0.0, 1.0))
 
         # Usability determination & reason codes
-        reasons: List[str] = []
-        guidance_parts: List[str] = []
+        reasons: list[str] = []
+        guidance_parts: list[str] = []
 
         # Fatal defects that prevent accurate feature extraction
         if blur_score < 0.20:

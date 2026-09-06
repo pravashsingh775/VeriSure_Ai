@@ -1,5 +1,6 @@
 import re
-from typing import Any, Dict, Optional, Tuple
+from typing import Any
+
 import cv2
 import numpy as np
 
@@ -60,7 +61,7 @@ class DomainGatekeeperEngine:
     }
 
     @staticmethod
-    def is_physical_packaging(image_bgr: np.ndarray, ocr_text: str = "") -> Tuple[bool, str, float]:
+    def is_physical_packaging(image_bgr: np.ndarray, ocr_text: str = "") -> tuple[bool, str, float]:
         """
         Validates if the input image is a photograph of physical product packaging
         versus a digital diagram, flowchart, schematic, screenshot, or document.
@@ -83,7 +84,7 @@ class DomainGatekeeperEngine:
 
         # Check 2: Visual Diagram Analysis (Large uniform light background + high-contrast line network)
         gray = cv2.cvtColor(image_bgr, cv2.COLOR_BGR2GRAY)
-        
+
         # Calculate percentage of pure white/near-white pixels (> 240)
         white_pixels = np.sum(gray > 240) / float(h * w)
         # Calculate percentage of very light background (> 220)
@@ -102,14 +103,14 @@ class DomainGatekeeperEngine:
                 sat = hsv[:, :, 1]
                 # Diagrams have low overall color saturation across most of the image
                 low_sat_pct = np.sum(sat < 30) / float(h * w)
-                
+
                 # Packaging with white back panels (nutrition tables, barcodes, ingredients)
                 # will have low saturation and white backgrounds, BUT contain packaging keywords.
                 # A digital diagram or document will NOT have packaging keywords.
                 if len(packaging_matches) == 0:
                     if low_sat_pct > 0.70 and len(diagram_matches) >= 1:
                         return False, "DIGITAL_DIAGRAM_OR_SCHEMATIC", 0.90
-                    elif low_sat_pct > 0.85 and white_pixels > 0.55:
+                    if low_sat_pct > 0.85 and white_pixels > 0.55:
                         # Very high monochrome background with diagram layout and zero packaging tokens
                         return False, "DIGITAL_DIAGRAM_OR_DOCUMENT", 0.85
 
@@ -138,7 +139,7 @@ class DomainGatekeeperEngine:
     ]
 
     @staticmethod
-    def detect_brand(image_bgr: np.ndarray, ocr_text: str = "") -> Dict[str, Any]:
+    def detect_brand(image_bgr: np.ndarray, ocr_text: str = "") -> dict[str, Any]:
         """
         Inspects textual and visual cues to identify the product brand.
         Returns:

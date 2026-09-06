@@ -1,8 +1,9 @@
-from typing import List, Optional
+
 from fastapi import HTTPException, status
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
+
 from backend.app.core.audit import log_audit_event
 from backend.app.models.model_registry import ModelDeployment, ModelEntity, ModelVersionEntity
 from backend.app.schemas.model_registry import (
@@ -15,14 +16,14 @@ from backend.app.schemas.model_registry import (
 
 class ModelService:
     @staticmethod
-    async def list_models(db: AsyncSession) -> List[ModelResponse]:
+    async def list_models(db: AsyncSession) -> list[ModelResponse]:
         stmt = select(ModelEntity).options(
             selectinload(ModelEntity.versions).selectinload(ModelVersionEntity.evaluation_runs)
         )
         result = await db.execute(stmt)
         models = result.scalars().all()
 
-        responses: List[ModelResponse] = []
+        responses: list[ModelResponse] = []
         for m in models:
             versions = []
             for v in m.versions:
@@ -53,7 +54,7 @@ class ModelService:
         db: AsyncSession,
         model_id: str,
         data: ModelVersionCreate,
-        actor_id: Optional[str] = None
+        actor_id: str | None = None
     ) -> ModelVersionResponse:
         model = (await db.execute(select(ModelEntity).where(ModelEntity.id == model_id))).scalar_one_or_none()
         if not model:
@@ -94,7 +95,7 @@ class ModelService:
         db: AsyncSession,
         version_id: str,
         new_status: str,
-        actor_id: Optional[str] = None
+        actor_id: str | None = None
     ) -> ModelVersionResponse:
         valid_statuses = ["DEVELOPMENT", "EVALUATED", "APPROVED", "CANARY", "PRODUCTION", "DEPRECATED", "REJECTED"]
         new_status = new_status.upper()

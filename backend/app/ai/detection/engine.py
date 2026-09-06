@@ -1,6 +1,7 @@
+
 import cv2
 import numpy as np
-from typing import Tuple
+
 from backend.app.ai.contracts import BaseProductDetector, DetectedProductBox
 
 
@@ -8,7 +9,7 @@ class ProductDetector(BaseProductDetector):
     """
     Locates the product packaging boundary and isolates the object from the background.
     """
-    def detect(self, image_bgr: np.ndarray) -> Tuple[DetectedProductBox, np.ndarray]:
+    def detect(self, image_bgr: np.ndarray) -> tuple[DetectedProductBox, np.ndarray]:
         h, w = image_bgr.shape[:2]
         if h == 0 or w == 0:
             return DetectedProductBox(bbox=(0.0, 0.0, 1.0, 1.0), confidence=0.0, aspect_ratio=1.0), image_bgr

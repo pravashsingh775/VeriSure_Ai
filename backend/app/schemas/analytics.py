@@ -1,4 +1,3 @@
-from typing import Any, Dict, List, Optional
 from pydantic import BaseModel
 
 
@@ -7,7 +6,7 @@ class ConsumerAnalyticsResponse(BaseModel):
     likely_genuine_count: int
     suspicious_count: int
     tampered_count: int
-    recent_risk_scores: List[float] = []
+    recent_risk_scores: list[float] = []
 
 
 class AdminAnalyticsResponse(BaseModel):
@@ -16,8 +15,8 @@ class AdminAnalyticsResponse(BaseModel):
     open_cases: int
     verified_counterfeits: int
     quality_pass_rate_percent: float
-    decision_distribution: Dict[str, int]
-    common_anomaly_types: Dict[str, int]
+    decision_distribution: dict[str, int]
+    common_anomaly_types: dict[str, int]
 
 
 class BrandAnalyticsResponse(BaseModel):
@@ -26,5 +25,5 @@ class BrandAnalyticsResponse(BaseModel):
     total_scans: int
     active_packaging_versions: int
     counterfeit_risk_rate_percent: float
-    risk_distribution: Dict[str, int]
+    risk_distribution: dict[str, int]
 

@@ -1,7 +1,7 @@
 import sys
 import uuid
+from collections.abc import AsyncGenerator
 from datetime import datetime, timezone
-from typing import AsyncGenerator
 
 if sys.platform == "win32":
     import asyncio
@@ -11,6 +11,7 @@ from sqlalchemy import Column, DateTime, String, create_engine
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 from sqlalchemy.orm import declarative_base, sessionmaker
 from sqlalchemy.pool import NullPool
+
 from backend.app.core.config import settings
 
 is_sqlite = "sqlite" in settings.DATABASE_SYNC_URL or "sqlite" in settings.DATABASE_URL

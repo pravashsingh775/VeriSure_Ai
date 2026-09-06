@@ -1,24 +1,24 @@
 from backend.app.core.database import Base, BaseModel
-from backend.app.models.user import User, Role, Permission, UserRole, RolePermission
-from backend.app.models.brand import Brand, BrandUser, BrandSettings
-from backend.app.models.product import Product, ProductVariant, ProductPackSize
-from backend.app.models.packaging import PackagingVersion
-from backend.app.models.reference import ReferenceImage, ReferenceFeature, ReferenceFingerprint
-from backend.app.models.scan import Scan, ScanImage
-from backend.app.models.evidence import Evidence, PackagingFingerprintRecord
+from backend.app.models.audit import AuditLog
+from backend.app.models.brand import Brand, BrandSettings, BrandUser
+from backend.app.models.case import CaseReview, SuspiciousCase
+from backend.app.models.dataset import Dataset, DatasetSample, DatasetVersion
 from backend.app.models.decision import Decision
-from backend.app.models.case import SuspiciousCase, CaseReview
+from backend.app.models.evidence import Evidence, PackagingFingerprintRecord
 from backend.app.models.feedback import FeedbackSample
-from backend.app.models.dataset import Dataset, DatasetVersion, DatasetSample
 from backend.app.models.model_registry import (
+    EvaluationRun,
+    ModelDeployment,
     ModelEntity,
     ModelVersionEntity,
     TrainingRun,
-    EvaluationRun,
-    ModelDeployment,
 )
+from backend.app.models.packaging import PackagingVersion
+from backend.app.models.product import Product, ProductPackSize, ProductVariant
+from backend.app.models.reference import ReferenceFeature, ReferenceFingerprint, ReferenceImage
 from backend.app.models.report import ReportRecord
-from backend.app.models.audit import AuditLog
+from backend.app.models.scan import Scan, ScanImage
+from backend.app.models.user import Permission, Role, RolePermission, User, UserRole
 
 __all__ = [
     "Base",

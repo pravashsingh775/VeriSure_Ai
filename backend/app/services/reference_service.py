@@ -1,17 +1,17 @@
 from datetime import datetime
-from typing import List, Optional
+
 from fastapi import HTTPException, UploadFile, status
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import joinedload
+
 from backend.app.core.audit import log_audit_event
 from backend.app.core.storage import storage
 from backend.app.models.packaging import PackagingVersion
-from backend.app.models.product import Product, ProductPackSize, ProductVariant
-from backend.app.models.reference import ReferenceFeature, ReferenceFingerprint, ReferenceImage
+from backend.app.models.product import ProductPackSize, ProductVariant
+from backend.app.models.reference import ReferenceImage
 from backend.app.schemas.reference import (
     ReferenceApprovalRequest,
-    ReferenceFeatureResponse,
     ReferenceImageResponse,
 )
 
@@ -32,8 +32,8 @@ class ReferenceService:
         view_type: str,
         source_type: str,
         file: UploadFile,
-        uploaded_by: Optional[str] = None,
-        custom_trust_level: Optional[float] = None,
+        uploaded_by: str | None = None,
+        custom_trust_level: float | None = None,
     ) -> ReferenceImageResponse:
         # 1. Verify packaging version exists
         pv = (await db.execute(select(PackagingVersion).where(PackagingVersion.id == packaging_version_id))).scalar_one_or_none()
@@ -98,7 +98,7 @@ class ReferenceService:
         db: AsyncSession,
         reference_id: str,
         data: ReferenceApprovalRequest,
-        actor_id: Optional[str] = None
+        actor_id: str | None = None
     ) -> ReferenceImageResponse:
         stmt = select(ReferenceImage).where(ReferenceImage.id == reference_id)
         ref = (await db.execute(stmt)).scalar_one_or_none()
@@ -145,7 +145,7 @@ class ReferenceService:
         db: AsyncSession,
         packaging_version_id: str,
         only_approved: bool = False
-    ) -> List[ReferenceImageResponse]:
+    ) -> list[ReferenceImageResponse]:
         stmt = (
             select(ReferenceImage)
             .where(ReferenceImage.packaging_version_id == packaging_version_id)
@@ -167,9 +167,9 @@ class ReferenceService:
     @staticmethod
     async def get_all_references(
         db: AsyncSession,
-        packaging_version_id: Optional[str] = None,
+        packaging_version_id: str | None = None,
         only_approved: bool = False
-    ) -> List[ReferenceImageResponse]:
+    ) -> list[ReferenceImageResponse]:
         stmt = (
             select(ReferenceImage)
             .options(

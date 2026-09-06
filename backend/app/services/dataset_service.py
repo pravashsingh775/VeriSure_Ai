@@ -1,8 +1,9 @@
-from typing import List, Optional
+
 from fastapi import HTTPException, status
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
+
 from backend.app.core.audit import log_audit_event
 from backend.app.models.dataset import Dataset, DatasetSample, DatasetVersion
 from backend.app.schemas.dataset import (
@@ -15,7 +16,7 @@ from backend.app.schemas.dataset import (
 
 class DatasetService:
     @staticmethod
-    async def create_dataset(db: AsyncSession, data: DatasetCreate, actor_id: Optional[str] = None) -> DatasetResponse:
+    async def create_dataset(db: AsyncSession, data: DatasetCreate, actor_id: str | None = None) -> DatasetResponse:
         dataset = Dataset(
             name=data.name,
             description=data.description,
@@ -46,7 +47,7 @@ class DatasetService:
         )
 
     @staticmethod
-    async def list_datasets(db: AsyncSession) -> List[DatasetResponse]:
+    async def list_datasets(db: AsyncSession) -> list[DatasetResponse]:
         stmt = select(Dataset).options(selectinload(Dataset.versions))
         result = await db.execute(stmt)
         datasets = result.scalars().all()
@@ -57,7 +58,7 @@ class DatasetService:
         db: AsyncSession,
         dataset_id: str,
         data: DatasetVersionCreate,
-        actor_id: Optional[str] = None
+        actor_id: str | None = None
     ) -> DatasetVersionResponse:
         # Check dataset exists
         dataset = (await db.execute(select(Dataset).where(Dataset.id == dataset_id))).scalar_one_or_none()

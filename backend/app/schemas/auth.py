@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import List, Optional
+
 from pydantic import BaseModel, EmailStr, Field
 
 
@@ -8,7 +8,7 @@ class RegisterRequest(BaseModel):
     password: str = Field(min_length=8)
     full_name: str
     role_name: str = "CONSUMER"  # CONSUMER, BRAND_ADMIN, BRAND_REVIEWER, PLATFORM_ADMIN
-    brand_id: Optional[str] = None
+    brand_id: str | None = None
 
 
 class LoginRequest(BaseModel):
@@ -19,11 +19,11 @@ class LoginRequest(BaseModel):
 class UserResponse(BaseModel):
     id: str
     email: str
-    full_name: Optional[str]
+    full_name: str | None
     is_active: bool
     is_superuser: bool
-    brand_id: Optional[str]
-    roles: List[str] = []
+    brand_id: str | None
+    roles: list[str] = []
     created_at: datetime
 
     model_config = {"from_attributes": True}
@@ -35,7 +35,7 @@ class TokenResponse(BaseModel):
     expires_in_minutes: int
     user_id: str
     email: str
-    roles: List[str]
-    brand_id: Optional[str] = None
-    user: Optional[UserResponse] = None
+    roles: list[str]
+    brand_id: str | None = None
+    user: UserResponse | None = None
 

@@ -1,15 +1,16 @@
-from typing import List, Optional
+
 from fastapi import Depends, HTTPException, status
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
+
 from backend.app.core.database import get_db
 from backend.app.core.security import decode_access_token, oauth2_scheme
 from backend.app.models.user import User
 
 
 async def get_current_user(
-    token: Optional[str] = Depends(oauth2_scheme),
+    token: str | None = Depends(oauth2_scheme),
     db: AsyncSession = Depends(get_db)
 ) -> User:
     if not token:
@@ -43,9 +44,9 @@ async def get_current_user(
 
 
 async def get_optional_user(
-    token: Optional[str] = Depends(oauth2_scheme),
+    token: str | None = Depends(oauth2_scheme),
     db: AsyncSession = Depends(get_db)
-) -> Optional[User]:
+) -> User | None:
     if not token:
         return None
     try:
@@ -62,7 +63,7 @@ async def get_optional_user(
         return None
 
 
-def require_roles(allowed_roles: List[str]):
+def require_roles(allowed_roles: list[str]):
     async def role_checker(current_user: User = Depends(get_current_user)) -> User:
         if current_user.is_superuser:
             return current_user

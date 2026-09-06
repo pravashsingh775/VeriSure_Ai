@@ -1,5 +1,3 @@
-import re
-from typing import Any, Dict, Optional, Tuple
 import cv2
 import numpy as np
 
@@ -37,7 +35,7 @@ class PackagingViewClassifier:
         qr_detected: bool = False,
         barcode_area_ratio: float = 0.0,
         qr_area_ratio: float = 0.0
-    ) -> Tuple[str, float]:
+    ) -> tuple[str, float]:
         """
         Classifies view angle and returns (view_type, confidence).
         """

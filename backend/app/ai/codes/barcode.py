@@ -1,7 +1,9 @@
-from typing import Any, Dict, List, Optional
+from typing import Any
+
 import cv2
 import numpy as np
 import zxingcpp
+
 from backend.app.ai.contracts import EvidenceObject, EvidenceType, RegionBox
 
 
@@ -25,10 +27,10 @@ class BarcodeAnalyzer:
     def analyze(
         self,
         scan_crop_bgr: np.ndarray,
-        reference_metadata: Optional[Dict[str, Any]] = None
+        reference_metadata: dict[str, Any] | None = None
     ) -> EvidenceObject:
         decoded_values = []
-        regions: List[RegionBox] = []
+        regions: list[RegionBox] = []
         h, w = scan_crop_bgr.shape[:2]
 
         # 1. Try zxingcpp decoder
@@ -46,7 +48,7 @@ class BarcodeAnalyzer:
                 detector = cv2.barcode.BarcodeDetector()
                 ok, decoded_info, decoded_type, corners = detector.detectAndDecode(scan_crop_bgr)
                 if ok and decoded_info:
-                    for text, btype in zip(decoded_info, decoded_type):
+                    for text, btype in zip(decoded_info, decoded_type, strict=False):
                         if text:
                             decoded_values.append((text, btype))
             except Exception:

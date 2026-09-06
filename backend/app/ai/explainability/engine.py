@@ -1,6 +1,6 @@
-from typing import Any, Dict, List, Optional, Tuple
 import cv2
 import numpy as np
+
 from backend.app.ai.contracts import DecisionResult, EvidenceObject, RegionBox
 
 
@@ -12,10 +12,10 @@ class DifferenceHeatmapEngine:
     @staticmethod
     def generate_heatmap(
         scan_crop_bgr: np.ndarray,
-        reference_crop_bgr: Optional[np.ndarray] = None
-    ) -> Tuple[np.ndarray, List[RegionBox]]:
+        reference_crop_bgr: np.ndarray | None = None
+    ) -> tuple[np.ndarray, list[RegionBox]]:
         h, w = scan_crop_bgr.shape[:2]
-        regions: List[RegionBox] = []
+        regions: list[RegionBox] = []
 
         if reference_crop_bgr is None or reference_crop_bgr.size == 0:
             # Generate a neutral ambient overlay if reference image is missing
@@ -97,14 +97,12 @@ class ExplanationEngine:
     @staticmethod
     def generate_narrative(
         decision: DecisionResult,
-        evidences: List[EvidenceObject],
+        evidences: list[EvidenceObject],
         product_name: str,
         packaging_version: str
     ) -> str:
-        ev_map = {e.type.value: e for e in evidences if e.availability}
-
-        supporting: List[str] = []
-        contradictory: List[str] = []
+        supporting: list[str] = []
+        contradictory: list[str] = []
 
         for ev in evidences:
             if not ev.availability or ev.score is None:

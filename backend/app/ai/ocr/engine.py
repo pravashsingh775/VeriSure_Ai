@@ -1,8 +1,9 @@
 import re
-from datetime import datetime
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any
+
 import cv2
 import numpy as np
+
 from backend.app.ai.contracts import EvidenceObject, EvidenceType, RegionBox
 
 
@@ -11,22 +12,17 @@ class StructuredOCRParser:
     Extracts and validates structured FMCG packaging fields according to Indian Dairy regulations.
     """
     PATTERNS = {
-        "mrp": r"(?:MRP|Rs\.?|₹)\s*[:\.]?\s*([0-9]+(?:\.[0-9]{2})?)",
-        "fssai": r"(?:FSSAI|Lic\.?\s*No\.?)\s*[:\.]?\s*([0-9]{14})",
-        "batch": r"(?:BATCH|LOT|B\.?\s*NO\.?)\s*[:\.]?\s*([A-Z0-9\/\-]+)",
         "mrp": r"(?:MRP|Rs\.?|₹|PRICE)\s*[:\.]?\s*([0-9]+(?:\.[0-9]{2})?)",
         "fssai": r"(?:FSSAI|Lic\.?\s*No\.?|Licence\s*No\.?)\s*[:\.]?\s*([0-9]{14})",
         "batch": r"(?:BATCH|LOT|B\.?\s*NO\.?|BN)\s*[:\.]?\s*([A-Z0-9\/\-]+)",
         "net_qty": r"([0-9]+(?:\.[0-9]+)?\s*(?:ml|mL|L|litres?|g|kg))",
-        "mfd_date": r"(?:MFD|PKD|PACKED)\s*[:\.]?\s*([0-9]{2}[\/\.\-][0-9]{2}[\/\.\-][0-9]{2,4})",
-        "exp_date": r"(?:EXP|USE\s*BY|BEST\s*BEFORE)\s*[:\.]?\s*([0-9]{2}[\/\.\-][0-9]{2}[\/\.\-][0-9]{2,4})",
         "mfd_date": r"(?:MFD|PKD|PACKED|MFG)\s*[:\.]?\s*([0-9]{2}[\/\.\-][0-9]{2}[\/\.\-][0-9]{2,4})",
         "exp_date": r"(?:EXP|USE\s*BY|BEST\s*BEFORE|EXPIRY)\s*[:\.]?\s*([0-9]{2}[\/\.\-][0-9]{2}[\/\.\-][0-9]{2,4})",
     }
 
     @staticmethod
-    def parse(raw_text: str) -> Dict[str, Any]:
-        extracted: Dict[str, Any] = {}
+    def parse(raw_text: str) -> dict[str, Any]:
+        extracted: dict[str, Any] = {}
         for key, pattern in StructuredOCRParser.PATTERNS.items():
             match = re.search(pattern, raw_text, re.IGNORECASE)
             if match:
@@ -77,7 +73,7 @@ class OCREngine:
                 self._easyocr_reader = False
         return self._easyocr_reader
 
-    def extract_text(self, image_bgr: np.ndarray) -> Tuple[str, float, List[Dict[str, Any]]]:
+    def extract_text(self, image_bgr: np.ndarray) -> tuple[str, float, list[dict[str, Any]]]:
         reader = self._get_reader()
         if reader:
             try:
@@ -123,7 +119,7 @@ class OCREngine:
     def analyze(
         self,
         scan_crop_bgr: np.ndarray,
-        reference_metadata: Optional[Dict[str, Any]] = None
+        reference_metadata: dict[str, Any] | None = None
     ) -> EvidenceObject:
         raw_text, ocr_conf, box_details = self.extract_text(scan_crop_bgr)
         if not raw_text or not raw_text.strip():
@@ -152,7 +148,7 @@ class OCREngine:
 
         score = 0.85
         warnings = []
-        regions: List[RegionBox] = []
+        regions: list[RegionBox] = []
 
         if extracted_fields.get("brand") == "AMUL":
             score += 0.05

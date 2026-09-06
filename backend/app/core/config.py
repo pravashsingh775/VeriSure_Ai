@@ -1,7 +1,8 @@
-from typing import Any, List, Optional, Union
-from pydantic import AnyHttpUrl, field_validator
-from pydantic_settings import BaseSettings, SettingsConfigDict
 from pathlib import Path
+from typing import Any
+
+from pydantic import field_validator
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
@@ -53,11 +54,11 @@ class Settings(BaseSettings):
         return v
 
     # PostgreSQL Configuration (Primary)
-    POSTGRES_USER: Optional[str] = None
-    POSTGRES_PASSWORD: Optional[str] = None
-    POSTGRES_HOST: Optional[str] = None
+    POSTGRES_USER: str | None = None
+    POSTGRES_PASSWORD: str | None = None
+    POSTGRES_HOST: str | None = None
     POSTGRES_PORT: int = 5432
-    POSTGRES_DB: Optional[str] = None
+    POSTGRES_DB: str | None = None
 
     # Database URLs (PostgreSQL Primary, with SQLite fallback support for isolated tests)
     DATABASE_URL: str = "postgresql+asyncpg://verisure_app:verisure_secure_pass_2026@localhost:5432/verisure_db"
@@ -65,7 +66,7 @@ class Settings(BaseSettings):
 
     @field_validator("DATABASE_URL", mode="before")
     @classmethod
-    def assemble_async_db_url(cls, v: Optional[str], info) -> str:
+    def assemble_async_db_url(cls, v: str | None, info) -> str:
         if isinstance(v, str) and v.strip():
             return v
         values = info.data
@@ -80,7 +81,7 @@ class Settings(BaseSettings):
 
     @field_validator("DATABASE_SYNC_URL", mode="before")
     @classmethod
-    def assemble_sync_db_url(cls, v: Optional[str], info) -> str:
+    def assemble_sync_db_url(cls, v: str | None, info) -> str:
         if isinstance(v, str) and v.strip():
             return v
         values = info.data
@@ -105,10 +106,10 @@ class Settings(BaseSettings):
     QUALITY_MIN_SCORE: float = 0.60
     FUSION_WEIGHTS_VERSION: str = "v1.0"
     DECISION_RULES_VERSION: str = "v1.0"
-    AUTHORIZED_QR_DOMAINS: List[str] = ["amul.com", "gcmmf.com", "amuldairy.com"]
+    AUTHORIZED_QR_DOMAINS: list[str] = ["amul.com", "gcmmf.com", "amuldairy.com"]
 
     # CORS
-    CORS_ORIGINS: Union[List[str], str] = [
+    CORS_ORIGINS: list[str] | str = [
         "http://localhost:3000",
         "http://127.0.0.1:3000",
         "http://localhost:5173",
@@ -122,10 +123,10 @@ class Settings(BaseSettings):
     ]
 
     @field_validator("CORS_ORIGINS", mode="before")
-    def assemble_cors_origins(cls, v: Union[str, List[str]]) -> List[str]:
+    def assemble_cors_origins(cls, v: str | list[str]) -> list[str]:
         if isinstance(v, str) and not v.startswith("["):
             return [i.strip() for i in v.split(",") if i.strip()]
-        elif isinstance(v, (list, str)):
+        if isinstance(v, (list, str)):
             return v
         raise ValueError(v)
 

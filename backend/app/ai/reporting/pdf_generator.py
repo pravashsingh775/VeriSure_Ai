@@ -1,10 +1,11 @@
 from datetime import datetime
-from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any
+
 from reportlab.lib import colors
 from reportlab.lib.pagesizes import letter
 from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet
 from reportlab.platypus import HRFlowable, Paragraph, SimpleDocTemplate, Spacer, Table, TableStyle
+
 from backend.app.ai.contracts import DecisionResult, EvidenceObject
 
 
@@ -16,10 +17,10 @@ class VeriSurePDFGenerator:
     def generate_report(
         output_pdf_path: str,
         scan_id: str,
-        product_metadata: Dict[str, Any],
+        product_metadata: dict[str, Any],
         decision: DecisionResult,
-        evidences: List[EvidenceObject],
-        quality_details: Optional[Dict[str, Any]] = None
+        evidences: list[EvidenceObject],
+        quality_details: dict[str, Any] | None = None
     ) -> str:
         doc = SimpleDocTemplate(
             output_pdf_path,

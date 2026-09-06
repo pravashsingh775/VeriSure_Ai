@@ -1,10 +1,11 @@
-from typing import Any, Dict, List, Optional
+from typing import Any
+
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
+
 from backend.app.models.packaging import PackagingVersion
 from backend.app.models.product import Product, ProductPackSize, ProductVariant
-from backend.app.models.reference import ReferenceImage
 
 
 class ReferenceRetriever:
@@ -21,10 +22,10 @@ class ReferenceRetriever:
     async def retrieve_candidates(
         db: AsyncSession,
         detected_text: str,
-        detected_barcode: Optional[str] = None,
+        detected_barcode: str | None = None,
         view_type: str = "FRONT",
-        crop_bgr: Optional[Any] = None
-    ) -> List[Dict[str, Any]]:
+        crop_bgr: Any | None = None
+    ) -> list[dict[str, Any]]:
         import cv2
         import numpy as np
 
@@ -41,7 +42,7 @@ class ReferenceRetriever:
         result = await db.execute(stmt)
         products = result.scalars().all()
 
-        candidates: List[Dict[str, Any]] = []
+        candidates: list[dict[str, Any]] = []
         text_upper = detected_text.upper() if detected_text else ""
 
         # Brand-specific variant and multi-lingual keywords
@@ -147,7 +148,7 @@ class ReferenceRetriever:
                                     if fallback_img:
                                         ref_img = fallback_img
                                         break
-                                    elif other_trusted and not ref_img:
+                                    if other_trusted and not ref_img:
                                         ref_img = other_trusted[0]
                                 if ref_img:
                                     break

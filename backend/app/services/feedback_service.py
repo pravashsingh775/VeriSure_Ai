@@ -1,7 +1,6 @@
-from typing import List, Optional
-from fastapi import HTTPException, status
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
+
 from backend.app.core.audit import log_audit_event
 from backend.app.models.feedback import FeedbackSample
 from backend.app.schemas.feedback import FeedbackCreate, FeedbackResponse
@@ -38,7 +37,7 @@ class FeedbackService:
         return FeedbackResponse.model_validate(sample)
 
     @staticmethod
-    async def list_feedback(db: AsyncSession) -> List[FeedbackResponse]:
+    async def list_feedback(db: AsyncSession) -> list[FeedbackResponse]:
         stmt = select(FeedbackSample).order_by(FeedbackSample.created_at.desc())
         result = await db.execute(stmt)
         samples = result.scalars().all()

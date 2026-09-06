@@ -1,5 +1,6 @@
 from dataclasses import asdict, dataclass
-from typing import Any, Dict, Tuple
+from typing import Any
+
 import cv2
 import numpy as np
 
@@ -22,7 +23,7 @@ class QualityMetrics10D:
     quality_status: str  # EXCELLENT, GOOD, ACCEPTABLE, POOR, REJECT
     usable: bool
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return asdict(self)
 
 
@@ -79,7 +80,7 @@ class PackagingQualityEngine10D:
 
         # HSV conversions
         hsv = cv2.cvtColor(img_bgr, cv2.COLOR_BGR2HSV)
-        h_ch, s_ch, v_ch = hsv[:, :, 0], hsv[:, :, 1], hsv[:, :, 2]
+        _h_ch, s_ch, v_ch = hsv[:, :, 0], hsv[:, :, 1], hsv[:, :, 2]
 
         # 4. Brightness Score (Optimal V mean between 110 and 190)
         mean_v = float(np.mean(v_ch))

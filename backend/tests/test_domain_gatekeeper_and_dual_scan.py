@@ -1,8 +1,10 @@
 import os
+
 import cv2
 import numpy as np
 import pytest
 from httpx import ASGITransport, AsyncClient
+
 from backend.app.ai.domain.gatekeeper import DomainGatekeeperEngine
 from backend.app.main import app
 

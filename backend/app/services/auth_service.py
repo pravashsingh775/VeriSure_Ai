@@ -1,8 +1,8 @@
-from typing import Optional
 from fastapi import HTTPException, status
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
+
 from backend.app.core.audit import log_audit_event
 from backend.app.core.config import settings
 from backend.app.core.security import create_access_token, get_password_hash, verify_password

@@ -1,6 +1,7 @@
-from typing import List
+
 from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
+
 from backend.app.api.deps import require_roles
 from backend.app.core.database import get_db
 from backend.app.models.user import User
@@ -22,7 +23,7 @@ async def create_brand(
     return await BrandService.create_brand(db, data, actor_id=current_user.id)
 
 
-@router.get("", response_model=List[BrandResponse])
+@router.get("", response_model=list[BrandResponse])
 async def list_brands(
     db: AsyncSession = Depends(get_db)
 ):

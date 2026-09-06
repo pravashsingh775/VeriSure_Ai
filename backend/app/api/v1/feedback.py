@@ -1,6 +1,7 @@
-from typing import List
+
 from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
+
 from backend.app.api.deps import require_roles
 from backend.app.core.database import get_db
 from backend.app.models.user import User
@@ -23,7 +24,7 @@ async def submit_verified_feedback(
     return await FeedbackService.record_feedback(db, data, verified_by_id=current_user.id)
 
 
-@router.get("", response_model=List[FeedbackResponse])
+@router.get("", response_model=list[FeedbackResponse])
 async def list_feedback_samples(
     db: AsyncSession = Depends(get_db),
     current_user: User = Depends(require_roles(["PLATFORM_ADMIN", "BRAND_ADMIN"]))

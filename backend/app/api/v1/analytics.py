@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
+
 from backend.app.api.deps import get_current_user, require_roles
 from backend.app.core.database import get_db
 from backend.app.models.user import User
@@ -48,6 +49,7 @@ async def get_brand_analytics(
     if not current_user.is_superuser:
         from fastapi import HTTPException, status
         from sqlalchemy import select
+
         from backend.app.models.brand import Brand
         brand = (await db.execute(
             select(Brand).where((Brand.id == brand_id) | (Brand.code == brand_id.upper()))

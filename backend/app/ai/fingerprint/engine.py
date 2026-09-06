@@ -1,5 +1,6 @@
 from datetime import datetime
-from typing import Any, Dict, List, Optional
+from typing import Any
+
 from backend.app.ai.contracts import EvidenceObject, EvidenceType, PackagingFingerprint
 
 
@@ -12,11 +13,11 @@ class PackagingFingerprintEngine:
 
     @staticmethod
     def generate_fingerprint(
-        product_metadata: Dict[str, Any],
-        evidences: List[EvidenceObject],
-        regions: List[Dict[str, Any]]
+        product_metadata: dict[str, Any],
+        evidences: list[EvidenceObject],
+        regions: list[dict[str, Any]]
     ) -> PackagingFingerprint:
-        ev_map: Dict[str, EvidenceObject] = {e.type.value: e for e in evidences}
+        ev_map: dict[str, EvidenceObject] = {e.type.value: e for e in evidences}
 
         # 1. Product Identity slot
         identity_slot = {

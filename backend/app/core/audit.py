@@ -1,5 +1,7 @@
-from typing import Any, Dict, Optional
+from typing import Any
+
 from sqlalchemy.ext.asyncio import AsyncSession
+
 from backend.app.models.audit import AuditLog
 
 
@@ -7,10 +9,10 @@ async def log_audit_event(
     session: AsyncSession,
     action: str,
     resource_type: str,
-    resource_id: Optional[str] = None,
-    user_id: Optional[str] = None,
-    changes: Optional[Dict[str, Any]] = None,
-    ip_address: Optional[str] = None,
+    resource_id: str | None = None,
+    user_id: str | None = None,
+    changes: dict[str, Any] | None = None,
+    ip_address: str | None = None,
 ) -> AuditLog:
     """
     Records an immutable audit event in the database.

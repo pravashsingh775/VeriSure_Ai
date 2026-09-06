@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import List, Optional
+
 from pydantic import BaseModel, Field
 
 
@@ -8,7 +8,7 @@ class CaseReviewResponse(BaseModel):
     reviewer_id: str
     previous_status: str
     new_status: str
-    comments: Optional[str]
+    comments: str | None
     created_at: datetime
 
     model_config = {"from_attributes": True}
@@ -26,9 +26,9 @@ class CaseResponse(BaseModel):
     case_number: str
     status: str
     priority: str
-    assigned_to: Optional[str]
-    notes: Optional[str]
-    reviews: List[CaseReviewResponse] = []
+    assigned_to: str | None
+    notes: str | None
+    reviews: list[CaseReviewResponse] = []
     created_at: datetime
     updated_at: datetime
 

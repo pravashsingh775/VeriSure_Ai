@@ -1,5 +1,5 @@
 import uuid
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any
 
 
 class PackagingVersionAndPairingEngine:
@@ -11,9 +11,9 @@ class PackagingVersionAndPairingEngine:
     def detect_version(
         self,
         ocr_text: str = "",
-        barcode: Optional[str] = None,
+        barcode: str | None = None,
         has_qr: bool = False,
-        declared_mrp: Optional[float] = None
+        declared_mrp: float | None = None
     ) -> str:
         """
         Determines the packaging version iteration from regulatory and design markers.
@@ -33,8 +33,8 @@ class PackagingVersionAndPairingEngine:
 
     def pair_front_and_back(
         self,
-        records: List[Dict[str, Any]]
-    ) -> List[Dict[str, Any]]:
+        records: list[dict[str, Any]]
+    ) -> list[dict[str, Any]]:
         """
         Identifies verified Front/Back pairs among curated records.
         A valid pair MUST:
@@ -46,7 +46,7 @@ class PackagingVersionAndPairingEngine:
         fronts = [r for r in records if r.get("view_type") == "FRONT" and r.get("variant") in ["AMUL_GOLD", "AMUL_TAAZA", "AMUL_SHAKTI"]]
         backs = [r for r in records if r.get("view_type") == "BACK" and r.get("variant") in ["AMUL_GOLD", "AMUL_TAAZA", "AMUL_SHAKTI"]]
 
-        pairs: List[Dict[str, Any]] = []
+        pairs: list[dict[str, Any]] = []
         used_backs = set()
 
         for f in fronts:

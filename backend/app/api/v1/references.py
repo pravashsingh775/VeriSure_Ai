@@ -1,6 +1,7 @@
-from typing import List, Optional
+
 from fastapi import APIRouter, Depends, File, Form, UploadFile
 from sqlalchemy.ext.asyncio import AsyncSession
+
 from backend.app.api.deps import require_roles
 from backend.app.core.database import get_db
 from backend.app.models.user import User
@@ -18,7 +19,7 @@ async def upload_reference_image(
     packaging_version_id: str = Form(...),
     view_type: str = Form("FRONT"),
     source_type: str = Form("BRAND_PROVIDED"),
-    trust_level: Optional[float] = Form(None),
+    trust_level: float | None = Form(None),
     file: UploadFile = File(...),
     db: AsyncSession = Depends(get_db),
     current_user: User = Depends(require_roles(["PLATFORM_ADMIN", "BRAND_ADMIN"]))
@@ -29,6 +30,7 @@ async def upload_reference_image(
     if not current_user.is_superuser:
         from fastapi import HTTPException, status
         from sqlalchemy import select
+
         from backend.app.models.packaging import PackagingVersion
         from backend.app.models.product import Product, ProductPackSize, ProductVariant
         pv = (await db.execute(select(PackagingVersion).where(PackagingVersion.id == packaging_version_id))).scalar_one_or_none()
@@ -67,6 +69,7 @@ async def approve_reference_image(
     if not current_user.is_superuser:
         from fastapi import HTTPException, status
         from sqlalchemy import select
+
         from backend.app.models.packaging import PackagingVersion
         from backend.app.models.product import Product, ProductPackSize, ProductVariant
         from backend.app.models.reference import ReferenceImage
@@ -92,7 +95,7 @@ async def approve_reference_image(
     )
 
 
-@router.get("/version/{packaging_version_id}", response_model=List[ReferenceImageResponse])
+@router.get("/version/{packaging_version_id}", response_model=list[ReferenceImageResponse])
 async def list_references_for_version(
     packaging_version_id: str,
     only_approved: bool = False,
@@ -108,9 +111,9 @@ async def list_references_for_version(
     )
 
 
-@router.get("", response_model=List[ReferenceImageResponse])
+@router.get("", response_model=list[ReferenceImageResponse])
 async def list_all_references(
-    packaging_version_id: Optional[str] = None,
+    packaging_version_id: str | None = None,
     only_approved: bool = False,
     db: AsyncSession = Depends(get_db)
 ):

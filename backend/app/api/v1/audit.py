@@ -1,9 +1,11 @@
 from datetime import datetime
-from typing import Any, Dict, List, Optional
+from typing import Any
+
 from fastapi import APIRouter, Depends, Query
 from pydantic import BaseModel
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
+
 from backend.app.api.deps import require_roles
 from backend.app.core.database import get_db
 from backend.app.models.audit import AuditLog
@@ -14,21 +16,21 @@ router = APIRouter()
 
 class AuditLogResponse(BaseModel):
     id: str
-    user_id: Optional[str]
+    user_id: str | None
     action: str
     resource_type: str
-    resource_id: Optional[str]
-    changes: Dict[str, Any]
-    ip_address: Optional[str]
+    resource_id: str | None
+    changes: dict[str, Any]
+    ip_address: str | None
     timestamp: datetime
 
     model_config = {"from_attributes": True}
 
 
-@router.get("", response_model=List[AuditLogResponse])
+@router.get("", response_model=list[AuditLogResponse])
 async def list_audit_logs(
-    resource_type: Optional[str] = None,
-    action: Optional[str] = None,
+    resource_type: str | None = None,
+    action: str | None = None,
     limit: int = Query(50, ge=1, le=200),
     db: AsyncSession = Depends(get_db),
     current_user: User = Depends(require_roles(["PLATFORM_ADMIN"]))
@@ -46,4 +48,4 @@ async def list_audit_logs(
 
     result = await db.execute(stmt)
     logs = result.scalars().all()
-    return [AuditLogResponse.model_validate(l) for l in logs]
+    return [AuditLogResponse.model_validate(log) for log in logs]

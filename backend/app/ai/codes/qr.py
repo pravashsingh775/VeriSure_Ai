@@ -1,9 +1,11 @@
-from typing import Any, Dict, List, Optional
+from typing import Any
 from urllib.parse import urlparse
+
 import cv2
 import numpy as np
 import zxingcpp
-from backend.app.ai.contracts import EvidenceObject, EvidenceType, RegionBox
+
+from backend.app.ai.contracts import EvidenceObject, EvidenceType
 
 
 class QRAnalyzer:
@@ -13,7 +15,7 @@ class QRAnalyzer:
     def analyze(
         self,
         scan_crop_bgr: np.ndarray,
-        reference_metadata: Optional[Dict[str, Any]] = None
+        reference_metadata: dict[str, Any] | None = None
     ) -> EvidenceObject:
         decoded_text = None
         h, w = scan_crop_bgr.shape[:2]

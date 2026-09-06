@@ -1,8 +1,10 @@
-from typing import Any, Dict, List, Optional
+from typing import Any
+
 import cv2
 import numpy as np
 from skimage.feature import local_binary_pattern
-from backend.app.ai.contracts import BaseVisionAnalyzer, EvidenceObject, EvidenceType, RegionBox
+
+from backend.app.ai.contracts import BaseVisionAnalyzer, EvidenceObject, EvidenceType
 
 
 class TextureAnalyzer(BaseVisionAnalyzer):
@@ -19,8 +21,8 @@ class TextureAnalyzer(BaseVisionAnalyzer):
     def analyze(
         self,
         scan_crop_bgr: np.ndarray,
-        reference_crop_bgr: Optional[np.ndarray] = None,
-        reference_metadata: Optional[Dict[str, Any]] = None
+        reference_crop_bgr: np.ndarray | None = None,
+        reference_metadata: dict[str, Any] | None = None
     ) -> EvidenceObject:
         gray_scan = cv2.cvtColor(scan_crop_bgr, cv2.COLOR_BGR2GRAY)
         scan_hist = self._compute_lbp_hist(gray_scan)

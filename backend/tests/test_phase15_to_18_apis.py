@@ -1,6 +1,7 @@
 import uuid
-import pytest
+
 from fastapi.testclient import TestClient
+
 from backend.app.main import app
 
 client = TestClient(app)
@@ -34,6 +35,7 @@ def test_suspicious_cases_and_reviews():
     cases = cases_res.json()
     if not cases:
         import io
+
         from backend.tests.helpers import create_test_amul_image, get_image_bytes
         img_bgr = create_test_amul_image(tamper_seal=True)
         img_bytes = get_image_bytes(img_bgr)

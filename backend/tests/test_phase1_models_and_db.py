@@ -1,8 +1,10 @@
+import contextlib
 import os
+
 import pytest
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from backend.app.core.config import settings
+
 from backend.app.core.database import Base
 from backend.app.core.security import (
     create_access_token,
@@ -45,10 +47,8 @@ def sync_db_session():
     Base.metadata.drop_all(bind=engine)
     engine.dispose()
     if os.path.exists("./test_phase1.db"):
-        try:
+        with contextlib.suppress(Exception):
             os.remove("./test_phase1.db")
-        except Exception:
-            pass
 
 
 def test_security_password_hashing():

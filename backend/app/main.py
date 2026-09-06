@@ -1,6 +1,8 @@
 from contextlib import asynccontextmanager
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+
 from backend.app.api.v1 import (
     analytics,
     audit,
@@ -70,9 +72,10 @@ app.add_middleware(
 
 import logging
 import uuid
-from starlette.middleware.base import BaseHTTPMiddleware
+
 from fastapi import Request
 from fastapi.responses import JSONResponse
+from starlette.middleware.base import BaseHTTPMiddleware
 
 logger = logging.getLogger("verisure.api")
 
@@ -120,7 +123,9 @@ app.include_router(analytics.router, prefix=f"{settings.API_V1_STR}/analytics", 
 app.include_router(audit.router, prefix=f"{settings.API_V1_STR}/audit", tags=["Audit Logging"])
 
 import os
+
 from fastapi.staticfiles import StaticFiles
+
 os.makedirs(settings.STORAGE_LOCAL_DIR, exist_ok=True)
 app.mount("/data/storage", StaticFiles(directory=settings.STORAGE_LOCAL_DIR), name="storage")
 
@@ -136,6 +141,7 @@ async def root():
 
 
 from sqlalchemy import text
+
 from backend.app.core.database import AsyncSessionLocal
 
 
@@ -229,7 +235,9 @@ async def readiness():
 
 
 from pathlib import Path
+
 from fastapi.responses import FileResponse
+
 frontend_dist = Path(__file__).resolve().parent.parent.parent / "frontend" / "dist"
 if frontend_dist.exists():
     if (frontend_dist / "assets").exists():

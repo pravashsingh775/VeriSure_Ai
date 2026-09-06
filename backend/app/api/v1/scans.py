@@ -1,8 +1,9 @@
-from typing import List, Optional
+
 from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile, status
 from fastapi.responses import FileResponse
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
+
 from backend.app.api.deps import get_current_user, get_optional_user
 from backend.app.core.database import get_db
 from backend.app.core.storage import storage
@@ -56,7 +57,7 @@ async def upload_and_scan_product(
     view_type: str = Form("FRONT"),
     is_multi_angle: bool = Form(False),
     db: AsyncSession = Depends(get_db),
-    optional_user: Optional[User] = Depends(get_optional_user)
+    optional_user: User | None = Depends(get_optional_user)
 ):
     """
     Submits a product photograph for multi-evidence authenticity risk assessment.
@@ -78,7 +79,7 @@ async def upload_dual_product_scan(
     file_front: UploadFile = File(...),
     file_back: UploadFile = File(...),
     db: AsyncSession = Depends(get_db),
-    optional_user: Optional[User] = Depends(get_optional_user)
+    optional_user: User | None = Depends(get_optional_user)
 ):
     """
     Submits both Front and Back product photographs for comprehensive 360° verification:
@@ -95,7 +96,7 @@ async def upload_dual_product_scan(
     )
 
 
-@router.get("/history/me", response_model=List[ScanSummaryResponse])
+@router.get("/history/me", response_model=list[ScanSummaryResponse])
 async def get_my_scan_history(
     db: AsyncSession = Depends(get_db),
     current_user: User = Depends(get_current_user)
@@ -125,8 +126,8 @@ async def get_scan_details(
 async def download_scan_pdf_report(
     scan_id: str,
     db: AsyncSession = Depends(get_db),
-    current_user: Optional[User] = Depends(get_optional_user),
-    token: Optional[str] = None,
+    current_user: User | None = Depends(get_optional_user),
+    token: str | None = None,
 ):
     """
     Downloads the generated vector PDF report containing risk metrics,
@@ -136,6 +137,7 @@ async def download_scan_pdf_report(
     if not current_user and token:
         try:
             from sqlalchemy.orm import selectinload
+
             from backend.app.core.security import decode_access_token
             payload = decode_access_token(token)
             if payload.sub:

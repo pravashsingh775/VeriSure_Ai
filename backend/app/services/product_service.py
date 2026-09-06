@@ -1,13 +1,12 @@
-from typing import List, Optional
+
 from fastapi import HTTPException, status
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
+
 from backend.app.core.audit import log_audit_event
 from backend.app.models.product import Product, ProductPackSize, ProductVariant
 from backend.app.schemas.product import (
-    PackSizeCreate,
-    PackSizeResponse,
     ProductCreate,
     ProductResponse,
     VariantCreate,
@@ -17,7 +16,7 @@ from backend.app.schemas.product import (
 
 class ProductService:
     @staticmethod
-    async def create_product(db: AsyncSession, data: ProductCreate, actor_id: Optional[str] = None) -> ProductResponse:
+    async def create_product(db: AsyncSession, data: ProductCreate, actor_id: str | None = None) -> ProductResponse:
         product = Product(
             brand_id=data.brand_id,
             name=data.name,
@@ -61,7 +60,7 @@ class ProductService:
         return await ProductService.get_product_by_id(db, product.id)
 
     @staticmethod
-    async def get_products(db: AsyncSession, brand_id: Optional[str] = None) -> List[ProductResponse]:
+    async def get_products(db: AsyncSession, brand_id: str | None = None) -> list[ProductResponse]:
         stmt = select(Product).options(
             selectinload(Product.variants).selectinload(ProductVariant.pack_sizes)
         )
@@ -89,7 +88,7 @@ class ProductService:
         return ProductResponse.model_validate(product)
 
     @staticmethod
-    async def add_variant(db: AsyncSession, product_id: str, data: VariantCreate, actor_id: Optional[str] = None) -> VariantResponse:
+    async def add_variant(db: AsyncSession, product_id: str, data: VariantCreate, actor_id: str | None = None) -> VariantResponse:
         stmt = select(Product).where(Product.id == product_id)
         product = (await db.execute(stmt)).scalar_one_or_none()
         if not product:

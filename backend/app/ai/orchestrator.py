@@ -1,15 +1,17 @@
-import os
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any
+
 import cv2
 import numpy as np
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
+
 from backend.app.ai.certification.engine import CertificationAnalyzer
 from backend.app.ai.codes.barcode import BarcodeAnalyzer
 from backend.app.ai.codes.qr import QRAnalyzer
-from backend.app.ai.contracts import DecisionResult, DecisionState, EvidenceObject, EvidenceType, QualityAssessmentResult
+from backend.app.ai.contracts import EvidenceObject, EvidenceType, QualityAssessmentResult
 from backend.app.ai.decision.engine import DecisionEngine
 from backend.app.ai.detection.engine import ProductDetector
+from backend.app.ai.domain.gatekeeper import DomainGatekeeperEngine
 from backend.app.ai.explainability.engine import DifferenceHeatmapEngine, ExplanationEngine
 from backend.app.ai.fingerprint.engine import PackagingFingerprintEngine
 from backend.app.ai.fusion.engine import MultiEvidenceFusionEngine
@@ -26,9 +28,6 @@ from backend.app.ai.vision.shape import ShapeAnalyzer
 from backend.app.ai.vision.texture import TextureAnalyzer
 from backend.app.ai.vision.typography import TypographyAnalyzer
 from backend.app.core.storage import storage
-
-
-from backend.app.ai.domain.gatekeeper import DomainGatekeeperEngine
 
 
 class AIOrchestrator:
@@ -95,7 +94,7 @@ class AIOrchestrator:
         scan_id: str,
         image_bgr: np.ndarray,
         view_type: str = "FRONT"
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         # Stage 1: Image Quality Assessment
         quality_result = self.quality_engine.assess(image_bgr)
 
@@ -254,7 +253,7 @@ class AIOrchestrator:
             }
 
         # Stage 5: Independent Evidence Analysis Engines
-        evidences: List[EvidenceObject] = [
+        evidences: list[EvidenceObject] = [
             # Vision Engines
             self._safe_analyze(self.logo_analyzer.analyze, crop_bgr, ref_crop_bgr, ref_meta, ev_type=EvidenceType.LOGO, source="verisure-logo-orb-v1"),
             self._safe_analyze(self.layout_analyzer.analyze, crop_bgr, ref_crop_bgr, ref_meta, ev_type=EvidenceType.LAYOUT, source="verisure-layout-sift-v1"),
@@ -353,7 +352,7 @@ class AIOrchestrator:
         scan_id: str,
         image_front_bgr: np.ndarray,
         image_back_bgr: np.ndarray
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """
         Executes comprehensive 360° dual-side product verification across both Front and Back panels:
         1. Front Side: Evaluates Brand Logo, Typography, Layout, Colour, Shape, Texture, Front Seals.
@@ -496,7 +495,7 @@ class AIOrchestrator:
                     ref_back_bgr = cv2.imread(str(p))
 
         # --- DUAL-SIDE EVIDENCE ENGINES ---
-        evidences: List[EvidenceObject] = [
+        evidences: list[EvidenceObject] = [
             # Front Vision Models
             self._safe_analyze(self.logo_analyzer.analyze, crop_front_bgr, ref_front_bgr, ref_meta, ev_type=EvidenceType.LOGO, source="verisure-logo-orb-v1"),
             self._safe_analyze(self.layout_analyzer.analyze, crop_front_bgr, ref_front_bgr, ref_meta, ev_type=EvidenceType.LAYOUT, source="verisure-layout-sift-v1"),
@@ -525,12 +524,11 @@ class AIOrchestrator:
 
         # --- CROSS-SIDE CONSISTENCY CHECK ---
         cross_side_conflicts = []
-        if detected_barcode and best_candidate.get("expected_barcode"):
-            if detected_barcode != best_candidate["expected_barcode"]:
-                cross_side_conflicts.append(
-                    f"Cross-Side Packaging Contradiction: Front graphics identify '{best_candidate['product_name']}', "
-                    f"but back barcode ('{detected_barcode}') does not match expected barcode ('{best_candidate['expected_barcode']}')."
-                )
+        if detected_barcode and best_candidate.get("expected_barcode") and detected_barcode != best_candidate["expected_barcode"]:
+            cross_side_conflicts.append(
+                f"Cross-Side Packaging Contradiction: Front graphics identify '{best_candidate['product_name']}', "
+                f"but back barcode ('{detected_barcode}') does not match expected barcode ('{best_candidate['expected_barcode']}')."
+            )
 
         # Multi-Evidence Fusion with combined quality
         combined_qual = QualityAssessmentResult(

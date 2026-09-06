@@ -1,21 +1,23 @@
 from datetime import datetime, timedelta
-from typing import Any, List, Optional, Union
+from typing import Any
+
 import bcrypt
 import jwt
-from fastapi import Depends, HTTPException, status
+from fastapi import HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from pydantic import BaseModel
+
 from backend.app.core.config import settings
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl=f"{settings.API_V1_STR}/auth/login", auto_error=False)
 
 
 class TokenPayload(BaseModel):
-    sub: Optional[str] = None
-    email: Optional[str] = None
-    roles: List[str] = []
-    brand_id: Optional[str] = None
-    exp: Optional[int] = None
+    sub: str | None = None
+    email: str | None = None
+    roles: list[str] = []
+    brand_id: str | None = None
+    exp: int | None = None
 
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
@@ -34,11 +36,11 @@ def get_password_hash(password: str) -> str:
 
 
 def create_access_token(
-    subject: Union[str, Any],
+    subject: str | Any,
     email: str,
-    roles: List[str],
-    brand_id: Optional[str] = None,
-    expires_delta: Optional[timedelta] = None
+    roles: list[str],
+    brand_id: str | None = None,
+    expires_delta: timedelta | None = None
 ) -> str:
     if expires_delta:
         expire = datetime.utcnow() + expires_delta
@@ -53,8 +55,7 @@ def create_access_token(
         "exp": int(expire.timestamp()),
         "iat": int(datetime.utcnow().timestamp()),
     }
-    encoded_jwt = jwt.encode(to_encode, settings.SECRET_KEY, algorithm=settings.ALGORITHM)
-    return encoded_jwt
+    return jwt.encode(to_encode, settings.SECRET_KEY, algorithm=settings.ALGORITHM)
 
 
 def decode_access_token(token: str) -> TokenPayload:
@@ -64,11 +65,10 @@ def decode_access_token(token: str) -> TokenPayload:
             settings.SECRET_KEY,
             algorithms=[settings.ALGORITHM]
         )
-        token_data = TokenPayload(**payload)
-        return token_data
+        return TokenPayload(**payload)
     except (jwt.PyJWTError, Exception):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Could not validate credentials",
             headers={"WWW-Authenticate": "Bearer"},
-        )
+        ) from None

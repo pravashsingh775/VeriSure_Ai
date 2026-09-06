@@ -1,6 +1,8 @@
-from typing import Any, Dict, List, Optional
+from typing import Any
+
 import cv2
 import numpy as np
+
 from backend.app.ai.contracts import BaseVisionAnalyzer, EvidenceObject, EvidenceType, RegionBox
 
 
@@ -25,8 +27,8 @@ class ColourAnalyzer(BaseVisionAnalyzer):
     def analyze(
         self,
         scan_crop_bgr: np.ndarray,
-        reference_crop_bgr: Optional[np.ndarray] = None,
-        reference_metadata: Optional[Dict[str, Any]] = None
+        reference_crop_bgr: np.ndarray | None = None,
+        reference_metadata: dict[str, Any] | None = None
     ) -> EvidenceObject:
         scan_palette = self._extract_palette(scan_crop_bgr, k=4)
 
@@ -47,7 +49,7 @@ class ColourAnalyzer(BaseVisionAnalyzer):
             )
 
         ref_palette = self._extract_palette(reference_crop_bgr, k=4)
-        regions: List[RegionBox] = []
+        regions: list[RegionBox] = []
 
         # Compute nearest-neighbor chromaticity Delta E between palettes (order-invariant)
         scan_to_ref_min = []

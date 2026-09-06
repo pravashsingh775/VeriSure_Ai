@@ -1,6 +1,7 @@
 import io
-import pytest
+
 from fastapi.testclient import TestClient
+
 from backend.app.main import app
 
 client = TestClient(app)
@@ -195,10 +196,10 @@ def test_packaging_version_lifecycle_and_reference():
     assert len(list_refs.json()) == 1
 
     # Clean up test artifact from storage and db
-    from backend.app.core.storage import storage
     from backend.app.core.database import SyncSessionLocal
-    from backend.app.models.reference import ReferenceImage
+    from backend.app.core.storage import storage
     from backend.app.models.packaging import PackagingVersion
+    from backend.app.models.reference import ReferenceImage
     storage.delete(ref_image["image_path"])
     with SyncSessionLocal() as session:
         ref_obj = session.query(ReferenceImage).filter(ReferenceImage.id == ref_image["id"]).first()

@@ -4,20 +4,17 @@ Validates mathematical fusion boundaries, monotonicity, fault-isolation barriers
 abstention gatekeepers, seal tamper triggers, competitor rejection, duplicate views,
 and deterministic decision reproducibility.
 """
-import cv2
 import numpy as np
 import pytest
 
 from backend.app.ai.contracts import (
-    DecisionResult,
     DecisionState,
     EvidenceObject,
     EvidenceType,
     QualityAssessmentResult,
 )
 from backend.app.ai.decision.engine import DecisionEngine
-from backend.app.ai.domain.gatekeeper import DomainGatekeeperEngine
-from backend.app.ai.fusion.engine import MultiEvidenceFusionEngine, ConflictDetector
+from backend.app.ai.fusion.engine import MultiEvidenceFusionEngine
 from backend.app.ai.orchestrator import AIOrchestrator
 
 

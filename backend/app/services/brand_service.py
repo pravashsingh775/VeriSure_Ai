@@ -1,15 +1,16 @@
-from typing import List, Optional
+
 from fastapi import HTTPException, status
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
+
 from backend.app.core.audit import log_audit_event
 from backend.app.models.brand import Brand, BrandSettings
-from backend.app.schemas.brand import BrandCreate, BrandResponse, BrandUpdate
+from backend.app.schemas.brand import BrandCreate, BrandResponse
 
 
 class BrandService:
     @staticmethod
-    async def create_brand(db: AsyncSession, data: BrandCreate, actor_id: Optional[str] = None) -> BrandResponse:
+    async def create_brand(db: AsyncSession, data: BrandCreate, actor_id: str | None = None) -> BrandResponse:
         stmt = select(Brand).where((Brand.name == data.name) | (Brand.code == data.code.upper()))
         existing = (await db.execute(stmt)).scalar_one_or_none()
         if existing:
@@ -46,7 +47,7 @@ class BrandService:
         return BrandResponse.model_validate(brand)
 
     @staticmethod
-    async def get_brands(db: AsyncSession) -> List[BrandResponse]:
+    async def get_brands(db: AsyncSession) -> list[BrandResponse]:
         stmt = select(Brand).order_by(Brand.name.asc())
         result = await db.execute(stmt)
         brands = result.scalars().all()

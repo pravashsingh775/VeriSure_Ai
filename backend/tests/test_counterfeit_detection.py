@@ -1,19 +1,13 @@
-import numpy as np
 import pytest
 
 from backend.app.ai.codes.barcode import BarcodeAnalyzer
-from backend.app.ai.codes.qr import QRAnalyzer
 from backend.app.ai.contracts import (
-    DecisionResult,
     DecisionState,
     EvidenceObject,
     EvidenceType,
     QualityAssessmentResult,
 )
 from backend.app.ai.decision.engine import DecisionEngine
-from backend.app.ai.fusion.engine import MultiEvidenceFusionEngine
-from backend.app.ai.vision.seal import SealAnalyzer
-from backend.app.ai.vision.logo import LogoAnalyzer
 
 
 @pytest.fixture
@@ -97,7 +91,6 @@ def test_counterfeit_phishing_qr_domain():
     Tests that a packaging QR code pointing to an unauthorized / phishing domain
     is penalized with low score and warning.
     """
-    qr_analyzer = QRAnalyzer()
     parsed_domain = "amul-dairy-offers.xyz"
     from backend.app.core.config import settings
     trusted_domains = [d.lower() for d in settings.AUTHORIZED_QR_DOMAINS]

@@ -1,7 +1,8 @@
 from datetime import datetime
-from typing import Any, Dict, Optional
+
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
+
 from backend.app.core.audit import log_audit_event
 from backend.app.models.model_registry import EvaluationRun, ModelVersionEntity
 from backend.app.schemas.model_registry import EvaluationRunResponse
@@ -17,9 +18,9 @@ class EvaluationService:
     async def run_evaluation(
         db: AsyncSession,
         model_version_id: str,
-        dataset_version_id: Optional[str] = None,
+        dataset_version_id: str | None = None,
         simulate_perturbations: bool = False,
-        actor_id: Optional[str] = None
+        actor_id: str | None = None
     ) -> EvaluationRunResponse:
         # 1. Verify model version
         mv = (await db.execute(select(ModelVersionEntity).where(ModelVersionEntity.id == model_version_id))).scalar_one_or_none()

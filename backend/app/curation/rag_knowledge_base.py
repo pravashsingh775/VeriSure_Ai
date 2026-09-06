@@ -1,6 +1,6 @@
 import json
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 
 class PackagingRAGKnowledgeBase:
@@ -14,13 +14,13 @@ class PackagingRAGKnowledgeBase:
         "They provide semantic context and NEVER override empirical visual or computer vision measurements."
     )
 
-    def __init__(self, knowledge_dir: Optional[Path] = None):
+    def __init__(self, knowledge_dir: Path | None = None):
         if knowledge_dir is None:
             self.knowledge_dir = Path(r"C:\Users\PRAVASH\Desktop\VeriSure_Ai\data\rag_knowledge")
         else:
             self.knowledge_dir = Path(knowledge_dir)
 
-        self.documents: Dict[str, Dict[str, Any]] = {}
+        self.documents: dict[str, dict[str, Any]] = {}
         self._load_knowledge()
 
     def _load_knowledge(self) -> None:
@@ -30,14 +30,14 @@ class PackagingRAGKnowledgeBase:
 
         for filepath in self.knowledge_dir.glob("*.json"):
             try:
-                with open(filepath, "r", encoding="utf-8") as f:
+                with open(filepath, encoding="utf-8") as f:
                     data = json.load(f)
                     doc_id = filepath.stem
                     self.documents[doc_id] = data
             except Exception:
                 pass
 
-    def query_product_spec(self, variant: str) -> Dict[str, Any]:
+    def query_product_spec(self, variant: str) -> dict[str, Any]:
         """
         Retrieves official documented packaging parameters for a given variant.
         """
@@ -57,7 +57,7 @@ class PackagingRAGKnowledgeBase:
             "disclaimer": self.DISCLAIMER
         }
 
-    def query_regulatory_requirements(self) -> Dict[str, Any]:
+    def query_regulatory_requirements(self) -> dict[str, Any]:
         """
         Retrieves FSSAI and Legal Metrology packaging declarations.
         """
@@ -67,15 +67,14 @@ class PackagingRAGKnowledgeBase:
             "disclaimer": self.DISCLAIMER
         }
 
-    def get_known_packaging_versions(self, variant: str) -> List[Dict[str, Any]]:
+    def get_known_packaging_versions(self, variant: str) -> list[dict[str, Any]]:
         """
         Lists officially known packaging version design iterations.
         """
         spec = self.query_product_spec(variant).get("specification", {})
-        versions = spec.get("packaging_versions", [])
-        return versions
+        return spec.get("packaging_versions", [])
 
-    def search_knowledge(self, query: str) -> List[Dict[str, Any]]:
+    def search_knowledge(self, query: str) -> list[dict[str, Any]]:
         """
         Keyword and topic search across the RAG knowledge corpus.
         """
