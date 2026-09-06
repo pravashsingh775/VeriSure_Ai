@@ -1,45 +1,68 @@
 @echo off
+setlocal EnableExtensions
+
 title VeriSure AI - Development Platform
-setlocal enabledelayedexpansion
+
 cd /d "%~dp0"
+
+if errorlevel 1 (
+    echo.
+    echo [ERROR] Failed to switch to repository directory:
+    echo   "%~dp0"
+    echo.
+    pause
+    exit /b 1
+)
 
 echo =======================================================
 echo   VeriSure AI Platform - Development Environment
 echo =======================================================
 echo.
 
-if not exist "%~dp0run_dev.ps1" (
-    echo [ERROR] Required controller script 'run_dev.ps1' not found in:
-    echo   "%~dp0"
+set "CONTROLLER=%~dp0run_dev.ps1"
+
+if not exist "%CONTROLLER%" (
+    echo [ERROR] Required controller script 'run_dev.ps1' not found.
+    echo.
+    echo Expected:
+    echo   "%CONTROLLER%"
+    echo.
     echo Please ensure all repository files are present.
     echo.
     pause
     exit /b 1
 )
 
-powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%~dp0run_dev.ps1"
-set "EXIT_CODE=!ERRORLEVEL!"
+rem -------------------------------------------------------
+rem Translate BAT-friendly browser arguments to PowerShell.
+rem -------------------------------------------------------
 
-if !EXIT_CODE! neq 0 (
+set "PS_ARGS="
+
+if /i "%~1"=="--no-browser" set "PS_ARGS=-NoBrowser"
+if /i "%~1"=="-no-browser"  set "PS_ARGS=-NoBrowser"
+if /i "%~1"=="-n"           set "PS_ARGS=-NoBrowser"
+
+echo [INFO] Starting VeriSure AI development controller...
+echo.
+
+powershell.exe ^
+    -NoLogo ^
+    -NoProfile ^
+    -NonInteractive ^
+    -ExecutionPolicy Bypass ^
+    -File "%CONTROLLER%" %PS_ARGS%
+
+set "EXIT_CODE=%ERRORLEVEL%"
+
+if not "%EXIT_CODE%"=="0" (
     echo.
-    echo [ERROR] VeriSure launcher halted with error code: !EXIT_CODE!
+    echo =======================================================
+    echo [ERROR] VeriSure AI launcher failed.
+    echo         Exit code: %EXIT_CODE%
+    echo =======================================================
     echo.
     pause
-    exit /b !EXIT_CODE!
 )
 
-if /i "%1"=="--no-browser" exit /b 0
-if /i "%1"=="-n" exit /b 0
-if /i "%1"=="-no-browser" exit /b 0
-
-echo.
-echo -------------------------------------------------------
-echo [INFO] Press [ENTER] to open http://localhost:5173 in browser,
-echo        or type 'N' to skip.
-echo -------------------------------------------------------
-set "OPEN_UI=y"
-set /p OPEN_UI="Open Web UI now? (Y/n): "
-if /i not "!OPEN_UI!"=="n" if /i not "!OPEN_UI!"=="no" (
-    start "" "http://localhost:5173"
-)
-exit /b 0
+exit /b %EXIT_CODE%

@@ -1,258 +1,753 @@
-# VeriSure AI - Idempotent, Health-Aware Development Launcher
-# Ensures WSL PostgreSQL, FastAPI Backend, and Vite Frontend are active without duplicate processes or port collisions.
+#requires -Version 5.1
+
+<#
+.SYNOPSIS
+    VeriSure AI - Idempotent, health-aware development environment launcher.
+
+.DESCRIPTION
+    Ensures the following development services are available:
+
+      1. WSL Ubuntu PostgreSQL
+      2. FastAPI backend on port 8000
+      3. Vite frontend on port 5173
+
+    The launcher is intentionally idempotent:
+      - Re-running it does not create duplicate backend/frontend processes.
+      - Existing healthy services are reused.
+      - Occupied ports are never blindly killed.
+      - Services are considered ready only after health checks succeed.
+
+.PARAMETER NoBrowser
+    Do not automatically open the frontend in the browser.
+#>
 
 [CmdletBinding()]
-param()
+param(
+    [switch]$NoBrowser
+)
 
+Set-StrictMode -Version Latest
 $ErrorActionPreference = "Stop"
+
+# -------------------------------------------------------------------
+# Global paths / constants
+# -------------------------------------------------------------------
+
 $RepoRoot = Split-Path -Parent $MyInvocation.MyCommand.Path
-Set-Location $RepoRoot
+Set-Location -LiteralPath $RepoRoot
 
-Write-Host "=======================================================" -ForegroundColor Cyan
-Write-Host "   VeriSure AI - Development Environment Launcher     " -ForegroundColor Cyan
-Write-Host "=======================================================" -ForegroundColor Cyan
+$BackendDir  = Join-Path $RepoRoot "backend"
+$FrontendDir = Join-Path $RepoRoot "frontend"
+
+$BackendPort  = 8000
+$FrontendPort = 5173
+$WslDistro    = "Ubuntu"
+
+$BackendHealthUrl  = "http://127.0.0.1:$BackendPort/health"
+$FrontendHealthUrl = "http://127.0.0.1:$FrontendPort"
 
 # -------------------------------------------------------------------
-# Phase 1: Verify Core Prerequisites (Python, Node, npm, WSL)
+# Helper functions
 # -------------------------------------------------------------------
-Write-Host "`n[1/5] Verifying System Prerequisites..." -ForegroundColor Yellow
 
-# Check Python
-$pythonCmd = Get-Command python -ErrorAction SilentlyContinue
-if (-not $pythonCmd) {
-    Write-Host "[ERROR] Python is not installed or not in PATH." -ForegroundColor Red
-    Write-Host "Suggested action: Install Python 3.10+ and add it to system PATH." -ForegroundColor DarkYellow
-    exit 1
+function Write-Section {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$Title
+    )
+
+    Write-Host ""
+    Write-Host "=======================================================" -ForegroundColor Cyan
+    Write-Host " $Title" -ForegroundColor Cyan
+    Write-Host "=======================================================" -ForegroundColor Cyan
 }
-$pyVer = & python --version 2>&1
-Write-Host "  [OK] Python: $pyVer" -ForegroundColor Green
 
-# Check Node & npm
-$nodeCmd = Get-Command node -ErrorAction SilentlyContinue
-$npmCmd = Get-Command npm -ErrorAction SilentlyContinue
-if (-not $nodeCmd -or -not $npmCmd) {
-    Write-Host "[ERROR] Node.js or npm is not installed or not in PATH." -ForegroundColor Red
-    Write-Host "Suggested action: Install Node.js 18+ and add to PATH." -ForegroundColor DarkYellow
-    exit 1
+function Write-Info {
+    param([string]$Message)
+
+    Write-Host "  [INFO] $Message" -ForegroundColor Gray
 }
-$nodeVer = & node -v 2>&1
-Write-Host "  [OK] Node.js: $nodeVer" -ForegroundColor Green
 
-# Check WSL
-$wslCmd = Get-Command wsl -ErrorAction SilentlyContinue
-if (-not $wslCmd) {
-    Write-Host "[ERROR] WSL is not installed or not available in PATH." -ForegroundColor Red
-    Write-Host "Suggested action: Enable Windows Subsystem for Linux (WSL)." -ForegroundColor DarkYellow
-    exit 1
+function Write-Ok {
+    param([string]$Message)
+
+    Write-Host "  [OK]   $Message" -ForegroundColor Green
 }
-Write-Host "  [OK] WSL Available" -ForegroundColor Green
 
-# -------------------------------------------------------------------
-# Phase 2: Ensure PostgreSQL is running & reachable
-# -------------------------------------------------------------------
-Write-Host "`n[2/5] Ensuring PostgreSQL Database is Ready..." -ForegroundColor Yellow
+function Write-Warn {
+    param([string]$Message)
 
-# Check if PostgreSQL is accepting connections on 5432
-$dbReachable = $false
-try {
-    $tcp5432 = Test-NetConnection -ComputerName 127.0.0.1 -Port 5432 -InformationLevel Quiet -WarningAction SilentlyContinue
-    if ($tcp5432) { $dbReachable = $true }
-} catch {}
+    Write-Host "  [WARN] $Message" -ForegroundColor DarkYellow
+}
 
-if (-not $dbReachable) {
-    # Dynamically query WSL Ubuntu IP if available, with static fallback
-    $wslIp = "172.30.74.29"
+function Write-ErrorMessage {
+    param([string]$Message)
+
+    Write-Host "  [ERROR] $Message" -ForegroundColor Red
+}
+
+function Test-TcpPort {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$ComputerName,
+
+        [Parameter(Mandatory = $true)]
+        [int]$Port
+    )
+
     try {
-        $detectedIp = (& wsl -d Ubuntu -e hostname -I 2>$null).Trim().Split(' ')[0]
-        if ($detectedIp -and $detectedIp.Length -ge 7) { $wslIp = $detectedIp }
-    } catch {}
-
-    try {
-        $tcpWsl = Test-NetConnection -ComputerName $wslIp -Port 5432 -InformationLevel Quiet -WarningAction SilentlyContinue
-        if ($tcpWsl) { $dbReachable = $true }
-    } catch {}
-}
-
-if (-not $dbReachable) {
-    Write-Host "  PostgreSQL not yet responding, starting via WSL Ubuntu daemon..." -ForegroundColor Gray
-    try {
-        & wsl -d Ubuntu -u root -e /usr/sbin/service postgresql start 2>&1 | Out-Null
-        # Also ensure WSL keep-alive is active
-        Start-Process -FilePath "wsl" -ArgumentList "-d Ubuntu -u root -e bash -c 'sleep infinity'" -WindowStyle Hidden
-        Start-Sleep -Seconds 3
-    } catch {
-        Write-Host "  [WARN] Failed to start PostgreSQL service automatically via WSL." -ForegroundColor DarkYellow
+        return [bool](Test-NetConnection `
+            -ComputerName $ComputerName `
+            -Port $Port `
+            -InformationLevel Quiet `
+            -WarningAction SilentlyContinue)
+    }
+    catch {
+        return $false
     }
 }
 
-# Verify actual database connection via Python
-$dbTestScript = "import asyncio, asyncpg, sys, os
-from backend.app.core.config import settings
-async def test():
-    try:
-        conn = await asyncpg.connect(settings.DATABASE_URL.replace('postgresql+asyncpg://', 'postgresql://'))
-        await conn.close()
-        sys.exit(0)
-    except Exception as e:
-        print(f'DB Connection Error: {e}', file=sys.stderr)
-        sys.exit(1)
-asyncio.run(test())"
+function Get-WslIPv4 {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$Distribution
+    )
 
-$dbCheckResult = & python -c $dbTestScript 2>&1
-if ($LASTEXITCODE -ne 0) {
-    Write-Host "[ERROR] Database connectivity failed." -ForegroundColor Red
-    Write-Host "Reason: $dbCheckResult" -ForegroundColor Red
-    Write-Host "Suggested action: Check WSL PostgreSQL status (`wsl -d Ubuntu -u root -e service postgresql status`)." -ForegroundColor DarkYellow
-    exit 1
-}
-Write-Host "  [OK] PostgreSQL reachable & accepting connections" -ForegroundColor Green
-
-# -------------------------------------------------------------------
-# Phase 3: Run Idempotent Database & Model Seeds
-# -------------------------------------------------------------------
-Write-Host "`n[3/5] Verifying Database Seeds..." -ForegroundColor Yellow
-
-$seedDataOut = & python -m backend.scripts.seed_data 2>&1
-if ($LASTEXITCODE -ne 0) {
-    Write-Host "[ERROR] Database seeding failed." -ForegroundColor Red
-    Write-Host "$seedDataOut" -ForegroundColor Red
-    exit 1
-}
-Write-Host "  [OK] Core product catalog seeds verified" -ForegroundColor Green
-
-$seedModelsOut = & python -m backend.scripts.seed_models 2>&1
-if ($LASTEXITCODE -ne 0) {
-    Write-Host "[ERROR] Model registry seeding failed." -ForegroundColor Red
-    Write-Host "$seedModelsOut" -ForegroundColor Red
-    exit 1
-}
-Write-Host "  [OK] Model registry seeds verified" -ForegroundColor Green
-
-# -------------------------------------------------------------------
-# Phase 4: Manage FastAPI Backend (Port 8000)
-# -------------------------------------------------------------------
-Write-Host "`n[4/5] Checking FastAPI Backend (Port 8000)..." -ForegroundColor Yellow
-
-$backendReady = $false
-$conn8000 = Get-NetTCPConnection -LocalPort 8000 -State Listen -ErrorAction SilentlyContinue
-
-if ($conn8000) {
-    $owningPid = $conn8000[0].OwningProcess
-    # Probe /health endpoint to see if it is our VeriSure backend
     try {
-        $health = Invoke-RestMethod -Uri "http://127.0.0.1:8000/health" -TimeoutSec 3 -ErrorAction Stop
-        if ($health.status -eq "healthy") {
-            Write-Host "  [OK] VeriSure Backend is already running & healthy (PID: $owningPid)" -ForegroundColor Green
+        $raw = & wsl -d $Distribution -e hostname -I 2>$null
+
+        if ($LASTEXITCODE -ne 0 -or -not $raw) {
+            return $null
+        }
+
+        $ips = $raw.Trim() -split "\s+"
+
+        foreach ($ip in $ips) {
+            if ($ip -match '^(?:\d{1,3}\.){3}\d{1,3}$') {
+                return $ip
+            }
+        }
+    }
+    catch {
+        return $null
+    }
+
+    return $null
+}
+
+function Test-BackendHealth {
+    try {
+        $response = Invoke-RestMethod `
+            -Uri $BackendHealthUrl `
+            -TimeoutSec 3 `
+            -ErrorAction Stop
+
+        return ($response.status -eq "healthy")
+    }
+    catch {
+        return $false
+    }
+}
+
+function Test-FrontendHealth {
+    try {
+        $response = Invoke-WebRequest `
+            -Uri $FrontendHealthUrl `
+            -UseBasicParsing `
+            -TimeoutSec 3 `
+            -ErrorAction Stop
+
+        return ($response.StatusCode -eq 200)
+    }
+    catch {
+        try {
+            $response = Invoke-WebRequest `
+                -Uri "http://localhost:$FrontendPort" `
+                -UseBasicParsing `
+                -TimeoutSec 3 `
+                -ErrorAction Stop
+
+            return ($response.StatusCode -eq 200)
+        }
+        catch {
+            return $false
+        }
+    }
+}
+
+function Get-ListeningProcess {
+    param(
+        [Parameter(Mandatory = $true)]
+        [int]$Port
+    )
+
+    try {
+        return Get-NetTCPConnection `
+            -LocalPort $Port `
+            -State Listen `
+            -ErrorAction SilentlyContinue |
+            Select-Object -First 1
+    }
+    catch {
+        return $null
+    }
+}
+
+# -------------------------------------------------------------------
+# Startup banner
+# -------------------------------------------------------------------
+
+Write-Host "=======================================================" -ForegroundColor Cyan
+Write-Host "       VeriSure AI Development Environment             " -ForegroundColor Cyan
+Write-Host "=======================================================" -ForegroundColor Cyan
+Write-Host " Repository : $RepoRoot" -ForegroundColor DarkGray
+Write-Host " Backend    : http://localhost:$BackendPort" -ForegroundColor DarkGray
+Write-Host " Frontend   : http://localhost:$FrontendPort" -ForegroundColor DarkGray
+Write-Host " PostgreSQL : WSL $WslDistro" -ForegroundColor DarkGray
+Write-Host "=======================================================" -ForegroundColor Cyan
+
+try {
+
+    # ===============================================================
+    # PHASE 1 - Prerequisites
+    # ===============================================================
+
+    Write-Section "[1/5] Verifying System Prerequisites"
+
+    # Python
+    $pythonCmd = Get-Command python -ErrorAction SilentlyContinue
+
+    if (-not $pythonCmd) {
+        throw "Python is not installed or is not available in PATH."
+    }
+
+    $pyVersion = & python --version 2>&1
+
+    if ($LASTEXITCODE -ne 0) {
+        throw "Python was found but could not be executed."
+    }
+
+    Write-Ok "Python: $pyVersion"
+
+    # Node.js
+    $nodeCmd = Get-Command node -ErrorAction SilentlyContinue
+
+    if (-not $nodeCmd) {
+        throw "Node.js is not installed or is not available in PATH."
+    }
+
+    $nodeVersion = & node --version 2>&1
+
+    if ($LASTEXITCODE -ne 0) {
+        throw "Node.js was found but could not be executed."
+    }
+
+    Write-Ok "Node.js: $nodeVersion"
+
+    # npm
+    $npmCmd = Get-Command npm -ErrorAction SilentlyContinue
+
+    if (-not $npmCmd) {
+        throw "npm is not installed or is not available in PATH."
+    }
+
+    $npmVersion = & npm --version 2>&1
+
+    if ($LASTEXITCODE -ne 0) {
+        throw "npm was found but could not be executed."
+    }
+
+    Write-Ok "npm: $npmVersion"
+
+    # WSL
+    $wslCmd = Get-Command wsl -ErrorAction SilentlyContinue
+
+    if (-not $wslCmd) {
+        throw "WSL is not installed or is not available in PATH."
+    }
+
+    Write-Ok "WSL command available"
+
+    # Required directories
+    if (-not (Test-Path -LiteralPath $BackendDir -PathType Container)) {
+        throw "Backend directory not found: $BackendDir"
+    }
+
+    if (-not (Test-Path -LiteralPath $FrontendDir -PathType Container)) {
+        throw "Frontend directory not found: $FrontendDir"
+    }
+
+    if (-not (Test-Path -LiteralPath (Join-Path $FrontendDir "package.json") -PathType Leaf)) {
+        throw "Frontend package.json not found: $FrontendDir\package.json"
+    }
+
+    Write-Ok "Repository structure verified"
+
+    # ===============================================================
+    # PHASE 2 - PostgreSQL
+    # ===============================================================
+
+    Write-Section "[2/5] Ensuring PostgreSQL Database is Ready"
+
+    # ---------------------------------------------------------------
+    # Dynamically determine WSL IPv4.
+    # ---------------------------------------------------------------
+
+    $wslIp = Get-WslIPv4 -Distribution $WslDistro
+
+    if (-not $wslIp) {
+        Write-Info "WSL IPv4 address not available yet."
+        Write-Info "Attempting to start the Ubuntu distribution..."
+
+        try {
+            & wsl -d $WslDistro -e true 2>&1 | Out-Null
+        }
+        catch {
+            throw "Unable to start WSL distribution '$WslDistro'."
+        }
+
+        Start-Sleep -Seconds 2
+
+        $wslIp = Get-WslIPv4 -Distribution $WslDistro
+    }
+
+    if (-not $wslIp) {
+        throw "Unable to determine the IPv4 address of WSL distribution '$WslDistro'."
+    }
+
+    Write-Ok "WSL IPv4: $wslIp"
+
+    # ---------------------------------------------------------------
+    # Test PostgreSQL TCP port.
+    # ---------------------------------------------------------------
+
+    $dbReachable = Test-TcpPort `
+        -ComputerName $wslIp `
+        -Port 5432
+
+    if (-not $dbReachable) {
+
+        Write-Warn "PostgreSQL is not reachable on $wslIp`:5432."
+        Write-Info "Attempting to start PostgreSQL inside WSL..."
+
+        try {
+            & wsl `
+                -d $WslDistro `
+                -u root `
+                -e /usr/sbin/service postgresql start `
+                2>&1 | Out-Null
+        }
+        catch {
+            Write-Warn "Automatic PostgreSQL service start command failed."
+        }
+
+        Start-Sleep -Seconds 2
+
+        # WSL IP may change after startup.
+        $wslIp = Get-WslIPv4 -Distribution $WslDistro
+
+        if (-not $wslIp) {
+            throw "WSL IPv4 address disappeared while starting PostgreSQL."
+        }
+
+        for ($i = 1; $i -le 10; $i++) {
+
+            if (Test-TcpPort -ComputerName $wslIp -Port 5432) {
+                $dbReachable = $true
+                break
+            }
+
+            Start-Sleep -Seconds 1
+        }
+    }
+
+    if (-not $dbReachable) {
+        throw "PostgreSQL TCP port 5432 is not reachable at $wslIp."
+    }
+
+    Write-Ok "PostgreSQL TCP endpoint reachable at $wslIp`:5432"
+
+    # ---------------------------------------------------------------
+    # Real application-level PostgreSQL validation using asyncpg.
+    # ---------------------------------------------------------------
+
+    $dbTestScript = @"
+import asyncio
+import sys
+
+import asyncpg
+
+from backend.app.core.config import settings
+
+
+async def main():
+    url = settings.DATABASE_URL
+
+    if not url:
+        print("DATABASE_URL is empty.", file=sys.stderr)
+        return 1
+
+    if not url.startswith("postgresql+asyncpg://"):
+        print(
+            "DATABASE_URL does not use the expected asyncpg SQLAlchemy scheme.",
+            file=sys.stderr,
+        )
+        return 1
+
+    async_url = url.replace(
+        "postgresql+asyncpg://",
+        "postgresql://",
+        1,
+    )
+
+    try:
+        conn = await asyncpg.connect(
+            async_url,
+            timeout=5,
+        )
+
+        await conn.execute("SELECT 1")
+        await conn.close()
+
+        print("DATABASE_CONNECTION_OK")
+        return 0
+
+    except Exception as exc:
+        print(
+            f"DATABASE_CONNECTION_ERROR: {type(exc).__name__}: {exc}",
+            file=sys.stderr,
+        )
+        return 1
+
+
+raise SystemExit(asyncio.run(main()))
+"@
+
+    Write-Info "Verifying application-level PostgreSQL connectivity..."
+
+    $dbCheckOutput = & python -c $dbTestScript 2>&1
+
+    if ($LASTEXITCODE -ne 0) {
+
+        Write-ErrorMessage "Application-level PostgreSQL connectivity failed."
+        Write-Host "$dbCheckOutput" -ForegroundColor Red
+
+        Write-Host ""
+        Write-Host "Suggested diagnostic:" -ForegroundColor DarkYellow
+        Write-Host "  wsl -d $WslDistro -u root -e service postgresql status" -ForegroundColor DarkYellow
+
+        throw "Database connection validation failed."
+    }
+
+    Write-Ok "PostgreSQL application connection verified"
+
+    # ===============================================================
+    # PHASE 3 - Seeds
+    # ===============================================================
+
+    Write-Section "[3/5] Verifying Database Seeds"
+
+    Write-Info "Running core product/catalog seed verification..."
+
+    $seedDataOutput = & python -m backend.scripts.seed_data 2>&1
+
+    if ($LASTEXITCODE -ne 0) {
+        Write-ErrorMessage "Database seed_data failed."
+        Write-Host "$seedDataOutput" -ForegroundColor Red
+        throw "Database seed_data failed."
+    }
+
+    Write-Ok "Core product catalog seeds verified"
+
+    Write-Info "Running model registry seed verification..."
+
+    $seedModelsOutput = & python -m backend.scripts.seed_models 2>&1
+
+    if ($LASTEXITCODE -ne 0) {
+        Write-ErrorMessage "Database seed_models failed."
+        Write-Host "$seedModelsOutput" -ForegroundColor Red
+        throw "Database seed_models failed."
+    }
+
+    Write-Ok "Model registry seeds verified"
+
+    # ===============================================================
+    # PHASE 4 - FastAPI Backend
+    # ===============================================================
+
+    Write-Section "[4/5] Checking FastAPI Backend"
+
+    $backendReady = $false
+
+    $backendConnection = Get-ListeningProcess -Port $BackendPort
+
+    if ($backendConnection) {
+
+        $backendPid = $backendConnection.OwningProcess
+
+        if (Test-BackendHealth) {
+
+            Write-Ok "VeriSure Backend already healthy (PID: $backendPid)"
+
             $backendReady = $true
         }
-    } catch {
-        # Port is listening but health probe failed or returned unexpected response
-        $proc = Get-CimInstance Win32_Process -Filter "ProcessId = $owningPid" -ErrorAction SilentlyContinue
-        $procName = if ($proc) { $proc.Name } else { "Unknown" }
-        Write-Host "[ERROR] Port 8000 is occupied by an unresponsive or non-VeriSure process." -ForegroundColor Red
-        Write-Host "  Process: $procName (PID: $owningPid)" -ForegroundColor Red
-        Write-Host "Suggested action: Terminate PID $owningPid (`Stop-Process -Id $owningPid -Force`) or free port 8000." -ForegroundColor DarkYellow
-        exit 1
+        else {
+
+            try {
+                $backendProcess = Get-CimInstance `
+                    Win32_Process `
+                    -Filter "ProcessId = $backendPid" `
+                    -ErrorAction SilentlyContinue
+
+                $backendProcessName = if ($backendProcess) {
+                    $backendProcess.Name
+                }
+                else {
+                    "Unknown"
+                }
+            }
+            catch {
+                $backendProcessName = "Unknown"
+            }
+
+            Write-ErrorMessage `
+                "Port $BackendPort is occupied but the service is not a healthy VeriSure backend."
+
+            Write-Host "  Process: $backendProcessName" -ForegroundColor Red
+            Write-Host "  PID:     $backendPid" -ForegroundColor Red
+            Write-Host ""
+            Write-Host "The launcher will NOT terminate the process automatically." -ForegroundColor DarkYellow
+            Write-Host "Free the port manually if this is an orphaned process." -ForegroundColor DarkYellow
+
+            throw "Port $BackendPort is occupied by an unhealthy process."
+        }
     }
-}
 
-if (-not $backendReady) {
-    Write-Host "  Port 8000 is free. Starting FastAPI Backend..." -ForegroundColor Gray
-    Start-Process -FilePath "cmd.exe" -ArgumentList @("/k", "title VeriSure Backend && cd /d `"$RepoRoot`" && set PYTHONPATH=. && python -m uvicorn backend.app.main:app --reload --reload-dir backend/app --port 8000") -WindowStyle Normal
+    if (-not $backendReady) {
 
-    # Poll /health endpoint with retry policy (up to 20 seconds)
-    Write-Host "  Waiting for FastAPI Backend to become ready..." -ForegroundColor Gray
-    for ($i = 1; $i -le 20; $i++) {
-        Start-Sleep -Seconds 1
-        try {
-            $h = Invoke-RestMethod -Uri "http://127.0.0.1:8000/health" -TimeoutSec 2 -ErrorAction Stop
-            if ($h.status -eq "healthy") {
+        Write-Info "Port $BackendPort is available."
+        Write-Info "Starting FastAPI Backend..."
+
+        $backendCommand = @(
+            "/k",
+            "title VeriSure Backend && cd /d `"$RepoRoot`" && set PYTHONPATH=. && python -m uvicorn backend.app.main:app --reload --reload-dir backend/app --port $BackendPort"
+        )
+
+        Start-Process `
+            -FilePath "cmd.exe" `
+            -ArgumentList $backendCommand `
+            -WorkingDirectory $RepoRoot `
+            -WindowStyle Normal | Out-Null
+
+        Write-Info "Waiting for FastAPI health endpoint..."
+
+        for ($i = 1; $i -le 30; $i++) {
+
+            Start-Sleep -Seconds 1
+
+            if (Test-BackendHealth) {
                 $backendReady = $true
                 break
             }
-        } catch {}
+        }
+
+        if (-not $backendReady) {
+
+            Write-ErrorMessage `
+                "FastAPI Backend failed to become healthy within 30 seconds."
+
+            Write-Host ""
+            Write-Host "Check the 'VeriSure Backend' console for the traceback." -ForegroundColor DarkYellow
+            Write-Host "Health endpoint: $BackendHealthUrl" -ForegroundColor DarkYellow
+
+            throw "FastAPI Backend startup failed."
+        }
+
+        $backendConnection = Get-ListeningProcess -Port $BackendPort
+
+        $backendPid = if ($backendConnection) {
+            $backendConnection.OwningProcess
+        }
+        else {
+            "Unknown"
+        }
+
+        Write-Ok "FastAPI Backend started and healthy (PID: $backendPid)"
     }
 
-    if ($backendReady) {
-        $newConn = Get-NetTCPConnection -LocalPort 8000 -State Listen -ErrorAction SilentlyContinue
-        $newPid = if ($newConn) { $newConn[0].OwningProcess } else { "Unknown" }
-        Write-Host "  [OK] FastAPI Backend successfully started & healthy (PID: $newPid)" -ForegroundColor Green
-    } else {
-        Write-Host "[ERROR] FastAPI Backend failed to become healthy within 20 seconds." -ForegroundColor Red
-        Write-Host "Suggested action: Check the 'VeriSure Backend' console window for traceback details." -ForegroundColor DarkYellow
-        exit 1
-    }
-}
+    # ===============================================================
+    # PHASE 5 - Vite Frontend
+    # ===============================================================
 
-# -------------------------------------------------------------------
-# Phase 5: Manage Vite Frontend (Port 5173)
-# -------------------------------------------------------------------
-Write-Host "`n[5/5] Checking Vite Frontend (Port 5173)..." -ForegroundColor Yellow
+    Write-Section "[5/5] Checking Vite Frontend"
 
-$frontendReady = $false
-$conn5173 = Get-NetTCPConnection -LocalPort 5173 -State Listen -ErrorAction SilentlyContinue
+    $frontendReady = $false
 
-if ($conn5173) {
-    $owningPidFe = $conn5173[0].OwningProcess
-    try {
-        $feResp = $null
-        try { $feResp = Invoke-WebRequest -Uri "http://127.0.0.1:5173" -UseBasicParsing -TimeoutSec 3 -ErrorAction Stop }
-        catch { $feResp = Invoke-WebRequest -Uri "http://localhost:5173" -UseBasicParsing -TimeoutSec 3 -ErrorAction Stop }
-        if ($feResp -and $feResp.StatusCode -eq 200) {
-            Write-Host "  [OK] Vite Frontend is already running & reachable (PID: $owningPidFe)" -ForegroundColor Green
+    $frontendConnection = Get-ListeningProcess -Port $FrontendPort
+
+    if ($frontendConnection) {
+
+        $frontendPid = $frontendConnection.OwningProcess
+
+        if (Test-FrontendHealth) {
+
+            Write-Ok "Vite Frontend already running and reachable (PID: $frontendPid)"
+
             $frontendReady = $true
         }
-    } catch {
-        $procFe = Get-CimInstance Win32_Process -Filter "ProcessId = $owningPidFe" -ErrorAction SilentlyContinue
-        $procFeName = if ($procFe) { $procFe.Name } else { "Unknown" }
-        Write-Host "[ERROR] Port 5173 is occupied by an unresponsive or non-Vite process." -ForegroundColor Red
-        Write-Host "  Process: $procFeName (PID: $owningPidFe)" -ForegroundColor Red
-        Write-Host "Suggested action: Terminate PID $owningPidFe or free port 5173." -ForegroundColor DarkYellow
-        exit 1
+        else {
+
+            try {
+                $frontendProcess = Get-CimInstance `
+                    Win32_Process `
+                    -Filter "ProcessId = $frontendPid" `
+                    -ErrorAction SilentlyContinue
+
+                $frontendProcessName = if ($frontendProcess) {
+                    $frontendProcess.Name
+                }
+                else {
+                    "Unknown"
+                }
+            }
+            catch {
+                $frontendProcessName = "Unknown"
+            }
+
+            Write-ErrorMessage `
+                "Port $FrontendPort is occupied but the frontend is not responding."
+
+            Write-Host "  Process: $frontendProcessName" -ForegroundColor Red
+            Write-Host "  PID:     $frontendPid" -ForegroundColor Red
+            Write-Host ""
+            Write-Host "The launcher will NOT terminate the process automatically." -ForegroundColor DarkYellow
+            Write-Host "Free the port manually if this is an orphaned process." -ForegroundColor DarkYellow
+
+            throw "Port $FrontendPort is occupied by an unhealthy process."
+        }
     }
-}
 
-if (-not $frontendReady) {
-    Write-Host "  Port 5173 is free. Starting Vite Frontend..." -ForegroundColor Gray
-    Start-Process -FilePath "cmd.exe" -ArgumentList @("/k", "title VeriSure Frontend && cd /d `"$RepoRoot\frontend`" && npm run dev") -WindowStyle Normal
+    if (-not $frontendReady) {
 
-    # Poll frontend with retry policy (up to 15 seconds)
-    Write-Host "  Waiting for Vite Frontend to become ready..." -ForegroundColor Gray
-    for ($i = 1; $i -le 15; $i++) {
-        Start-Sleep -Seconds 1
-        try {
-            $feProbe = $null
-            try { $feProbe = Invoke-WebRequest -Uri "http://127.0.0.1:5173" -UseBasicParsing -TimeoutSec 2 -ErrorAction Stop }
-            catch { $feProbe = Invoke-WebRequest -Uri "http://localhost:5173" -UseBasicParsing -TimeoutSec 2 -ErrorAction Stop }
-            if ($feProbe -and $feProbe.StatusCode -eq 200) {
+        Write-Info "Port $FrontendPort is available."
+        Write-Info "Starting Vite Frontend..."
+
+        $frontendCommand = @(
+            "/k",
+            "title VeriSure Frontend && cd /d `"$FrontendDir`" && npm run dev"
+        )
+
+        Start-Process `
+            -FilePath "cmd.exe" `
+            -ArgumentList $frontendCommand `
+            -WorkingDirectory $FrontendDir `
+            -WindowStyle Normal | Out-Null
+
+        Write-Info "Waiting for Vite HTTP endpoint..."
+
+        for ($i = 1; $i -le 30; $i++) {
+
+            Start-Sleep -Seconds 1
+
+            if (Test-FrontendHealth) {
                 $frontendReady = $true
                 break
             }
-        } catch {}
+        }
+
+        if (-not $frontendReady) {
+
+            Write-ErrorMessage `
+                "Vite Frontend failed to become reachable within 30 seconds."
+
+            Write-Host ""
+            Write-Host "Check the 'VeriSure Frontend' console for npm/Vite errors." -ForegroundColor DarkYellow
+            Write-Host "Frontend URL: $FrontendHealthUrl" -ForegroundColor DarkYellow
+
+            throw "Vite Frontend startup failed."
+        }
+
+        $frontendConnection = Get-ListeningProcess -Port $FrontendPort
+
+        $frontendPid = if ($frontendConnection) {
+            $frontendConnection.OwningProcess
+        }
+        else {
+            "Unknown"
+        }
+
+        Write-Ok "Vite Frontend started and reachable (PID: $frontendPid)"
     }
 
-    if ($frontendReady) {
-        $newConnFe = Get-NetTCPConnection -LocalPort 5173 -State Listen -ErrorAction SilentlyContinue
-        $newPidFe = if ($newConnFe) { $newConnFe[0].OwningProcess } else { "Unknown" }
-        Write-Host "  [OK] Vite Frontend successfully started & reachable (PID: $newPidFe)" -ForegroundColor Green
-    } else {
-        Write-Host "[ERROR] Vite Frontend failed to become ready within 15 seconds." -ForegroundColor Red
-        Write-Host "Suggested action: Check the 'VeriSure Frontend' console window for npm/vite errors." -ForegroundColor DarkYellow
-        exit 1
+    # ===============================================================
+    # FINAL VERIFICATION
+    # ===============================================================
+
+    Write-Section "Final Verification"
+
+    if (-not $dbReachable) {
+        throw "Final verification failed: PostgreSQL is not reachable."
     }
+
+    if (-not (Test-BackendHealth)) {
+        throw "Final verification failed: Backend health check failed."
+    }
+
+    if (-not (Test-FrontendHealth)) {
+        throw "Final verification failed: Frontend health check failed."
+    }
+
+    $finalWslIp = Get-WslIPv4 -Distribution $WslDistro
+
+    if (-not $finalWslIp) {
+        throw "Final verification failed: Unable to determine WSL IPv4 address."
+    }
+
+    Write-Host ""
+    Write-Host "=======================================================" -ForegroundColor Cyan
+    Write-Host "       VeriSure AI Development Environment             " -ForegroundColor Cyan
+    Write-Host "=======================================================" -ForegroundColor Cyan
+    Write-Host "  Frontend : http://localhost:$FrontendPort" -ForegroundColor White
+    Write-Host "  Backend  : http://localhost:$BackendPort" -ForegroundColor White
+    Write-Host "  Docs     : http://localhost:$BackendPort/docs" -ForegroundColor White
+    Write-Host "  Health   : http://localhost:$BackendPort/health" -ForegroundColor White
+    Write-Host "  Database : PostgreSQL / WSL $WslDistro" -ForegroundColor White
+    Write-Host "  WSL IP   : $finalWslIp" -ForegroundColor White
+    Write-Host "  Status   : HEALTHY" -ForegroundColor Green
+    Write-Host "=======================================================" -ForegroundColor Cyan
+    Write-Host ""
+
+    # ---------------------------------------------------------------
+    # Browser
+    # ---------------------------------------------------------------
+
+    if (-not $NoBrowser) {
+
+        Write-Info "Opening VeriSure Web UI..."
+
+        try {
+            Start-Process "http://localhost:$FrontendPort" | Out-Null
+        }
+        catch {
+            Write-Warn "Could not automatically open the browser."
+            Write-Host "Open manually: http://localhost:$FrontendPort" -ForegroundColor DarkYellow
+        }
+    }
+    else {
+        Write-Info "Browser launch skipped (-NoBrowser)."
+    }
+
+    exit 0
 }
+catch {
 
-# -------------------------------------------------------------------
-# Final Verification & Startup Summary
-# -------------------------------------------------------------------
-Write-Host "`n=======================================================" -ForegroundColor Cyan
-Write-Host "        VeriSure AI Development Environment            " -ForegroundColor Cyan
-Write-Host "=======================================================" -ForegroundColor Cyan
-Write-Host "  Frontend : http://localhost:5173" -ForegroundColor White
-Write-Host "  Backend  : http://localhost:8000" -ForegroundColor White
-Write-Host "  Docs     : http://localhost:8000/docs" -ForegroundColor White
-Write-Host "  Health   : http://localhost:8000/health" -ForegroundColor White
-Write-Host "  Database : Connected (PostgreSQL 18 on WSL Ubuntu)" -ForegroundColor White
-Write-Host "  Status   : HEALTHY" -ForegroundColor Green
-Write-Host "=======================================================`n" -ForegroundColor Cyan
+    Write-Host ""
+    Write-Host "=======================================================" -ForegroundColor Red
+    Write-Host "       VeriSure AI Development Startup FAILED          " -ForegroundColor Red
+    Write-Host "=======================================================" -ForegroundColor Red
+    Write-Host "  Reason: $($_.Exception.Message)" -ForegroundColor Red
+    Write-Host "=======================================================" -ForegroundColor Red
+    Write-Host ""
 
+    exit 1
+}

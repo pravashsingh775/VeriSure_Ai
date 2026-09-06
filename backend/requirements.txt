@@ -48,3 +48,5 @@ httpx==0.28.1
 
 # --- Testing ---
 pytest==9.1.1
+
+ImageHash==4.3.2
