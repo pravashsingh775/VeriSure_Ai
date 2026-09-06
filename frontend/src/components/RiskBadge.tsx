@@ -78,53 +78,54 @@ export const RiskBadge: React.FC<RiskBadgeProps> = ({ decision }) => {
   };
 
   const config = getBadgeConfig(decision.state);
+  const isHighAlert = ['CRITICAL_RISK', 'TAMPERED_OR_DAMAGED'].includes(decision.state);
 
   return (
-    <div className={`p-5 rounded-2xl border-2 ${config.bg} shadow-sm transition-all`}>
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-        <div className="flex items-center gap-4">
-          <div className="p-3 bg-white rounded-xl shadow-sm border border-slate-200/60">
+    <div className={`p-6 rounded-3xl border ${config.bg} bg-white/95 backdrop-blur-xl shadow-[0_4px_20px_-4px_rgba(15,23,42,0.06)] ${isHighAlert ? 'ring-2 ring-rose-400/40 animate-pulse-glow' : ''} transition-all relative overflow-hidden`}>
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-5">
+        <div className="flex items-start sm:items-center gap-4">
+          <div className="p-3.5 bg-white rounded-2xl shadow-xs border border-slate-200/80 shrink-0">
             {config.icon}
           </div>
           <div>
-            <div className="flex items-center gap-2">
-              <span className={`px-2.5 py-0.5 rounded-full text-xs font-bold tracking-wide uppercase ${config.badgeBg}`}>
+            <div className="flex flex-wrap items-center gap-2">
+              <span className={`px-3 py-1 rounded-full text-[11px] font-black tracking-wider uppercase ${config.badgeBg}`}>
                 {config.title}
               </span>
-              <span className="text-xs font-medium text-slate-500">
+              <span className="text-xs font-bold text-slate-500 bg-slate-100/80 px-2.5 py-0.5 rounded-full border border-slate-200/60">
                 Certainty: {Math.round(decision.confidence * 100)}%
               </span>
             </div>
-            <p className="mt-1 text-sm font-medium text-slate-700">{config.subtitle}</p>
+            <p className="mt-1.5 text-sm font-semibold text-slate-700 leading-snug">{config.subtitle}</p>
           </div>
         </div>
 
         {/* Numerical Risk Gauge */}
-        <div className="flex items-center gap-6 bg-white/80 backdrop-blur px-4 py-2.5 rounded-xl border border-slate-200/80">
+        <div className="flex items-center gap-5 sm:gap-6 bg-slate-50/90 backdrop-blur-xs px-5 py-3 rounded-2xl border border-slate-200/80 shadow-xs self-stretch sm:self-auto justify-around sm:justify-start">
           <div className="text-center">
-            <div className="text-2xl font-black text-slate-900">
+            <div className="text-2xl font-black text-slate-900 tracking-tight">
               {decision.risk_score}
               <span className="text-xs font-semibold text-slate-400">/100</span>
             </div>
-            <div className="text-[10px] uppercase font-bold text-slate-500 tracking-wider">
+            <div className="text-[10px] uppercase font-black text-slate-500 tracking-wider mt-0.5">
               Risk Score
             </div>
           </div>
-          <div className="w-[1px] h-8 bg-slate-200" />
+          <div className="w-px h-8 bg-slate-200" />
           <div className="text-center">
-            <div className="text-sm font-bold text-slate-800">
+            <div className="text-sm font-black text-slate-800">
               {Math.round(decision.evidence_coverage * 100)}%
             </div>
-            <div className="text-[10px] uppercase font-bold text-slate-500 tracking-wider">
+            <div className="text-[10px] uppercase font-black text-slate-500 tracking-wider mt-0.5">
               Coverage
             </div>
           </div>
-          <div className="w-[1px] h-8 bg-slate-200" />
+          <div className="w-px h-8 bg-slate-200" />
           <div className="text-center">
-            <div className="text-sm font-bold text-slate-800">
+            <div className="text-sm font-black text-slate-800">
               {Math.round(decision.uncertainty * 100)}%
             </div>
-            <div className="text-[10px] uppercase font-bold text-slate-500 tracking-wider">
+            <div className="text-[10px] uppercase font-black text-slate-500 tracking-wider mt-0.5">
               Uncertainty
             </div>
           </div>

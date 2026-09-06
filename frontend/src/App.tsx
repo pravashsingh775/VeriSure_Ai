@@ -34,7 +34,14 @@ export const App: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col">
+    <div className="min-h-screen bg-slate-50 relative flex flex-col selection:bg-blue-600 selection:text-white">
+      {/* Subtle Ambient Background Gradients */}
+      <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+        <div className="absolute -top-[20%] -left-[10%] w-[50vw] h-[50vw] rounded-full bg-blue-100/40 blur-3xl" />
+        <div className="absolute top-[30%] -right-[15%] w-[45vw] h-[45vw] rounded-full bg-indigo-50/50 blur-3xl" />
+        <div className="absolute -bottom-[20%] left-[20%] w-[40vw] h-[40vw] rounded-full bg-emerald-50/40 blur-3xl" />
+      </div>
+
       <Navbar
         currentUser={currentUser}
         activeTab={activeTab}
@@ -53,7 +60,7 @@ export const App: React.FC = () => {
         onLogout={handleLogout}
       />
 
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 relative z-10">
         {activeTab === 'consumer' && (
           <>
             {currentScan ? (
@@ -80,17 +87,26 @@ export const App: React.FC = () => {
         )}
       </main>
 
-      <footer className="bg-white border-t border-slate-200/80 py-6 mt-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-500">
-          <div>
-            <span className="font-bold text-slate-800">VeriSure AI Platform</span> • Minor Project Edition 2026
+      <footer className="bg-white/85 backdrop-blur-md border-t border-slate-200/80 py-6 mt-12 relative z-10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
+          <div className="flex items-center gap-2">
+            <span className="font-bold text-slate-800">VeriSure AI Platform</span>
+            <span className="px-2 py-0.5 bg-blue-50 text-blue-700 text-[10px] font-bold rounded-full border border-blue-200/50">
+              v1.0.0-rc1
+            </span>
+            <span className="text-slate-300">•</span>
+            <span className="text-slate-500">Minor Project Edition 2026</span>
           </div>
-          <div className="flex items-center gap-4 text-slate-400">
-            <span>Powered by PyTorch & OpenCV</span>
+          <div className="flex flex-wrap items-center gap-4 text-slate-400 text-[11px]">
+            <span>PyTorch &amp; OpenCV Runtime</span>
             <span>•</span>
-            <span>Zero API Cost Architecture</span>
+            <span>Zero Cloud API Cost</span>
             <span>•</span>
-            <span>Multi-Evidence Fusion</span>
+            <span>Evidential Deep Fusion</span>
+            <span>•</span>
+            <span className="text-emerald-600 font-semibold flex items-center gap-1">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block" /> All Systems Nominal
+            </span>
           </div>
         </div>
       </footer>

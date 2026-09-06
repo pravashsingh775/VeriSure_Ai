@@ -2,7 +2,8 @@
 ### AI-Assisted Product Authenticity Risk Assessment & Brand Protection Platform
 *Target Domain: Flexible Dairy Packaging (Amul Milk Pouches) | Architecture: Production-Ready, Brand-Agnostic FMCG*
 
-[![CI / Automated Tests](https://img.shields.io/badge/Tests-36%20Passed%20(100%25)-success.svg?style=for-the-badge&logo=pytest)](https://github.com/pravashsingh775/VeriSure_Ai)
+[![CI / Automated Tests](https://img.shields.io/badge/Tests-42%2B%20Passed-success.svg?style=for-the-badge&logo=pytest)](https://github.com/pravashsingh775/VeriSure_Ai)
+[![CI](https://github.com/pravashsingh775/VeriSure_Ai/actions/workflows/ci.yml/badge.svg)](https://github.com/pravashsingh775/VeriSure_Ai/actions/workflows/ci.yml)
 [![PostgreSQL](https://img.shields.io/badge/Database-PostgreSQL%2018.6-336791.svg?style=for-the-badge&logo=postgresql)](https://www.postgresql.org/)
 [![FastAPI](https://img.shields.io/badge/Backend-FastAPI%20Async-009688.svg?style=for-the-badge&logo=fastapi)](https://fastapi.tiangolo.com/)
 [![React 19](https://img.shields.io/badge/Frontend-React%2019%20%2B%20TypeScript-61DAFB.svg?style=for-the-badge&logo=react)](https://react.dev/)
@@ -33,7 +34,7 @@ graph TD
     A[Client App / Mobile View] -->|HTTP / Multipart Form| B[FastAPI Gateway :8000]
     B --> C[Security & Storage Barrier]
     C --> D[Image Quality Assessment Gate]
-    
+
     subgraph AI & Computer Vision Pipeline
         D -->|Pass| E[Pouch Detection & ROI Extractor]
         E --> F1[1. Logo ORB + RANSAC Homography]
@@ -47,13 +48,13 @@ graph TD
         E --> F9[9. QR Domain Whitelist Validator]
         E --> F10[10. FSSAI 14-Digit Regulatory Engine]
     end
-    
+
     subgraph Evidence Fusion & Calibration
         F1 & F2 & F3 & F4 & F5 & F6 & F7 & F8 & F9 & F10 --> G[Multi-Evidence Fusion Engine]
         G --> H[Contradiction Penalty Matrix]
         H --> I[Bayesian Calibrator & Decision Synthesizer]
     end
-    
+
     I --> J1[Pixel-wise SSIM Difference Heatmap]
     I --> J2[Publication-Grade PDF Certificate]
     I --> J3[PostgreSQL 18.6 Database]

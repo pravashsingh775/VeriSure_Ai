@@ -43,6 +43,9 @@ data/storage/temp/*
 *.sqlite
 *.sqlite3
 *.backup
+*.sql
+data/backups/
+test_tmp.db
 
 # Node / Frontend
 node_modules/
@@ -66,4 +69,6 @@ htmlcov/
 
 # Logs
 *.log
+prod_out.log
+_backend_test.log
 

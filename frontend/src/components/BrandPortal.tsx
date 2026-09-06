@@ -58,9 +58,9 @@ export const BrandPortal: React.FC = () => {
   return (
     <div className="max-w-6xl mx-auto space-y-6">
       {/* Brand Header */}
-      <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="bg-white/95 backdrop-blur-xl p-6 sm:p-7 rounded-3xl border border-slate-200/90 shadow-[0_4px_20px_-4px_rgba(15,23,42,0.05)] flex flex-col sm:flex-row sm:items-center justify-between gap-5 relative overflow-hidden">
         <div className="flex items-center gap-4">
-          <div className="p-3.5 bg-red-50 text-red-600 rounded-2xl border border-red-200 shadow-inner">
+          <div className="p-3.5 bg-red-50 text-red-600 rounded-2xl border border-red-200 shadow-xs shrink-0">
             <Building2 className="w-8 h-8" />
           </div>
           <div>
@@ -68,30 +68,30 @@ export const BrandPortal: React.FC = () => {
               <h1 className="text-2xl font-black text-slate-900 tracking-tight">
                 Amul Dairy Brand Portal
               </h1>
-              <span className="px-2.5 py-0.5 bg-red-100 text-red-700 text-xs font-bold rounded-full">
+              <span className="px-3 py-1 bg-red-100 text-red-700 text-xs font-black rounded-full border border-red-200">
                 GCMMF • AMUL
               </span>
             </div>
-            <p className="text-xs text-slate-500 mt-1">
+            <p className="text-xs font-medium text-slate-500 mt-1">
               Gujarat Co-operative Milk Marketing Federation • Anand, Gujarat • Reference Corpus V1
             </p>
           </div>
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
-          <span className="px-3 py-1.5 bg-emerald-50 text-emerald-700 rounded-xl text-xs font-bold border border-emerald-200 flex items-center gap-1.5">
+          <span className="px-3.5 py-1.5 bg-emerald-50 text-emerald-700 rounded-xl text-xs font-bold border border-emerald-200 shadow-xs flex items-center gap-2">
             <ShieldCheck className="w-4 h-4 text-emerald-600" /> Corpus V1: 12 Images Verified
           </span>
         </div>
       </div>
 
       {/* Navigation Tabs */}
-      <div className="flex border-b border-slate-200 bg-white rounded-xl px-2 py-1 shadow-xs overflow-x-auto">
+      <div className="flex border border-slate-200/80 bg-white/95 backdrop-blur-md rounded-2xl p-1.5 shadow-xs overflow-x-auto gap-1">
         <button
           onClick={() => setActiveTab('references')}
-          className={`flex items-center gap-2 px-4 py-2.5 text-xs font-bold rounded-lg transition-all whitespace-nowrap ${
+          className={`flex items-center gap-2 px-4 py-2.5 text-xs font-bold rounded-xl transition-all whitespace-nowrap cursor-pointer ${
             activeTab === 'references'
-              ? 'bg-red-50 text-red-600 shadow-xs'
+              ? 'bg-gradient-to-r from-red-600 to-rose-600 text-white shadow-sm shadow-red-500/20'
               : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
           }`}
         >
@@ -101,9 +101,9 @@ export const BrandPortal: React.FC = () => {
 
         <button
           onClick={() => setActiveTab('analytics')}
-          className={`flex items-center gap-2 px-4 py-2.5 text-xs font-bold rounded-lg transition-all whitespace-nowrap ${
+          className={`flex items-center gap-2 px-4 py-2.5 text-xs font-bold rounded-xl transition-all whitespace-nowrap cursor-pointer ${
             activeTab === 'analytics'
-              ? 'bg-red-50 text-red-600 shadow-xs'
+              ? 'bg-gradient-to-r from-red-600 to-rose-600 text-white shadow-sm shadow-red-500/20'
               : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
           }`}
         >
@@ -113,9 +113,9 @@ export const BrandPortal: React.FC = () => {
 
         <button
           onClick={() => setActiveTab('catalog')}
-          className={`flex items-center gap-2 px-4 py-2.5 text-xs font-bold rounded-lg transition-all whitespace-nowrap ${
+          className={`flex items-center gap-2 px-4 py-2.5 text-xs font-bold rounded-xl transition-all whitespace-nowrap cursor-pointer ${
             activeTab === 'catalog'
-              ? 'bg-red-50 text-red-600 shadow-xs'
+              ? 'bg-gradient-to-r from-red-600 to-rose-600 text-white shadow-sm shadow-red-500/20'
               : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
           }`}
         >
@@ -168,7 +168,7 @@ export const BrandPortal: React.FC = () => {
               {filteredReferences.map((ref) => (
                 <div
                   key={ref.id}
-                  className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-xs hover:shadow-md transition-all flex flex-col justify-between group"
+                  className="bg-white rounded-2xl border border-slate-200/90 overflow-hidden shadow-xs hover-lift flex flex-col justify-between group"
                 >
                   <div className="relative bg-slate-100 aspect-4/3 overflow-hidden flex items-center justify-center">
                     <img
@@ -227,7 +227,7 @@ export const BrandPortal: React.FC = () => {
       {activeTab === 'analytics' && (
         <div className="space-y-6">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs">
+            <div className="bg-white p-5 rounded-2xl border border-slate-200/90 shadow-xs hover-lift">
               <div className="text-xs font-bold text-slate-500 uppercase tracking-wider">
                 Total Brand Scans
               </div>
@@ -239,7 +239,7 @@ export const BrandPortal: React.FC = () => {
               </div>
             </div>
 
-            <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs">
+            <div className="bg-white p-5 rounded-2xl border border-slate-200/90 shadow-xs hover-lift">
               <div className="text-xs font-bold text-slate-500 uppercase tracking-wider">
                 Active Packaging Versions
               </div>
@@ -251,7 +251,7 @@ export const BrandPortal: React.FC = () => {
               </div>
             </div>
 
-            <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs">
+            <div className="bg-white p-5 rounded-2xl border border-slate-200/90 shadow-xs hover-lift">
               <div className="text-xs font-bold text-slate-500 uppercase tracking-wider">
                 Counterfeit / Tamper Rate
               </div>
@@ -263,7 +263,7 @@ export const BrandPortal: React.FC = () => {
               </div>
             </div>
 
-            <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs">
+            <div className="bg-white p-5 rounded-2xl border border-slate-200/90 shadow-xs hover-lift">
               <div className="text-xs font-bold text-slate-500 uppercase tracking-wider">
                 Brand Authenticity Health
               </div>

@@ -27,64 +27,75 @@ export const Navbar: React.FC<NavbarProps> = ({
   };
 
   return (
-    <header className="bg-white border-b border-slate-200/80 sticky top-0 z-40">
+    <header className="bg-white/85 backdrop-blur-xl border-b border-slate-200/80 sticky top-0 z-50 shadow-[0_1px_4px_0_rgba(15,23,42,0.03)] transition-all">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-        {/* Brand Logo */}
-        <div className="flex items-center gap-3 cursor-pointer" onClick={() => handleTabClick('consumer')}>
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-700 to-indigo-600 flex items-center justify-center text-white shadow-sm shadow-blue-500/20">
-            <ShieldCheck className="w-6 h-6" />
-          </div>
-          <div>
-            <div className="flex items-center gap-2">
-              <span className="text-base font-black text-slate-900 tracking-tight">VeriSure AI</span>
-              <span className="px-2 py-0.2 bg-blue-50 text-blue-700 text-[10px] font-bold rounded-full border border-blue-200/60">
-                Amul FMCG
-              </span>
+        {/* Brand Logo & Live Health Pill */}
+        <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3 cursor-pointer group" onClick={() => handleTabClick('consumer')}>
+            <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-blue-500 flex items-center justify-center text-white shadow-md shadow-blue-500/20 group-hover:scale-105 transition-transform">
+              <ShieldCheck className="w-6 h-6" />
             </div>
-            <p className="text-[10px] text-slate-400 font-medium">Authenticity Risk Platform</p>
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="text-base font-black text-slate-900 tracking-tight">VeriSure<span className="text-blue-600">.AI</span></span>
+                <span className="px-2 py-0.5 bg-blue-50 text-blue-700 text-[10px] font-extrabold rounded-full border border-blue-200/60 uppercase tracking-wide">
+                  Amul FMCG
+                </span>
+              </div>
+              <p className="text-[10px] text-slate-400 font-semibold tracking-tight">Product Authenticity & Integrity Studio</p>
+            </div>
+          </div>
+
+          {/* Micro Live AI System Telemetry Tag */}
+          <div className="hidden xl:flex items-center gap-2 px-3 py-1 bg-slate-50 border border-slate-200/80 rounded-full text-[11px] font-medium text-slate-600">
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+            </span>
+            <span>12 AI Engines Online</span>
           </div>
         </div>
 
-        {/* Desktop Navigation Tabs */}
-        <nav className="hidden md:flex items-center gap-1 bg-slate-100 p-1 rounded-xl">
+        {/* Desktop Navigation Tabs (Segmented Control Pill) */}
+        <nav className="hidden md:flex items-center gap-1.5 bg-slate-100/90 p-1 rounded-2xl border border-slate-200/60 shadow-inner">
           <button
             onClick={() => handleTabClick('consumer')}
-            className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+            className={`px-4 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
               activeTab === 'consumer'
-                ? 'bg-white text-blue-700 shadow-xs'
-                : 'text-slate-600 hover:text-slate-900'
+                ? 'bg-white text-blue-700 shadow-sm'
+                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/50'
             }`}
           >
-            Consumer Scanner
+            <span>Consumer Scanner</span>
           </button>
           <button
             onClick={() => handleTabClick('brand')}
-            className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+            className={`px-4 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
               activeTab === 'brand'
-                ? 'bg-white text-red-700 shadow-xs'
-                : 'text-slate-600 hover:text-slate-900'
+                ? 'bg-white text-red-700 shadow-sm'
+                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/50'
             }`}
           >
-            Brand Portal (Amul)
+            <span>Brand Portal (Amul)</span>
           </button>
           <button
             onClick={() => handleTabClick('admin')}
-            className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+            className={`px-4 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
               activeTab === 'admin'
-                ? 'bg-white text-purple-700 shadow-xs'
-                : 'text-slate-600 hover:text-slate-900'
+                ? 'bg-white text-purple-700 shadow-sm'
+                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/50'
             }`}
           >
-            Admin Triage & MLOps
+            <span>Admin Triage & MLOps</span>
           </button>
         </nav>
 
         {/* User / Action Buttons */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2.5">
           {currentUser && activeTab === 'consumer' && (
             <button
               onClick={onOpenHistory}
-              className="p-2 text-slate-600 hover:text-blue-600 hover:bg-slate-100 rounded-xl transition-all cursor-pointer"
+              className="p-2 text-slate-600 hover:text-blue-600 hover:bg-blue-50 border border-transparent hover:border-blue-100 rounded-xl transition-all cursor-pointer"
               title="My Scan History"
             >
               <History className="w-5 h-5" />
@@ -92,15 +103,15 @@ export const Navbar: React.FC<NavbarProps> = ({
           )}
 
           {currentUser ? (
-            <div className="flex items-center gap-2 pl-2 border-l border-slate-200">
+            <div className="flex items-center gap-2 pl-3 border-l border-slate-200">
               <div className="hidden sm:block text-right">
-                <div className="text-xs font-bold text-slate-800">{currentUser.full_name}</div>
-                <div className="text-[10px] font-semibold text-slate-500 uppercase flex items-center justify-end gap-1">
+                <div className="text-xs font-bold text-slate-800 tracking-tight">{currentUser.full_name}</div>
+                <div className="text-[10px] font-bold text-slate-500 uppercase flex items-center justify-end gap-1.5">
                   <span className={`w-1.5 h-1.5 rounded-full ${
                     currentUser.roles[0] === 'PLATFORM_ADMIN' ? 'bg-purple-600' :
                     currentUser.roles[0] === 'BRAND_ADMIN' ? 'bg-red-600' : 'bg-blue-600'
                   }`} />
-                  {currentUser.roles[0] || 'Consumer'}
+                  <span>{currentUser.roles[0] || 'Consumer'}</span>
                 </div>
               </div>
               <button
@@ -112,16 +123,16 @@ export const Navbar: React.FC<NavbarProps> = ({
               </button>
             </div>
           ) : (
-            <div className="flex items-center gap-1.5 sm:gap-2">
+            <div className="flex items-center gap-2">
               <button
                 onClick={() => onOpenLogin('signin')}
-                className="inline-flex items-center gap-1 text-xs font-bold text-slate-700 hover:text-slate-900 px-2.5 sm:px-3 py-2 rounded-xl hover:bg-slate-100 transition-all cursor-pointer"
+                className="inline-flex items-center gap-1 text-xs font-bold text-slate-700 hover:text-slate-900 px-3 py-2 rounded-xl hover:bg-slate-100 transition-all cursor-pointer"
               >
-                <LogIn className="w-3.5 h-3.5" /> <span className="hidden xs:inline">Sign In</span>
+                <LogIn className="w-3.5 h-3.5 text-slate-500" /> <span className="hidden xs:inline">Sign In</span>
               </button>
               <button
                 onClick={() => onOpenLogin('register')}
-                className="inline-flex items-center gap-1 text-xs font-bold bg-blue-600 hover:bg-blue-700 text-white px-3 sm:px-3.5 py-2 rounded-xl shadow-xs transition-all cursor-pointer"
+                className="inline-flex items-center gap-1 text-xs font-bold bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white px-3.5 py-2 rounded-xl shadow-sm shadow-blue-500/20 hover:shadow-md transition-all cursor-pointer"
               >
                 <UserPlus className="w-3.5 h-3.5" /> <span className="hidden xs:inline">Create Account</span>
               </button>

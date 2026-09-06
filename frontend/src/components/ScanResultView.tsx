@@ -49,68 +49,77 @@ export const ScanResultView: React.FC<ScanResultViewProps> = ({ scan, onReset })
   };
 
   return (
-    <div className="max-w-5xl mx-auto space-y-6">
+    <div className="max-w-5xl mx-auto space-y-6 animate-in fade-in duration-300">
       {/* Top Bar with Navigation & Action */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-200">
         <button
           onClick={onReset}
-          className="inline-flex items-center gap-2 text-xs font-bold text-slate-600 hover:text-slate-900 bg-white px-3 py-2 rounded-xl border border-slate-200 transition-all self-start"
+          className="inline-flex items-center gap-2 text-xs font-black text-slate-700 hover:text-slate-900 bg-white hover:bg-slate-50 px-4 py-2.5 rounded-xl border border-slate-200 shadow-xs transition-all active:scale-[0.98] cursor-pointer self-start"
         >
-          <ArrowLeft className="w-4 h-4" /> Scan Another Product
+          <ArrowLeft className="w-4 h-4 text-slate-500" />
+          <span>Scan Another Packaging</span>
         </button>
 
         <div className="flex items-center gap-3 self-end sm:self-auto">
           {scan.suspicious_case_id && (
-            <span className="px-3 py-1.5 bg-rose-100 text-rose-800 rounded-xl text-xs font-bold border border-rose-200">
+            <span className="px-3 py-1.5 bg-rose-50 text-rose-700 rounded-xl text-xs font-bold border border-rose-200 shadow-xs flex items-center gap-1.5">
+              <span className="w-2 h-2 rounded-full bg-rose-500" />
               Triaged to Case #{scan.suspicious_case_id.slice(0, 8).toUpperCase()}
             </span>
           )}
           <button
             onClick={handleDownloadPDF}
             disabled={isDownloading}
-            className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 disabled:opacity-60 text-white text-xs font-bold px-4 py-2.5 rounded-xl shadow-xs transition-all active:scale-[0.98]"
+            className="inline-flex items-center gap-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 disabled:opacity-60 text-white text-xs font-black px-4 py-2.5 rounded-xl shadow-md shadow-blue-500/20 transition-all active:scale-[0.98] cursor-pointer"
           >
             {isDownloading ? (
               <Loader2 className="w-4 h-4 animate-spin" />
             ) : (
               <Download className="w-4 h-4" />
             )}
-            {isDownloading ? 'Generating PDF...' : 'Download PDF Report'}
+            <span>{isDownloading ? 'Generating PDF...' : 'Download Official PDF Report'}</span>
           </button>
         </div>
       </div>
 
       {/* Product Banner */}
-      <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="bg-white/95 backdrop-blur-xl p-6 sm:p-7 rounded-3xl border border-slate-200/90 shadow-[0_4px_20px_-4px_rgba(15,23,42,0.05)] flex flex-col sm:flex-row sm:items-center justify-between gap-5 relative overflow-hidden">
         <div>
-          <div className="flex items-center gap-2">
-            <span className="text-[11px] font-bold text-blue-600 uppercase tracking-wider">
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="text-[11px] font-black text-blue-600 uppercase tracking-wider">
               Verified Packaging Target
             </span>
             {scan.images.length > 1 && (
-              <span className="px-2.5 py-0.5 text-[10px] font-bold bg-indigo-50 text-indigo-700 border border-indigo-200 rounded-full flex items-center gap-1">
+              <span className="px-2.5 py-0.5 text-[10px] font-black bg-indigo-50 text-indigo-700 border border-indigo-200/80 rounded-full flex items-center gap-1">
                 <Layers className="w-3 h-3 text-indigo-600" />
                 360° Dual-Panel Verified
               </span>
             )}
+            <span className="px-2 py-0.5 bg-slate-100 text-slate-600 text-[10px] font-bold rounded-md uppercase">
+              Amul GCMMF
+            </span>
           </div>
-          <h1 className="text-2xl font-black text-slate-900 tracking-tight mt-0.5">
+          <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight mt-1">
             {scan.identified_product_name || 'Unregistered Packaging'}
           </h1>
-          <p className="text-xs text-slate-500 mt-1">
-            Variant: <span className="font-semibold text-slate-700">{scan.identified_variant_name || 'N/A'}</span> •
-            Pack Size: <span className="font-semibold text-slate-700">{scan.identified_pack_size || 'N/A'}</span> •
-            Packaging Version: <span className="font-semibold text-slate-700">{scan.packaging_version_code || 'V1'}</span>
+          <p className="text-xs text-slate-500 mt-1 flex flex-wrap items-center gap-x-2 gap-y-1">
+            <span>Variant: <strong className="text-slate-800 font-bold">{scan.identified_variant_name || 'N/A'}</strong></span>
+            <span className="text-slate-300">•</span>
+            <span>Pack Size: <strong className="text-slate-800 font-bold">{scan.identified_pack_size || 'N/A'}</strong></span>
+            <span className="text-slate-300">•</span>
+            <span>Packaging Version: <strong className="text-slate-800 font-bold">{scan.packaging_version_code || 'V1'}</strong></span>
           </p>
         </div>
 
-        <div className="text-right sm:border-l sm:border-slate-100 sm:pl-6">
-          <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">
-            Scan Reference
+        <div className="sm:text-right sm:border-l sm:border-slate-100 sm:pl-6 space-y-0.5 shrink-0">
+          <span className="text-[10px] uppercase font-black text-slate-400 tracking-wider">
+            Audit Reference ID
           </span>
-          <div className="text-xs font-mono font-bold text-slate-800">{scan.id.slice(0, 16)}...</div>
-          <div className="text-[10px] text-slate-400 mt-0.5">
-            {new Date(scan.created_at).toLocaleString()}
+          <div className="text-xs font-mono font-bold text-slate-800 bg-slate-50 px-2.5 py-1 rounded-lg border border-slate-200/60">
+            {scan.id.slice(0, 18)}...
+          </div>
+          <div className="text-[10px] text-slate-400">
+            {new Date(scan.created_at).toLocaleString([], { dateStyle: 'medium', timeStyle: 'short' })}
           </div>
         </div>
       </div>

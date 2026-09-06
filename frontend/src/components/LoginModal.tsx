@@ -18,11 +18,11 @@ export const LoginModal: React.FC<LoginModalProps> = ({
 }) => {
   const [mode, setMode] = useState<'signin' | 'register'>(initialMode);
   const [prevInitialMode, setPrevInitialMode] = useState(initialMode);
-  
+
   // Sign In fields
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  
+
   // Registration fields
   const [fullName, setFullName] = useState('');
   const [regEmail, setRegEmail] = useState('');
@@ -75,7 +75,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
           setError('Invalid email or password. Please check your credentials.');
         }
       } else if (err.request) {
-        setError('Unable to reach backend server. Please check your connection or verify the server is running on port 8000.');
+        setError('Unable to reach backend server. Please verify the server is running on port 8000.');
       } else {
         console.error('Login error:', err);
         setError(err.message || 'An unexpected error occurred during login.');
@@ -108,7 +108,6 @@ export const LoginModal: React.FC<LoginModalProps> = ({
 
     setLoading(true);
     try {
-      // 1. Register new user
       await authApi.register({
         email: regEmail.trim(),
         password: regPassword,
@@ -116,7 +115,6 @@ export const LoginModal: React.FC<LoginModalProps> = ({
         role_name: regRole,
       });
 
-      // 2. Automatically sign in with the new credentials
       const loginRes = await authApi.login(regEmail.trim(), regPassword);
       if (loginRes && loginRes.user) {
         onLoginSuccess(loginRes.user);
@@ -133,7 +131,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
           setError('Registration failed. Email may already be in use.');
         }
       } else if (err.request) {
-        setError('Unable to reach backend server. Please check your connection or verify the server is running on port 8000.');
+        setError('Unable to reach backend server. Please verify the server is running on port 8000.');
       } else {
         console.error('Registration error:', err);
         setError(err.message || 'An unexpected error occurred during registration.');
@@ -144,35 +142,42 @@ export const LoginModal: React.FC<LoginModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center p-4">
-      <div className="bg-white rounded-3xl p-6 sm:p-8 max-w-md w-full shadow-2xl space-y-5">
-        {/* Header with Title and Close Button */}
+    <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+      <div className="bg-white rounded-3xl p-6 sm:p-8 max-w-md w-full shadow-2xl space-y-5 border border-slate-200/90 animate-in fade-in zoom-in-95 duration-200">
+        {/* Header */}
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="p-2 bg-blue-50 text-blue-600 rounded-xl">
+          <div className="flex items-center gap-2.5">
+            <div className="p-2.5 bg-blue-50 text-blue-600 rounded-xl">
               {mode === 'signin' ? <Lock className="w-5 h-5" /> : <UserPlus className="w-5 h-5" />}
             </div>
-            <h2 className="text-lg font-bold text-slate-900">
-              {mode === 'signin' ? 'Sign In to VeriSure' : 'Create a New Account'}
-            </h2>
+            <div>
+              <h2 className="text-lg font-black text-slate-900">
+                {mode === 'signin' ? 'Sign In to VeriSure' : 'Create an Account'}
+              </h2>
+              <p className="text-[11px] text-slate-400 font-medium">
+                {mode === 'signin'
+                  ? 'Access consumer history or enterprise brand tools'
+                  : 'Register a new consumer or brand account'}
+              </p>
+            </div>
           </div>
           <button
             onClick={onClose}
-            className="p-1 text-slate-400 hover:text-slate-600 rounded-lg hover:bg-slate-100 transition-colors"
+            className="p-1.5 text-slate-400 hover:text-slate-600 rounded-xl hover:bg-slate-100 transition-colors cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
         {/* Tab Switcher: Sign In vs Create Account */}
-        <div className="grid grid-cols-2 p-1 bg-slate-100 rounded-2xl">
+        <div className="grid grid-cols-2 p-1 bg-slate-100/90 rounded-2xl border border-slate-200/50">
           <button
             type="button"
             onClick={() => {
               setMode('signin');
               setError(null);
             }}
-            className={`py-2 text-xs font-bold rounded-xl transition-all ${
+            className={`py-2 text-xs font-black rounded-xl transition-all cursor-pointer ${
               mode === 'signin'
                 ? 'bg-white text-slate-900 shadow-xs'
                 : 'text-slate-500 hover:text-slate-900'
@@ -186,7 +191,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
               setMode('register');
               setError(null);
             }}
-            className={`py-2 text-xs font-bold rounded-xl transition-all ${
+            className={`py-2 text-xs font-black rounded-xl transition-all cursor-pointer ${
               mode === 'register'
                 ? 'bg-white text-slate-900 shadow-xs'
                 : 'text-slate-500 hover:text-slate-900'
@@ -197,8 +202,9 @@ export const LoginModal: React.FC<LoginModalProps> = ({
         </div>
 
         {error && (
-          <div className="p-3 bg-rose-50 border border-rose-200 rounded-xl text-xs text-rose-700 font-medium">
-            {error}
+          <div className="p-3.5 bg-rose-50 border border-rose-200 rounded-2xl text-xs text-rose-700 font-medium flex items-start gap-2">
+            <span className="w-1.5 h-1.5 rounded-full bg-rose-500 mt-1 shrink-0" />
+            <span>{error}</span>
           </div>
         )}
 
@@ -206,17 +212,17 @@ export const LoginModal: React.FC<LoginModalProps> = ({
           <>
             {/* 1-Click Demo Accounts */}
             <div>
-              <label className="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-2">
+              <label className="block text-[10px] font-black text-slate-400 uppercase tracking-wider mb-2">
                 Quick 1-Click Demo Roles
               </label>
               <div className="grid grid-cols-3 gap-2">
                 <button
                   type="button"
                   onClick={() => handleLogin('consumer@verisure.ai', 'Consumer@12345')}
-                  className="p-2.5 bg-slate-50 hover:bg-blue-50 border border-slate-200 hover:border-blue-300 rounded-xl text-center transition-all group"
+                  className="p-3 bg-slate-50 hover:bg-blue-50 border border-slate-200 hover:border-blue-300 rounded-2xl text-center transition-all group cursor-pointer shadow-xs"
                 >
-                  <UserIcon className="w-4 h-4 mx-auto text-slate-500 group-hover:text-blue-600 mb-1" />
-                  <div className="text-[11px] font-bold text-slate-700 group-hover:text-blue-700">
+                  <UserIcon className="w-5 h-5 mx-auto text-slate-500 group-hover:text-blue-600 mb-1" />
+                  <div className="text-[11px] font-black text-slate-700 group-hover:text-blue-700">
                     Consumer
                   </div>
                 </button>
@@ -224,22 +230,22 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                 <button
                   type="button"
                   onClick={() => handleLogin('amul_admin@verisure.ai', 'Amul@12345')}
-                  className="p-2.5 bg-slate-50 hover:bg-red-50 border border-slate-200 hover:border-red-300 rounded-xl text-center transition-all group"
+                  className="p-3 bg-slate-50 hover:bg-red-50 border border-slate-200 hover:border-red-300 rounded-2xl text-center transition-all group cursor-pointer shadow-xs"
                 >
-                  <Building2 className="w-4 h-4 mx-auto text-slate-500 group-hover:text-red-600 mb-1" />
-                  <div className="text-[11px] font-bold text-slate-700 group-hover:text-red-700">
-                    Brand Admin
+                  <Building2 className="w-5 h-5 mx-auto text-slate-500 group-hover:text-red-600 mb-1" />
+                  <div className="text-[11px] font-black text-slate-700 group-hover:text-red-700">
+                    Brand GCMMF
                   </div>
                 </button>
 
                 <button
                   type="button"
                   onClick={() => handleLogin('admin@verisure.ai', 'Admin@12345')}
-                  className="p-2.5 bg-slate-50 hover:bg-purple-50 border border-slate-200 hover:border-purple-300 rounded-xl text-center transition-all group"
+                  className="p-3 bg-slate-50 hover:bg-purple-50 border border-slate-200 hover:border-purple-300 rounded-2xl text-center transition-all group cursor-pointer shadow-xs"
                 >
-                  <Shield className="w-4 h-4 mx-auto text-slate-500 group-hover:text-purple-600 mb-1" />
-                  <div className="text-[11px] font-bold text-slate-700 group-hover:text-purple-700">
-                    Admin
+                  <Shield className="w-5 h-5 mx-auto text-slate-500 group-hover:text-purple-600 mb-1" />
+                  <div className="text-[11px] font-black text-slate-700 group-hover:text-purple-700">
+                    Platform Admin
                   </div>
                 </button>
               </div>
@@ -247,100 +253,120 @@ export const LoginModal: React.FC<LoginModalProps> = ({
 
             <div className="relative flex py-1 items-center">
               <div className="flex-grow border-t border-slate-200"></div>
-              <span className="flex-shrink mx-3 text-[10px] uppercase font-bold text-slate-400">
-                Or sign in with email
+              <span className="flex-shrink mx-3 text-[10px] uppercase font-black text-slate-400">
+                Or Enter Email
               </span>
               <div className="flex-grow border-t border-slate-200"></div>
             </div>
 
-            {/* Sign In Form */}
             <form
               onSubmit={(e) => {
                 e.preventDefault();
                 handleLogin();
               }}
-              className="space-y-3"
+              className="space-y-3.5"
             >
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">Email</label>
+                <label className="block text-xs font-black text-slate-700 uppercase tracking-wider mb-1">
+                  Email Address
+                </label>
                 <input
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="user@example.com"
-                  required
-                  className="w-full text-xs p-3 border border-slate-200 rounded-xl focus:outline-blue-600"
+                  placeholder="name@example.com"
+                  className="w-full px-4 py-2.5 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:outline-blue-600 font-medium"
                 />
               </div>
+
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">Password</label>
+                <label className="block text-xs font-black text-slate-700 uppercase tracking-wider mb-1">
+                  Password
+                </label>
                 <input
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
-                  required
-                  className="w-full text-xs p-3 border border-slate-200 rounded-xl focus:outline-blue-600"
+                  className="w-full px-4 py-2.5 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:outline-blue-600 font-medium"
                 />
               </div>
 
               <button
                 type="submit"
-                disabled={loading || !email || !password}
-                className="w-full py-3 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white rounded-xl text-xs font-bold shadow-md shadow-blue-500/20 transition-all flex items-center justify-center gap-2"
+                disabled={loading}
+                className="w-full py-3.5 px-4 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-xl text-xs font-black shadow-md shadow-blue-500/20 transition-all cursor-pointer flex items-center justify-center gap-2"
               >
-                {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Sign In'}
+                {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
+                <span>{loading ? 'Signing In...' : 'Sign In'}</span>
               </button>
             </form>
-
-            <div className="text-center text-xs text-slate-500 pt-1">
-              Don't have an account?{' '}
-              <button
-                type="button"
-                onClick={() => {
-                  setMode('register');
-                  setError(null);
-                }}
-                className="font-bold text-blue-600 hover:underline"
-              >
-                Create Account
-              </button>
-            </div>
           </>
         ) : (
-          /* Create Account Form */
           <form onSubmit={handleRegister} className="space-y-3">
             <div>
-              <label className="block text-xs font-bold text-slate-700 mb-1">Full Name</label>
+              <label className="block text-xs font-black text-slate-700 uppercase tracking-wider mb-1">
+                Full Name
+              </label>
               <input
                 type="text"
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
-                placeholder="Pravash Kumar"
-                required
-                className="w-full text-xs p-3 border border-slate-200 rounded-xl focus:outline-blue-600"
+                placeholder="Pravash Singh"
+                className="w-full px-4 py-2.5 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:outline-blue-600 font-medium"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-slate-700 mb-1">Email Address</label>
+              <label className="block text-xs font-black text-slate-700 uppercase tracking-wider mb-1">
+                Email Address
+              </label>
               <input
                 type="email"
                 value={regEmail}
                 onChange={(e) => setRegEmail(e.target.value)}
-                placeholder="pravash@example.com"
-                required
-                className="w-full text-xs p-3 border border-slate-200 rounded-xl focus:outline-blue-600"
+                placeholder="name@example.com"
+                className="w-full px-4 py-2.5 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:outline-blue-600 font-medium"
               />
             </div>
 
+            <div className="grid grid-cols-2 gap-2">
+              <div>
+                <label className="block text-xs font-black text-slate-700 uppercase tracking-wider mb-1">
+                  Password
+                </label>
+                <input
+                  type="password"
+                  value={regPassword}
+                  onChange={(e) => setRegPassword(e.target.value)}
+                  placeholder="Min 8 chars"
+                  className="w-full px-4 py-2.5 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:outline-blue-600 font-medium"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-black text-slate-700 uppercase tracking-wider mb-1">
+                  Confirm
+                </label>
+                <input
+                  type="password"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  placeholder="Repeat pass"
+                  className="w-full px-4 py-2.5 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:outline-blue-600 font-medium"
+                />
+              </div>
+            </div>
+
             <div>
-              <label className="block text-xs font-bold text-slate-700 mb-1">Account Role</label>
+              <label className="block text-xs font-black text-slate-700 uppercase tracking-wider mb-1">
+                Account Role
+              </label>
               <div className="grid grid-cols-2 gap-2">
                 <button
                   type="button"
                   onClick={() => setRegRole('CONSUMER')}
-                  className={`py-2 px-3 rounded-xl text-xs font-bold border transition-all text-center ${
+                  className={`py-2 px-3 text-xs font-black rounded-xl border transition-all cursor-pointer ${
                     regRole === 'CONSUMER'
                       ? 'bg-blue-50 text-blue-700 border-blue-300'
                       : 'bg-slate-50 text-slate-600 border-slate-200 hover:bg-slate-100'
@@ -351,67 +377,29 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                 <button
                   type="button"
                   onClick={() => setRegRole('BRAND_ADMIN')}
-                  className={`py-2 px-3 rounded-xl text-xs font-bold border transition-all text-center ${
+                  className={`py-2 px-3 text-xs font-black rounded-xl border transition-all cursor-pointer ${
                     regRole === 'BRAND_ADMIN'
                       ? 'bg-red-50 text-red-700 border-red-300'
                       : 'bg-slate-50 text-slate-600 border-slate-200 hover:bg-slate-100'
                   }`}
                 >
-                  Brand Partner
+                  Brand Admin
                 </button>
               </div>
             </div>
 
-            <div>
-              <label className="block text-xs font-bold text-slate-700 mb-1">Password (min. 8 characters)</label>
-              <input
-                type="password"
-                value={regPassword}
-                onChange={(e) => setRegPassword(e.target.value)}
-                placeholder="••••••••"
-                required
-                minLength={8}
-                className="w-full text-xs p-3 border border-slate-200 rounded-xl focus:outline-blue-600"
-              />
-            </div>
-
-            <div>
-              <label className="block text-xs font-bold text-slate-700 mb-1">Confirm Password</label>
-              <input
-                type="password"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                placeholder="••••••••"
-                required
-                minLength={8}
-                className="w-full text-xs p-3 border border-slate-200 rounded-xl focus:outline-blue-600"
-              />
-            </div>
-
             <button
               type="submit"
-              disabled={loading || !fullName || !regEmail || !regPassword || !confirmPassword}
-              className="w-full py-3 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white rounded-xl text-xs font-bold shadow-md shadow-blue-500/20 transition-all flex items-center justify-center gap-2 mt-2"
+              disabled={loading}
+              className="w-full py-3.5 px-4 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-xl text-xs font-black shadow-md shadow-blue-500/20 transition-all cursor-pointer flex items-center justify-center gap-2 mt-2"
             >
-              {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Create Account'}
+              {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
+              <span>{loading ? 'Creating Account...' : 'Register &amp; Sign In'}</span>
             </button>
-
-            <div className="text-center text-xs text-slate-500 pt-1">
-              Already have an account?{' '}
-              <button
-                type="button"
-                onClick={() => {
-                  setMode('signin');
-                  setError(null);
-                }}
-                className="font-bold text-blue-600 hover:underline"
-              >
-                Sign In
-              </button>
-            </div>
           </form>
         )}
       </div>
     </div>
   );
 };
+
